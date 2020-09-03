@@ -1,6 +1,6 @@
-import '../resources/repository.dart';
+import '../repositories/repository.dart';
 import 'package:rxdart/rxdart.dart';
-import '../models/gruppo_model.dart';
+import '../models/models.dart';
 
 class GruppiBloc {
   final _repository = Repository();
