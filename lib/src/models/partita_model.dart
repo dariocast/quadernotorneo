@@ -1,4 +1,6 @@
-class PartitaModel {
+import 'package:equatable/equatable.dart';
+
+class PartitaModel extends Equatable {
   final int id;
   final String squadra1;
   final String squadra2;
@@ -41,4 +43,20 @@ class PartitaModel {
         'ammoniti': ammoniti,
         'espulsi': espulsi
       };
+
+  @override
+  List<Object> get props => [
+        id,
+        squadra1,
+        squadra2,
+        golSquadra1,
+        golSquadra2,
+        marcatori,
+        ammoniti,
+        espulsi
+      ];
+
+  @override
+  String toString() =>
+      'Partita { id: $id, squadra1: $squadra1, squadra2: $squadra2 }';
 }
