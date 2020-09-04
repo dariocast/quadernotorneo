@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'partita_bloc.dart';
 
 abstract class PartitaEvent extends Equatable {
   @override

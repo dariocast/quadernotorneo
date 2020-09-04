@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:quaderno_flutter/src/models/models.dart';
 import 'package:http/http.dart' show Client;
+import 'package:quaderno_flutter/home/models/models.dart';
 
 const String baseUrl = 'https://dariocast.altervista.org/fantazama/api/partita';
 

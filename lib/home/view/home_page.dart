@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/src/blocs/bloc.dart';
-import '../models/models.dart';
+import 'package:quaderno_flutter/authentication/authentication.dart';
+import 'package:quaderno_flutter/home/home.dart';
 
-class VistaQuaderno extends StatelessWidget {
-  static const routeName = '/vista_quaderno';
+class HomePage extends StatelessWidget {
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => HomePage());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Partite'),
+        title: const Text('Home'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              context
+                  .bloc<AuthenticationBloc>()
+                  .add(AuthenticationLogoutRequested());
+            },
+          )
+        ],
       ),
       body: BlocProvider(
         create: (context) => PartitaBloc()..add(PartitaLoaded()),

@@ -1,12 +1,8 @@
 import 'dart:async';
-import 'package:quaderno_flutter/src/models/models.dart';
-
-import 'gruppo_api_provider.dart';
+import 'package:quaderno_flutter/home/home.dart';
 import 'partita_api_provider.dart';
-import '../models/gruppo_model.dart';
 
 class Repository {
-  final gruppoApiProvider = GruppoApiProvider();
   final partitaApiProvider = PartitaApiProvider();
 
   Future<List<PartitaModel>> listaPartite() => partitaApiProvider.tutte();
@@ -16,6 +12,4 @@ class Repository {
   Future<bool> aggiornaPartita(PartitaModel partitaDaAggiornare) =>
       partitaApiProvider.aggiorna(partitaDaAggiornare);
   Future<bool> eliminaPartita(int id) => partitaApiProvider.elimina(id);
-
-  Future<List<GruppoModel>> fetchAllGruppi() => gruppoApiProvider.getGruppi();
 }

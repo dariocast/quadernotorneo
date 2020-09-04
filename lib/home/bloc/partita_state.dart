@@ -1,5 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:quaderno_flutter/src/models/partita_model.dart';
+part of 'partita_bloc.dart';
 
 abstract class PartitaState extends Equatable {
   const PartitaState();

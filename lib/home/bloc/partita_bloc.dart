@@ -1,6 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/src/blocs/bloc.dart';
-import 'package:quaderno_flutter/src/repositories/repository.dart';
+import 'package:quaderno_flutter/home/models/models.dart';
+import 'package:quaderno_flutter/home/repositories/repository.dart';
+
+part 'partita_event.dart';
+part 'partita_state.dart';
 
 class PartitaBloc extends Bloc<PartitaEvent, PartitaState> {
   final _repository = Repository();

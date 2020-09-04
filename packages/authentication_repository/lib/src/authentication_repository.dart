@@ -9,7 +9,8 @@ enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
   Client client = Client();
-  final _authUrl = 'https://dariocast.altervista.org/fantazama/api/admin/auth.php';
+  final _authUrl =
+      'https://dariocast.altervista.org/fantazama/api/admin/auth.php';
   final _controller = StreamController<AuthenticationStatus>();
 
   Stream<AuthenticationStatus> get status async* {
@@ -23,12 +24,21 @@ class AuthenticationRepository {
     @required String password,
   }) async {
     var digest = sha1.convert(utf8.encode(password));
-    final response =
-        await client.post(_authUrl, body: {'username': username, 'password': digest});
+    final response = await client.post(
+      _authUrl,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'username': username,
+        'password': digest.toString()
+      }),
+    );
     if (response.statusCode == 200) {
       _controller.add(AuthenticationStatus.authenticated);
     } else {
       _controller.add(AuthenticationStatus.unauthenticated);
+      throw Exception();
     }
   }
 
