@@ -4,10 +4,7 @@ import 'package:quaderno_flutter/authentication/authentication.dart';
 import 'package:quaderno_flutter/home/home.dart';
 
 class HomePage extends StatelessWidget {
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => HomePage());
-  }
-
+  static const String routeName = '/';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,25 +22,25 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: BlocProvider(
-        create: (context) => PartitaBloc()..add(PartitaLoaded()),
+        create: (context) => PartitaBloc()..add(HomeLoaded()),
         child: lista(),
       ),
     );
   }
 
   Widget lista() {
-    return BlocBuilder<PartitaBloc, PartitaState>(builder: (context, state) {
-      if (state is PartitaInitial) {
+    return BlocBuilder<PartitaBloc, HomeState>(builder: (context, state) {
+      if (state is HomeInitial) {
         return Center(
           child: CircularProgressIndicator(),
         );
       }
-      if (state is PartitaFailure) {
+      if (state is HomeFailure) {
         return Center(
           child: Text('Impossibile caricare le partite'),
         );
       }
-      if (state is PartitaSuccess) {
+      if (state is HomeSuccess) {
         if (state.partite.isEmpty) {
           return Center(
             child: Text('Nessuna partita'),

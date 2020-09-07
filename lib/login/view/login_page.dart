@@ -7,9 +7,7 @@ class LoginPage extends StatelessWidget {
   final Map persistence;
   LoginPage(this.persistence);
 
-  static Route route(Map persistence) {
-    return MaterialPageRoute<void>(builder: (_) => LoginPage(persistence));
-  }
+  static const String routeName = '/login';
 
   @override
   Widget build(BuildContext context) {

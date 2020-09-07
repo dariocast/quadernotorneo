@@ -9,6 +9,12 @@ import 'package:quaderno_flutter/splash/splash.dart';
 
 import 'package:quaderno_flutter/database.dart';
 
+import 'home/home.dart';
+import 'login/login.dart';
+import 'splash/splash.dart';
+import 'splash/splash.dart';
+import 'theme.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var persistence = await Database.get('persistence');
@@ -61,20 +67,21 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: QuadernoTheme.themeData,
       navigatorKey: _navigatorKey,
       builder: (context, child) {
         return BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
-                _navigator.pushAndRemoveUntil<void>(
-                  HomePage.route(),
+                _navigator.pushNamedAndRemoveUntil<void>(
+                  HomePage.routeName,
                   (route) => false,
                 );
                 break;
               case AuthenticationStatus.unauthenticated:
-                _navigator.pushAndRemoveUntil<void>(
-                  LoginPage.route(persistence),
+                _navigator.pushNamedAndRemoveUntil<void>(
+                  LoginPage.routeName,
                   (route) => false,
                 );
                 break;
@@ -85,7 +92,12 @@ class _AppViewState extends State<AppView> {
           child: child,
         );
       },
-      onGenerateRoute: (_) => SplashPage.route(),
+      initialRoute: SplashPage.routeName,
+      routes: {
+        HomePage.routeName: (context) => HomePage(),
+        LoginPage.routeName: (context) => LoginPage(null),
+        SplashPage.routeName: (context) => SplashPage()
+      },
     );
   }
 }
