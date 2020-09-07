@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/login/login.dart';
+import 'package:quaderno_flutter/blocs/blocs.dart';
 
 class LoginForm extends StatelessWidget {
   final Map persistence;
@@ -10,6 +10,7 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.bloc<LoginBloc>().add(LoginPersistenceLoaded(persistence));
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {

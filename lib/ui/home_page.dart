@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/authentication/authentication.dart';
-import 'package:quaderno_flutter/home/home.dart';
+import 'package:quaderno_flutter/blocs/blocs.dart';
 
 class HomePage extends StatelessWidget {
   static const String routeName = '/';

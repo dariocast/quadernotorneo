@@ -1,16 +1,15 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/login/login.dart';
+import 'package:quaderno_flutter/blocs/blocs.dart';
 import 'package:flutter/material.dart';
+import 'package:quaderno_flutter/ui/ui.dart';
 
 class LoginPage extends StatelessWidget {
-  final Map persistence;
-  LoginPage(this.persistence);
-
   static const String routeName = '/login';
 
   @override
   Widget build(BuildContext context) {
+    final Map persistence = ModalRoute.of(context).settings.arguments;
     LoginForm form = LoginForm(persistence);
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),

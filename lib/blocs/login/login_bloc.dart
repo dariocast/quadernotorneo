@@ -4,7 +4,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:quaderno_flutter/database.dart';
-import 'package:quaderno_flutter/login/login.dart';
+import 'package:quaderno_flutter/models/models.dart';
 import 'package:formz/formz.dart';
 import 'package:meta/meta.dart';
 
@@ -32,6 +32,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield* _mapLoginSubmittedToState(event, state);
     } else if (event is LoginPersistChanged) {
       yield _mapLoginPersistChangedToState(event, state);
+    } else if (event is LoginPersistenceLoaded) {
+      yield* _mapLoginPersistenceLoadedToState(event, state);
+    }
+  }
+
+  Stream<LoginState> _mapLoginPersistenceLoadedToState(
+    LoginPersistenceLoaded event,
+    LoginState state,
+  ) async* {
+    if (event.persistence != null) {
+      yield state.copyWith(status: FormzStatus.submissionInProgress);
+      try {
+        await _authenticationRepository.logIn(
+          username: event.persistence['username'],
+          password: event.persistence['password'],
+        );
+        yield state.copyWith(status: FormzStatus.submissionSuccess);
+      } on Exception catch (_) {
+        yield state.copyWith(status: FormzStatus.submissionFailure);
+      }
     }
   }
 

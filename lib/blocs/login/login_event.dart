@@ -37,3 +37,12 @@ class LoginPersistChanged extends LoginEvent {
   @override
   List<Object> get props => [persist];
 }
+
+class LoginPersistenceLoaded extends LoginEvent {
+  final Map persistence;
+
+  const LoginPersistenceLoaded(this.persistence);
+
+  @override
+  List<Object> get props => [persistence];
+}

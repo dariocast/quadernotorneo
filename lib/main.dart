@@ -2,18 +2,10 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:quaderno_flutter/authentication/authentication.dart';
-import 'package:quaderno_flutter/home/home.dart';
-import 'package:quaderno_flutter/login/login.dart';
-import 'package:quaderno_flutter/splash/splash.dart';
-
 import 'package:quaderno_flutter/database.dart';
-
-import 'home/home.dart';
-import 'login/login.dart';
-import 'splash/splash.dart';
-import 'splash/splash.dart';
+import 'blocs/blocs.dart';
 import 'theme.dart';
+import 'ui/ui.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,9 +73,8 @@ class _AppViewState extends State<AppView> {
                 break;
               case AuthenticationStatus.unauthenticated:
                 _navigator.pushNamedAndRemoveUntil<void>(
-                  LoginPage.routeName,
-                  (route) => false,
-                );
+                    LoginPage.routeName, (route) => false,
+                    arguments: persistence);
                 break;
               default:
                 break;
@@ -95,7 +86,7 @@ class _AppViewState extends State<AppView> {
       initialRoute: SplashPage.routeName,
       routes: {
         HomePage.routeName: (context) => HomePage(),
-        LoginPage.routeName: (context) => LoginPage(null),
+        LoginPage.routeName: (context) => LoginPage(),
         SplashPage.routeName: (context) => SplashPage()
       },
     );

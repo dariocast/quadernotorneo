@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:quaderno_flutter/home/home.dart';
+import 'package:quaderno_flutter/models/models.dart';
 import 'partita_api_provider.dart';
 
 class Repository {

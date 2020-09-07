@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/home/models/models.dart';
-import 'package:quaderno_flutter/home/repositories/repository.dart';
+import 'package:quaderno_flutter/models/models.dart';
+import 'package:quaderno_flutter/repositories/repository.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
