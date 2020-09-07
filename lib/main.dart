@@ -3,14 +3,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:quaderno_flutter/database.dart';
-import 'blocs/blocs.dart';
-import 'theme.dart';
-import 'ui/ui.dart';
+import 'package:quaderno_flutter/blocs/blocs.dart';
+import 'package:quaderno_flutter/theme.dart';
+import 'package:quaderno_flutter/ui/ui.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var persistence = await Database.get('persistence');
-  print(persistence);
   runApp(QuadernoTorneoApp(
     persistence: persistence,
     authenticationRepository: AuthenticationRepository(),
@@ -87,7 +86,8 @@ class _AppViewState extends State<AppView> {
       routes: {
         HomePage.routeName: (context) => HomePage(),
         LoginPage.routeName: (context) => LoginPage(),
-        SplashPage.routeName: (context) => SplashPage()
+        SplashPage.routeName: (context) => SplashPage(),
+        DettaglioPage.routeName: (context) => DettaglioPage()
       },
     );
   }

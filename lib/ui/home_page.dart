@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quaderno_flutter/blocs/blocs.dart';
+import 'package:quaderno_flutter/ui/ui.dart';
 
 class HomePage extends StatelessWidget {
   static const String routeName = '/';
@@ -52,6 +53,9 @@ class HomePage extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   child: ListTile(
+                    onTap: () => Navigator.of(context).pushNamed(
+                        DettaglioPage.routeName,
+                        arguments: state.partite[index]),
                     title: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
