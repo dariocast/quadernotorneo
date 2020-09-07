@@ -7,8 +7,14 @@ import 'package:quaderno_flutter/home/home.dart';
 import 'package:quaderno_flutter/login/login.dart';
 import 'package:quaderno_flutter/splash/splash.dart';
 
-void main() {
+import 'package:quaderno_flutter/database.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var persistence = await Database.get('persistence');
+  print(persistence);
   runApp(QuadernoTorneoApp(
+    persistence: persistence,
     authenticationRepository: AuthenticationRepository(),
   ));
 }
@@ -16,11 +22,13 @@ void main() {
 class QuadernoTorneoApp extends StatelessWidget {
   const QuadernoTorneoApp({
     Key key,
+    this.persistence,
     @required this.authenticationRepository,
   })  : assert(authenticationRepository != null),
         super(key: key);
 
   final AuthenticationRepository authenticationRepository;
+  final Map persistence;
 
   @override
   Widget build(BuildContext context) {
@@ -29,19 +37,24 @@ class QuadernoTorneoApp extends StatelessWidget {
       child: BlocProvider(
         create: (_) => AuthenticationBloc(
             authenticationRepository: authenticationRepository),
-        child: AppView(),
+        child: AppView(persistence),
       ),
     );
   }
 }
 
 class AppView extends StatefulWidget {
+  final Map persistence;
+  AppView(this.persistence);
+
   @override
-  _AppViewState createState() => _AppViewState();
+  _AppViewState createState() => _AppViewState(persistence);
 }
 
 class _AppViewState extends State<AppView> {
   final _navigatorKey = GlobalKey<NavigatorState>();
+  final Map persistence;
+  _AppViewState(this.persistence);
 
   NavigatorState get _navigator => _navigatorKey.currentState;
 
@@ -61,7 +74,7 @@ class _AppViewState extends State<AppView> {
                 break;
               case AuthenticationStatus.unauthenticated:
                 _navigator.pushAndRemoveUntil<void>(
-                  LoginPage.route(),
+                  LoginPage.route(persistence),
                   (route) => false,
                 );
                 break;

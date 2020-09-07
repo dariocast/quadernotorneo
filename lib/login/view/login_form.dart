@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quaderno_flutter/login/login.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginForm extends StatelessWidget {
+  final Map persistence;
+
+  const LoginForm(this.persistence);
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
@@ -24,9 +27,9 @@ class LoginForm extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _UsernameInput(),
+            _UsernameInput(persistence),
             const Padding(padding: EdgeInsets.all(12)),
-            _PasswordInput(),
+            _PasswordInput(persistence),
             const Padding(padding: EdgeInsets.all(12)),
             _LoginButton(),
             const Padding(padding: EdgeInsets.all(12)),
@@ -57,19 +60,18 @@ class _SaveCredentialCheckbox extends StatelessWidget {
 }
 
 class _UsernameInput extends StatelessWidget {
+  final Map persistence;
+  _UsernameInput(this.persistence) {
+    print(this.persistence);
+  }
   @override
   Widget build(BuildContext context) {
-    String savedUsername;
-    SharedPreferences.getInstance().then((value) {
-      SharedPreferences prefs = value;
-      savedUsername = prefs.getString('username') ?? '';
-    });
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.username != current.username,
       builder: (context, state) {
         return TextFormField(
           key: const Key('loginForm_usernameInput_textField'),
-          initialValue: savedUsername,
+          initialValue: persistence != null ? persistence['username'] : '',
           onChanged: (username) =>
               context.bloc<LoginBloc>().add(LoginUsernameChanged(username)),
           decoration: InputDecoration(
@@ -83,19 +85,18 @@ class _UsernameInput extends StatelessWidget {
 }
 
 class _PasswordInput extends StatelessWidget {
+  final Map persistence;
+  _PasswordInput(this.persistence) {
+    print(this.persistence);
+  }
   @override
   Widget build(BuildContext context) {
-    String savedPassword;
-    SharedPreferences.getInstance().then((value) {
-      SharedPreferences prefs = value;
-      savedPassword = prefs.getString('password') ?? '';
-    });
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         return TextFormField(
           key: const Key('loginForm_passwordInput_textField'),
-          initialValue: savedPassword,
+          initialValue: persistence != null ? persistence['password'] : '',
           onChanged: (password) =>
               context.bloc<LoginBloc>().add(LoginPasswordChanged(password)),
           obscureText: true,

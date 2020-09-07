@@ -4,12 +4,16 @@ import 'package:quaderno_flutter/login/login.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => LoginPage());
+  final Map persistence;
+  LoginPage(this.persistence);
+
+  static Route route(Map persistence) {
+    return MaterialPageRoute<void>(builder: (_) => LoginPage(persistence));
   }
 
   @override
   Widget build(BuildContext context) {
+    LoginForm form = LoginForm(persistence);
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
       body: Padding(
@@ -21,7 +25,7 @@ class LoginPage extends StatelessWidget {
                   RepositoryProvider.of<AuthenticationRepository>(context),
             );
           },
-          child: LoginForm(),
+          child: form,
         ),
       ),
     );

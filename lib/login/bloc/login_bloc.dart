@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:quaderno_flutter/database.dart';
 import 'package:quaderno_flutter/login/login.dart';
 import 'package:formz/formz.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -77,10 +77,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           password: state.password.value,
         );
         if (state.persist) {
-          SharedPreferences.getInstance().then((value) {
-            SharedPreferences prefs = value;
-            prefs.setString('username', state.username.value);
-            prefs.setString('password', state.password.value);
+          Database.put('persistence', {
+            'username': state.username.value,
+            'password': state.password.value
           });
         }
         yield state.copyWith(status: FormzStatus.submissionSuccess);
