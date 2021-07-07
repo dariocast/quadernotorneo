@@ -13,7 +13,7 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc({
-    @required AuthenticationRepository authenticationRepository,
+    required AuthenticationRepository authenticationRepository,
   })  : assert(authenticationRepository != null),
         _authenticationRepository = authenticationRepository,
         super(const LoginState());
@@ -32,26 +32,37 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield* _mapLoginSubmittedToState(event, state);
     } else if (event is LoginPersistChanged) {
       yield _mapLoginPersistChangedToState(event, state);
-    } else if (event is LoginPersistenceLoaded) {
+    } else if (event is LoginLoaded) {
       yield* _mapLoginPersistenceLoadedToState(event, state);
     }
   }
 
   Stream<LoginState> _mapLoginPersistenceLoadedToState(
-    LoginPersistenceLoaded event,
+    LoginLoaded event,
     LoginState state,
   ) async* {
-    if (event.persistence != null) {
-      yield state.copyWith(status: FormzStatus.submissionInProgress);
+    var persistenceObj = await Database.get('persistence');
+    if (persistenceObj != null) {
+      final persistence =
+          Persistence(persistenceObj['username'], persistenceObj['password']);
+      final username = Username.dirty(persistence.username);
+      final password = Password.dirty(persistence.password);
+      yield state.copyWith(
+        status: Formz.validate([username, password]),
+        username: username,
+        password: password,
+      );
       try {
         await _authenticationRepository.logIn(
-          username: event.persistence['username'],
-          password: event.persistence['password'],
+          username: persistence.username,
+          password: persistence.password,
         );
         yield state.copyWith(status: FormzStatus.submissionSuccess);
       } on Exception catch (_) {
         yield state.copyWith(status: FormzStatus.submissionFailure);
       }
+    } else {
+      yield state.copyWith();
     }
   }
 

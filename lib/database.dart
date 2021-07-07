@@ -1,12 +1,14 @@
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
+
 class Database {
-  static var box;
+  final name = 'database';
+  static Box? box;
   static Future init() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appDocPath = appDocDir.path;
+    final Directory appDocDir = await getApplicationDocumentsDirectory();
+    final String appDocPath = appDocDir.path;
     Hive.init(appDocPath);
     box = await Hive.openBox('quaderno');
     if (box != null) {
@@ -20,15 +22,21 @@ class Database {
     }
   }
 
+  static Future remove() async {
+    await autoInit();
+    final response = await box!.clear();
+    return response;
+  }
+
   static Future put(key, value) async {
     await autoInit();
-    var r = await box.put(key, value);
+    final r = await box!.put(key, value);
     return r;
   }
 
   static Future get(key) async {
     await autoInit();
-    var r = await box.get(key);
+    final r = await box!.get(key);
     return r;
   }
 }

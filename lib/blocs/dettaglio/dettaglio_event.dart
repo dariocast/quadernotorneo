@@ -6,3 +6,9 @@ abstract class DettaglioEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class DettaglioLoaded extends DettaglioEvent {
+  final PartitaModel partita;
+
+  DettaglioLoaded(this.partita);
+}

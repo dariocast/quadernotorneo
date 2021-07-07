@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quaderno_flutter/models/models.dart';
 import 'package:quaderno_flutter/repositories/repository.dart';
@@ -6,22 +7,20 @@ import 'package:quaderno_flutter/repositories/repository.dart';
 part 'home_event.dart';
 part 'home_state.dart';
 
-class PartitaBloc extends Bloc<HomeEvent, HomeState> {
+class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final _repository = Repository();
 
-  PartitaBloc() : super(HomeInitial());
+  HomeBloc() : super(HomeInitial());
 
   @override
   Stream<HomeState> mapEventToState(HomeEvent event) async* {
-    final currentState = state;
     if (event is HomeLoaded) {
+      yield HomeLoading();
       try {
-        if (!(currentState is HomeFailure)) {
-          final partite = await _repository.listaPartite();
-          yield HomeSuccess(partite: partite);
-          return;
-        }
-      } catch (_) {
+        final partite = await _repository.listaPartite();
+        yield HomeSuccess(partite: partite);
+      } catch (e) {
+        debugPrint(e.toString());
         yield HomeFailure();
       }
     }

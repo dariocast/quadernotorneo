@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quaderno_flutter/models/models.dart';
+import 'package:quaderno_flutter/ui/style_helpers.dart';
 
 class PartitaWidget extends StatelessWidget {
   final PartitaModel partita;
@@ -8,14 +9,15 @@ class PartitaWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(
-        child: Container(
+    return Container(
+      height: Size.infinite.height,
+      width: Size.infinite.width,
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/images/blocnotes.png'),
               fit: BoxFit.fill)),
       child: PulsantieraWidget(),
-    ));
+    );
   }
 }
 
@@ -30,36 +32,36 @@ class PulsantieraWidget extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(left: 8.0, top: 5.0),
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text(
                   'Gol',
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.amber,
+                style: elevatedButtonStyle,
                 onPressed: () {/** */},
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0, top: 5.0),
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text('Autogol', style: TextStyle(color: Colors.white)),
-                color: Colors.amber,
+                style: elevatedButtonStyle,
                 onPressed: () {/** */},
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0, top: 5.0),
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text('Ammonisci', style: TextStyle(color: Colors.white)),
-                color: Colors.amber,
+                style: elevatedButtonStyle,
                 onPressed: () {/** */},
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0, top: 5.0),
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text('Espelli', style: TextStyle(color: Colors.white)),
-                color: Colors.amber,
+                style: elevatedButtonStyle,
                 onPressed: () {/** */},
               ),
             ),
@@ -73,20 +75,20 @@ class PulsantieraWidget extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text(
                   'Ok',
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.amber,
+                style: elevatedButtonStyle,
                 onPressed: () {/** */},
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text('Cancel', style: TextStyle(color: Colors.white)),
-                color: Colors.amber,
+                style: elevatedButtonStyle,
                 onPressed: () {/** */},
               ),
             ),

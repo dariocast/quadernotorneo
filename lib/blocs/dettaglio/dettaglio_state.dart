@@ -1,14 +1,27 @@
 part of 'dettaglio_bloc.dart';
 
-abstract class DettaglioState extends Equatable {
-  const DettaglioState();
+class DettaglioState extends Equatable {
+  final PartitaModel? partita;
+  final bool loading;
+  final bool isEdit;
+  const DettaglioState({
+    this.partita,
+    this.loading = true,
+    this.isEdit = false,
+  });
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [partita, loading];
+
+  DettaglioState copyWith({
+    PartitaModel? partita,
+    bool? loading,
+    bool? isEdit,
+  }) {
+    return DettaglioState(
+      partita: partita ?? this.partita,
+      loading: loading ?? this.loading,
+      isEdit: isEdit ?? this.isEdit,
+    );
+  }
 }
-
-class DettaglioInitial extends DettaglioState {}
-
-class DettaglioSaved extends DettaglioState {}
-
-class DettaglioEdited extends DettaglioState {}

@@ -4,7 +4,7 @@ abstract class LoginEvent extends Equatable {
   const LoginEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class LoginUsernameChanged extends LoginEvent {
@@ -30,7 +30,7 @@ class LoginSubmitted extends LoginEvent {
 }
 
 class LoginPersistChanged extends LoginEvent {
-  const LoginPersistChanged(this.persist);
+  const LoginPersistChanged({required this.persist});
 
   final bool persist;
 
@@ -38,11 +38,4 @@ class LoginPersistChanged extends LoginEvent {
   List<Object> get props => [persist];
 }
 
-class LoginPersistenceLoaded extends LoginEvent {
-  final Map persistence;
-
-  const LoginPersistenceLoaded(this.persistence);
-
-  @override
-  List<Object> get props => [persistence];
-}
+class LoginLoaded extends LoginEvent {}
