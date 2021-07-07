@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
         title: const Text('Home'),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: Icon(Icons.exit_to_app),
             onPressed: () {
               context
                   .bloc<AuthenticationBloc>()
