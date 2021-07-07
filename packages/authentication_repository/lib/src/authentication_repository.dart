@@ -14,18 +14,17 @@ class AuthenticationRepository {
   final _controller = StreamController<AuthenticationStatus>();
 
   Stream<AuthenticationStatus> get status async* {
-    await Future<void>.delayed(const Duration(seconds: 1));
     yield AuthenticationStatus.unauthenticated;
     yield* _controller.stream;
   }
 
   Future<void> logIn({
-    @required String username,
-    @required String password,
+    required String username,
+    required String password,
   }) async {
     var digest = sha1.convert(utf8.encode(password));
     final response = await client.post(
-      _authUrl,
+      Uri.parse(_authUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

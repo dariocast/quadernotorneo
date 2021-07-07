@@ -8,39 +8,40 @@ const String baseUrl = 'https://dariocast.altervista.org/fantazama/api/partita';
 class PartitaApiProvider {
   Client client = Client();
   Future<List<PartitaModel>> tutte() async {
-    final response = await client.get(baseUrl + '/getAll.php');
+    final response = await client.get(Uri.parse('$baseUrl/getAll.php'));
     if (response.statusCode == 200) {
-      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-      return parsed
-          .map<PartitaModel>((json) => PartitaModel.fromJson(json))
-          .toList();
+      final jsonDecoded = jsonDecode(response.body);
+      final mapDone =
+          jsonDecoded.map<PartitaModel>((json) => PartitaModel.fromMap(json));
+      final lista = mapDone.toList();
+      return lista;
     } else {
       throw Exception('Impossibile caricare le partite');
     }
   }
 
   Future<PartitaModel> singola(int id) async {
-    final response = await client.get(baseUrl + '/get.php?id=$id');
+    final response = await client.get(Uri.parse('$baseUrl/get.php?id=$id'));
     if (response.statusCode == 200) {
-      return PartitaModel.fromJson(json.decode(response.body));
+      return PartitaModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Impossibile caricare la partita con id: $id');
     }
   }
 
   Future<PartitaModel> crea(String squadra1, String squadra2) async {
-    final response = await client.post(baseUrl + '/create.php',
+    final response = await client.post(Uri.parse('$baseUrl/create.php'),
         body: {'squadraUno': squadra1, 'squadraDue': squadra2});
     if (response.statusCode == 200) {
-      return PartitaModel.fromJson(json.decode(response.body));
+      return PartitaModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Impossibile creare la partita');
     }
   }
 
   Future<bool> aggiorna(PartitaModel partita) async {
-    final response =
-        await client.post(baseUrl + '/update.php', body: partita.toJson());
+    final response = await client.post(Uri.parse('$baseUrl/update.php'),
+        body: partita.toJson());
     if (response.statusCode == 200) {
       return json.decode(response.body)['updated'];
     } else {
@@ -49,7 +50,8 @@ class PartitaApiProvider {
   }
 
   Future<bool> elimina(int id) async {
-    final response = await client.delete(baseUrl + '/delete.php?id=$id');
+    final response =
+        await client.delete(Uri.parse('$baseUrl/delete.php?id=$id'));
     if (response.statusCode == 200) {
       return json.decode(response.body)['deleted'];
     } else {

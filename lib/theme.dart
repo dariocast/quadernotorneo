@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 class QuadernoTheme {
   static ThemeData get themeData {
-    return ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.green,
-        accentColor: Colors.amber);
+    final ThemeData theme = ThemeData();
+    return theme.copyWith(
+      primaryColor: Colors.green,
+      colorScheme: theme.colorScheme.copyWith(
+        secondary: Colors.amber,
+      ),
+    );
   }
 }

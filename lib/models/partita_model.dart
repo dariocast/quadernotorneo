@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 
 class PartitaModel extends Equatable {
@@ -10,39 +12,16 @@ class PartitaModel extends Equatable {
   final List ammoniti;
   final List espulsi;
 
-  PartitaModel(
-      {this.id,
-      this.squadra1,
-      this.squadra2,
-      this.golSquadra1,
-      this.golSquadra2,
-      this.marcatori,
-      this.ammoniti,
-      this.espulsi});
-
-  factory PartitaModel.fromJson(Map<String, dynamic> json) {
-    return PartitaModel(
-      id: json['_id'] as int,
-      squadra1: json['squadraUno'] as String,
-      squadra2: json['squadraDue'] as String,
-      golSquadra1: json['golSquadraUno'] as int,
-      golSquadra2: json['golSquadraDue'] as int,
-      marcatori: json['marcatori'] as List,
-      ammoniti: json['ammoniti'] as List,
-      espulsi: json['espulsi'] as List,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        '_id': id,
-        'squadraUno': squadra1,
-        'squadraDue': squadra2,
-        'golSquadraUno': golSquadra1,
-        'golSquadraDue': golSquadra2,
-        'marcatori': marcatori,
-        'ammoniti': ammoniti,
-        'espulsi': espulsi
-      };
+  const PartitaModel({
+    required this.id,
+    required this.squadra1,
+    required this.squadra2,
+    required this.golSquadra1,
+    required this.golSquadra2,
+    required this.marcatori,
+    required this.ammoniti,
+    required this.espulsi,
+  });
 
   @override
   List<Object> get props => [
@@ -59,4 +38,35 @@ class PartitaModel extends Equatable {
   @override
   String toString() =>
       'Partita { id: $id, squadra1: $squadra1, squadra2: $squadra2 }';
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'squadra1': squadra1,
+      'squadra2': squadra2,
+      'golSquadra1': golSquadra1,
+      'golSquadra2': golSquadra2,
+      'marcatori': marcatori,
+      'ammoniti': ammoniti,
+      'espulsi': espulsi,
+    };
+  }
+
+  factory PartitaModel.fromMap(Map<String, dynamic> map) {
+    return PartitaModel(
+      id: map['_id'],
+      squadra1: map['squadraUno'],
+      squadra2: map['squadraDue'],
+      golSquadra1: map['golSquadraUno'],
+      golSquadra2: map['golSquadraDue'],
+      marcatori: List.from(map['marcatori']),
+      ammoniti: List.from(map['ammoniti']),
+      espulsi: List.from(map['espulsi']),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory PartitaModel.fromJson(String source) =>
+      PartitaModel.fromMap(json.decode(source));
 }

@@ -11,17 +11,12 @@ class HomeInitial extends HomeState {}
 
 class HomeFailure extends HomeState {}
 
+class HomeLoading extends HomeState {}
+
 class HomeSuccess extends HomeState {
   final List<PartitaModel> partite;
 
-  const HomeSuccess({this.partite});
-
-  HomeSuccess copyWith({
-    List<PartitaModel> partite,
-    bool hasReachedMax,
-  }) {
-    return HomeSuccess(partite: partite ?? this.partite);
-  }
+  const HomeSuccess({required this.partite});
 
   @override
   List<Object> get props => [partite];
