@@ -12,4 +12,6 @@ class Repository {
   Future<bool> aggiornaPartita(PartitaModel partitaDaAggiornare) =>
       partitaApiProvider.aggiorna(partitaDaAggiornare);
   Future<bool> eliminaPartita(int id) => partitaApiProvider.elimina(id);
+  Future<List<String>> giocatoriGruppo(String gruppo) =>
+      partitaApiProvider.giocatoriByGruppo(gruppo);
 }

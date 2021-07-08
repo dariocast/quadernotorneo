@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 class SplashPage extends StatelessWidget {
   static const String routeName = '/splash';
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => SplashPage());
+  }
 
   @override
   Widget build(BuildContext context) {

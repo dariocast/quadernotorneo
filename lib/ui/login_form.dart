@@ -3,6 +3,7 @@ import 'package:formz/formz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quaderno_flutter/blocs/blocs.dart';
 import 'package:quaderno_flutter/models/models.dart';
+import 'package:quaderno_flutter/ui/style_helpers.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm();
@@ -62,9 +63,7 @@ class _SaveCredentialCheckbox extends StatelessWidget {
 
 class _UsernameInput extends StatelessWidget {
   final String? username;
-  _UsernameInput(this.username) {
-    print(this.username);
-  }
+  _UsernameInput(this.username);
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
@@ -87,9 +86,7 @@ class _UsernameInput extends StatelessWidget {
 
 class _PasswordInput extends StatelessWidget {
   final String? password;
-  _PasswordInput(this.password) {
-    print(this.password);
-  }
+  _PasswordInput(this.password);
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
@@ -120,6 +117,7 @@ class _LoginButton extends StatelessWidget {
         return state.status.isSubmissionInProgress
             ? const CircularProgressIndicator()
             : ElevatedButton(
+                style: elevatedButtonStyle,
                 key: const Key('loginForm_continue_raisedButton'),
                 child: const Text('Login'),
                 onPressed: state.status.isValidated

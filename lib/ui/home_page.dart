@@ -9,10 +9,11 @@ class HomePage extends StatelessWidget {
 
   static Route route() {
     return MaterialPageRoute<void>(
-        builder: (_) => BlocProvider(
-              create: (context) => HomeBloc()..add(HomeLoaded()),
-              child: HomePage(),
-            ));
+      builder: (_) => BlocProvider(
+        create: (context) => HomeBloc()..add(HomeLoaded()),
+        child: HomePage(),
+      ),
+    );
   }
 
   @override
@@ -56,28 +57,31 @@ class HomePage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     child: ListTile(
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (_) => DettaglioBloc()
-                              ..add(DettaglioLoaded(state.partite[index])),
-                            child: DettaglioPage(),
-                          ),
-                        ),
-                      ),
+                      onTap: () => Navigator.of(context)
+                          .push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (_) => DettaglioBloc()
+                                  ..add(DettaglioLoaded(state.partite[index])),
+                                child: DettaglioPage(),
+                              ),
+                            ),
+                          )
+                          .whenComplete(
+                              () => context.read<HomeBloc>().add(HomeLoaded())),
                       title: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                              child: Text(state.partite[index].squadra1,
+                              child: Text(state.partite[index].squadraUno,
                                   textAlign: TextAlign.left)),
                           Expanded(
                               child: Text(
-                            '${state.partite[index].golSquadra1} - ${state.partite[index].golSquadra2}',
+                            '${state.partite[index].golSquadraUno} - ${state.partite[index].golSquadraDue}',
                             textAlign: TextAlign.center,
                           )),
                           Expanded(
-                              child: Text(state.partite[index].squadra2,
+                              child: Text(state.partite[index].squadraDue,
                                   textAlign: TextAlign.right)),
                         ],
                       ),

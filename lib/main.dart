@@ -66,8 +66,8 @@ class _AppViewState extends State<AppView> {
                 );
                 break;
               case AuthenticationStatus.unauthenticated:
-                _navigator.pushNamedAndRemoveUntil<void>(
-                    LoginPage.routeName, (route) => false);
+                _navigator.pushAndRemoveUntil<void>(
+                    LoginPage.route(), (route) => false);
                 break;
               default:
                 break;
@@ -76,13 +76,7 @@ class _AppViewState extends State<AppView> {
           child: child,
         );
       },
-      initialRoute: SplashPage.routeName,
-      routes: {
-        HomePage.routeName: (context) => HomePage(),
-        LoginPage.routeName: (context) => LoginPage(),
-        SplashPage.routeName: (context) => SplashPage(),
-        DettaglioPage.routeName: (context) => DettaglioPage()
-      },
+      onGenerateRoute: (_) => SplashPage.route(),
     );
   }
 }

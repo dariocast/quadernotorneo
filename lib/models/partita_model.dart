@@ -2,34 +2,55 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
+import 'models.dart';
+
 class PartitaModel extends Equatable {
   final int id;
-  final String squadra1;
-  final String squadra2;
-  final int golSquadra1;
-  final int golSquadra2;
-  final List marcatori;
-  final List ammoniti;
-  final List espulsi;
+  final String squadraUno;
+  final String squadraDue;
+  final int golSquadraUno;
+  final int falliSquadraUno;
+  final int golSquadraDue;
+  final int falliSquadraDue;
+  final List<Giocatore> marcatori;
+  final List<Giocatore> ammoniti;
+  final List<Giocatore> espulsi;
 
   const PartitaModel({
     required this.id,
-    required this.squadra1,
-    required this.squadra2,
-    required this.golSquadra1,
-    required this.golSquadra2,
+    required this.squadraUno,
+    required this.squadraDue,
+    required this.golSquadraUno,
+    required this.falliSquadraUno,
+    required this.golSquadraDue,
+    required this.falliSquadraDue,
     required this.marcatori,
     required this.ammoniti,
     required this.espulsi,
   });
+  PartitaModel.empty()
+      : this(
+          id: 0,
+          squadraUno: '',
+          squadraDue: '',
+          golSquadraUno: 0,
+          falliSquadraUno: 0,
+          golSquadraDue: 0,
+          falliSquadraDue: 0,
+          marcatori: List.empty(),
+          ammoniti: List.empty(),
+          espulsi: List.empty(),
+        );
 
   @override
   List<Object> get props => [
         id,
-        squadra1,
-        squadra2,
-        golSquadra1,
-        golSquadra2,
+        squadraUno,
+        squadraDue,
+        golSquadraUno,
+        falliSquadraUno,
+        golSquadraDue,
+        falliSquadraDue,
         marcatori,
         ammoniti,
         espulsi
@@ -37,31 +58,64 @@ class PartitaModel extends Equatable {
 
   @override
   String toString() =>
-      'Partita { id: $id, squadra1: $squadra1, squadra2: $squadra2 }';
+      'Partita { id: $id, squadraUno: $squadraUno, squadraDue: $squadraDue }';
+
+  PartitaModel copyWith({
+    int? id,
+    String? squadraUno,
+    String? squadraDue,
+    int? golSquadraUno,
+    int? falliSquadraUno,
+    int? golSquadraDue,
+    int? falliSquadraDue,
+    List<Giocatore>? marcatori,
+    List<Giocatore>? ammoniti,
+    List<Giocatore>? espulsi,
+  }) {
+    return PartitaModel(
+      id: id ?? this.id,
+      squadraUno: squadraUno ?? this.squadraUno,
+      squadraDue: squadraDue ?? this.squadraDue,
+      golSquadraUno: golSquadraUno ?? this.golSquadraUno,
+      falliSquadraUno: falliSquadraUno ?? this.falliSquadraUno,
+      golSquadraDue: golSquadraDue ?? this.golSquadraDue,
+      falliSquadraDue: falliSquadraDue ?? this.falliSquadraDue,
+      marcatori: marcatori ?? this.marcatori,
+      ammoniti: ammoniti ?? this.ammoniti,
+      espulsi: espulsi ?? this.espulsi,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'squadra1': squadra1,
-      'squadra2': squadra2,
-      'golSquadra1': golSquadra1,
-      'golSquadra2': golSquadra2,
-      'marcatori': marcatori,
-      'ammoniti': ammoniti,
-      'espulsi': espulsi,
+      '_id': id,
+      'squadraUno': squadraUno,
+      'squadraDue': squadraDue,
+      'golSquadraUno': golSquadraUno,
+      'falliSquadraUno': falliSquadraUno,
+      'golSquadraDue': golSquadraDue,
+      'falliSquadraDue': falliSquadraDue,
+      'marcatori': marcatori.map((x) => x.toMap()).toList(),
+      'ammoniti': ammoniti.map((x) => x.toMap()).toList(),
+      'espulsi': espulsi.map((x) => x.toMap()).toList(),
     };
   }
 
   factory PartitaModel.fromMap(Map<String, dynamic> map) {
     return PartitaModel(
       id: map['_id'],
-      squadra1: map['squadraUno'],
-      squadra2: map['squadraDue'],
-      golSquadra1: map['golSquadraUno'],
-      golSquadra2: map['golSquadraDue'],
-      marcatori: List.from(map['marcatori']),
-      ammoniti: List.from(map['ammoniti']),
-      espulsi: List.from(map['espulsi']),
+      squadraUno: map['squadraUno'],
+      squadraDue: map['squadraDue'],
+      golSquadraUno: map['golSquadraUno'],
+      falliSquadraUno: map['falliSquadraUno'],
+      golSquadraDue: map['golSquadraDue'],
+      falliSquadraDue: map['falliSquadraDue'],
+      marcatori: List<Giocatore>.from(
+          map['marcatori']?.map((x) => Giocatore.fromMap(x))),
+      ammoniti: List<Giocatore>.from(
+          map['ammoniti']?.map((x) => Giocatore.fromMap(x))),
+      espulsi: List<Giocatore>.from(
+          map['espulsi']?.map((x) => Giocatore.fromMap(x))),
     );
   }
 

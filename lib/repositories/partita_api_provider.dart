@@ -4,6 +4,8 @@ import 'package:http/http.dart' show Client;
 import 'package:quaderno_flutter/models/models.dart';
 
 const String baseUrl = 'https://dariocast.altervista.org/fantazama/api/partita';
+const String giocatoriUrl =
+    'https://dariocast.altervista.org/fantazama/api/giocatore';
 
 class PartitaApiProvider {
   Client client = Client();
@@ -56,6 +58,16 @@ class PartitaApiProvider {
       return json.decode(response.body)['deleted'];
     } else {
       throw Exception('Impossibile eliminare la partita');
+    }
+  }
+
+  Future<List<String>> giocatoriByGruppo(String gruppo) async {
+    final response = await client.get(
+        Uri.parse('$giocatoriUrl/getGiocatoriPerGruppo.php?gruppo=$gruppo'));
+    if (response.statusCode == 200) {
+      return List.from(json.decode(response.body));
+    } else {
+      throw Exception('Impossibile ottenere i giocatori');
     }
   }
 }

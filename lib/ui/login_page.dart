@@ -7,6 +7,9 @@ import 'package:quaderno_flutter/ui/ui.dart';
 
 class LoginPage extends StatelessWidget {
   static const String routeName = '/login';
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => LoginPage());
+  }
 
   @override
   Widget build(BuildContext context) {
