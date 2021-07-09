@@ -40,7 +40,7 @@ class PartitaApiProvider {
         body: jsonEncode({
           'squadraUno': squadra1,
           'squadraDue': squadra2,
-          'data': data.millisecondsSinceEpoch,
+          'data': data.millisecondsSinceEpoch / 1000,
         }));
     if (response.statusCode == 200) {
       return PartitaModel.fromJson(response.body);
