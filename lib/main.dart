@@ -30,6 +30,7 @@ class QuadernoTorneoApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
+            lazy: false,
             create: (_) => AuthenticationBloc(
                 authenticationRepository: authenticationRepository),
           ),
