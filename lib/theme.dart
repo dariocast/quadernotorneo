@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class QuadernoTheme {
   static ThemeData get themeData {
@@ -6,8 +7,10 @@ class QuadernoTheme {
     return theme.copyWith(
       primaryColor: Colors.green,
       colorScheme: theme.colorScheme.copyWith(
+        primary: Colors.green,
         secondary: Colors.amber,
       ),
+      textTheme: GoogleFonts.latoTextTheme(),
     );
   }
 }

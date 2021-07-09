@@ -7,20 +7,24 @@ import 'package:quaderno_flutter/ui/ui.dart';
 
 class LoginPage extends StatelessWidget {
   static const String routeName = '/login';
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => LoginPage());
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: BlocProvider(
-          create: (context) {
-            return LoginBloc(
-              authenticationRepository:
-                  RepositoryProvider.of<AuthenticationRepository>(context),
-            )..add(LoginLoaded());
-          },
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
+        if (state.status == AuthenticationStatus.authenticated)
+          Navigator.of(context).pop();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Login'),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(12),
           child: LoginForm(),
         ),
       ),

@@ -18,7 +18,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield HomeLoading();
       try {
         final partite = await _repository.listaPartite();
-        yield HomeSuccess(partite: partite);
+        final gruppi = await _repository.gruppi();
+        yield HomeSuccess(partite: partite, infoGruppi: gruppi);
       } catch (e) {
         debugPrint(e.toString());
         yield HomeFailure();

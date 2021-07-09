@@ -15,12 +15,14 @@ class HomeLoading extends HomeState {}
 
 class HomeSuccess extends HomeState {
   final List<PartitaModel> partite;
+  final List<Gruppo> infoGruppi;
 
-  const HomeSuccess({required this.partite});
-
-  @override
-  List<Object> get props => [partite];
+  const HomeSuccess({required this.partite, required this.infoGruppi});
 
   @override
-  String toString() => 'HomeSuccess { partite: ${partite.length}}';
+  List<Object> get props => [partite, infoGruppi];
+
+  @override
+  String toString() =>
+      'HomeSuccess(partite: $partite, infoGruppi: $infoGruppi)';
 }
