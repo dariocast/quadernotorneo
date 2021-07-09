@@ -1,4 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -21,6 +22,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.watch<AuthenticationBloc>().state;
     return Scaffold(
       drawer: Drawer(
         child: _buildDrawer(context),
@@ -136,18 +138,23 @@ class HomePage extends StatelessWidget {
           child: CircularProgressIndicator(),
         );
       }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context)
-            .push(CreaPage.route())
-            .whenComplete(() => context.read<HomeBloc>().add(HomeLoaded())),
-        child: Center(
-          child: Icon(Icons.add),
-        ),
-      ),
+      floatingActionButton:
+          authState.status == AuthenticationStatus.authenticated
+              ? FloatingActionButton(
+                  onPressed: () => Navigator.of(context)
+                      .push(CreaPage.route())
+                      .whenComplete(
+                          () => context.read<HomeBloc>().add(HomeLoaded())),
+                  child: Center(
+                    child: Icon(Icons.add),
+                  ),
+                )
+              : null,
     );
   }
 
   _buildDrawer(BuildContext context) {
+    final authState = context.watch<AuthenticationBloc>().state;
     return Column(
       children: [
         Expanded(
@@ -168,6 +175,39 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
+              authState.status == AuthenticationStatus.authenticated
+                  ? ListTile(
+                      trailing: Icon(Icons.sports_soccer_rounded),
+                      title: Text('Aggiorna marcatori'),
+                      onTap: () => showOkAlertDialog(
+                          context: context,
+                          title: 'Coming soon',
+                          message:
+                              'Questa funzione sarà disponibile con i prossimi aggiornamenti'),
+                    )
+                  : ListTile(),
+              authState.status == AuthenticationStatus.authenticated
+                  ? ListTile(
+                      trailing: Icon(Icons.calculate),
+                      title: Text('Calcola classifica'),
+                      onTap: () => showOkAlertDialog(
+                          context: context,
+                          title: 'Coming soon',
+                          message:
+                              'Questa funzione sarà disponibile con i prossimi aggiornamenti'),
+                    )
+                  : ListTile(),
+              authState.status == AuthenticationStatus.authenticated
+                  ? ListTile(
+                      trailing: Icon(Icons.restart_alt),
+                      title: Text('Reset classifica'),
+                      onTap: () => showOkAlertDialog(
+                          context: context,
+                          title: 'Coming soon',
+                          message:
+                              'Questa funzione sarà disponibile con i prossimi aggiornamenti'),
+                    )
+                  : ListTile(),
             ],
           ),
         ),
@@ -179,20 +219,29 @@ class HomePage extends StatelessWidget {
           ),
           child: InkWell(
             onTap: () async {
-              final result = await showOkCancelAlertDialog(
-                context: context,
-                title: 'Logout',
-                message: 'Sicuro di volerti disconnettere?',
-              );
-              if (result == OkCancelResult.ok) {
-                context
-                    .read<AuthenticationBloc>()
-                    .add(AuthenticationLogoutRequested());
+              if (authState.status == AuthenticationStatus.authenticated) {
+                final result = await showOkCancelAlertDialog(
+                  context: context,
+                  title: 'Logout',
+                  message: 'Sicuro di volerti disconnettere?',
+                );
+                if (result == OkCancelResult.ok) {
+                  context
+                      .read<AuthenticationBloc>()
+                      .add(AuthenticationLogoutRequested());
+                  Navigator.of(context).pop();
+                }
+              } else {
+                Navigator.of(context)
+                    .push(LoginPage.route())
+                    .then((value) => Navigator.of(context).pop());
               }
             },
             child: Center(
               child: Text(
-                'Logout',
+                authState.status == AuthenticationStatus.authenticated
+                    ? 'Logout'
+                    : 'Login',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
