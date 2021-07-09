@@ -25,17 +25,20 @@ class LoginForm extends StatelessWidget {
       builder: (context, state) {
         return Align(
           alignment: const Alignment(0, -1 / 3),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _UsernameInput(state.username.value),
-              const Padding(padding: EdgeInsets.all(12)),
-              _PasswordInput(state.password.value),
-              const Padding(padding: EdgeInsets.all(12)),
-              _LoginButton(),
-              const Padding(padding: EdgeInsets.all(12)),
-              _SaveCredentialCheckbox(),
-            ],
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width / 1.5,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _UsernameInput(state.username.value),
+                const Padding(padding: EdgeInsets.all(12)),
+                _PasswordInput(state.password.value),
+                const Padding(padding: EdgeInsets.all(12)),
+                _LoginButton(),
+                const Padding(padding: EdgeInsets.all(12)),
+                _SaveCredentialCheckbox(),
+              ],
+            ),
           ),
         );
       },

@@ -27,9 +27,22 @@ class QuadernoTorneoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
       value: authenticationRepository,
-      child: BlocProvider(
-        create: (_) => AuthenticationBloc(
-            authenticationRepository: authenticationRepository),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            lazy: false,
+            create: (_) => AuthenticationBloc(
+                authenticationRepository: authenticationRepository),
+          ),
+          BlocProvider(
+            lazy: false,
+            create: (_) {
+              return LoginBloc(
+                authenticationRepository: authenticationRepository,
+              )..add(LoginLoaded());
+            },
+          ),
+        ],
         child: AppView(),
       ),
     );
@@ -55,28 +68,28 @@ class _AppViewState extends State<AppView> {
       debugShowCheckedModeBanner: false,
       theme: QuadernoTheme.themeData,
       navigatorKey: _navigatorKey,
-      builder: (context, child) {
-        return BlocListener<AuthenticationBloc, AuthenticationState>(
-          listener: (context, state) {
-            switch (state.status) {
-              case AuthenticationStatus.authenticated:
-                _navigator.pushAndRemoveUntil<void>(
-                  HomePage.route(),
-                  (route) => false,
-                );
-                break;
-              case AuthenticationStatus.unauthenticated:
-                _navigator.pushAndRemoveUntil<void>(
-                    LoginPage.route(), (route) => false);
-                break;
-              default:
-                break;
-            }
-          },
-          child: child,
-        );
-      },
-      onGenerateRoute: (_) => SplashPage.route(),
+      // builder: (context, child) {
+      //   return BlocListener<AuthenticationBloc, AuthenticationState>(
+      //     listener: (context, state) {
+      //       switch (state.status) {
+      //         case AuthenticationStatus.authenticated:
+      //           _navigator.pushAndRemoveUntil<void>(
+      //             HomePage.route(),
+      //             (route) => false,
+      //           );
+      //           break;
+      //         case AuthenticationStatus.unauthenticated:
+      //           _navigator.pushAndRemoveUntil<void>(
+      //               LoginPage.route(), (route) => false);
+      //           break;
+      //         default:
+      //           break;
+      //       }
+      //     },
+      //     child: child,
+      //   );
+      // },
+      onGenerateRoute: (_) => HomePage.route(),
     );
   }
 }

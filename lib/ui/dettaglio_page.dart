@@ -1,4 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,8 @@ class DettaglioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DettaglioState state = context.watch<DettaglioBloc>().state;
+    final AuthenticationState authState =
+        context.watch<AuthenticationBloc>().state;
     return WillPopScope(
       onWillPop: () async {
         if (state.isEdit) {
@@ -35,48 +38,54 @@ class DettaglioPage extends StatelessWidget {
               ? Text('Dettaglio incontro')
               : Text(
                   '${state.partita!.squadraUno} vs ${state.partita!.squadraDue}'),
-          actions: [
-            IconButton(
-                onPressed: () async {
-                  if (state.isEdit) {
-                    final result = await showOkCancelAlertDialog(
-                        context: context, title: 'Salvare la partita?');
-                    if (result == OkCancelResult.ok && !state.loading)
-                      context
-                          .read<DettaglioBloc>()
-                          .add(DettaglioSalvaPartita());
-                  } else {
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(SnackBar(
-                          content: Text('Nessuna modifica da salvare')));
-                  }
-                },
-                icon: Icon(Icons.save_outlined)),
-            IconButton(
-                onPressed: () async {
-                  final result = await showOkCancelAlertDialog(
-                    context: context,
-                    title: 'Attenzione!',
-                    message: 'Sei sicuro di voler rimuovere la partita?',
-                  );
+          actions: authState.status == AuthenticationStatus.authenticated
+              ? [
+                  IconButton(
+                      onPressed: () async {
+                        if (state.isEdit) {
+                          final result = await showOkCancelAlertDialog(
+                              context: context, title: 'Salvare la partita?');
+                          if (result == OkCancelResult.ok && !state.loading)
+                            context
+                                .read<DettaglioBloc>()
+                                .add(DettaglioSalvaPartita());
+                        } else {
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(SnackBar(
+                                content: Text('Nessuna modifica da salvare')));
+                        }
+                      },
+                      icon: Icon(Icons.save_outlined)),
+                  IconButton(
+                      onPressed: () async {
+                        final result = await showOkCancelAlertDialog(
+                          context: context,
+                          title: 'Attenzione!',
+                          message: 'Sei sicuro di voler rimuovere la partita?',
+                        );
 
-                  if (result == OkCancelResult.ok && !state.loading) {
-                    context
-                        .read<DettaglioBloc>()
-                        .add(DettaglioRimuoviPartita());
-                    Navigator.of(context).pop(true);
-                  }
-                },
-                icon: Icon(Icons.delete_rounded)),
-          ],
+                        if (result == OkCancelResult.ok && !state.loading) {
+                          context
+                              .read<DettaglioBloc>()
+                              .add(DettaglioRimuoviPartita());
+                          Navigator.of(context).pop(true);
+                        }
+                      },
+                      icon: Icon(Icons.delete_rounded)),
+                ]
+              : null,
         ),
         body: state.loading
             ? Center(child: CircularProgressIndicator())
             : PartitaWidget(),
-        floatingActionButton: FloatingActionButton(
-            onPressed: () => context.read<DettaglioBloc>().add(DettaglioUndo()),
-            child: Icon(Icons.undo_rounded)),
+        floatingActionButton:
+            authState.status == AuthenticationStatus.authenticated
+                ? FloatingActionButton(
+                    onPressed: () =>
+                        context.read<DettaglioBloc>().add(DettaglioUndo()),
+                    child: Icon(Icons.undo_rounded))
+                : null,
       ),
     );
   }
