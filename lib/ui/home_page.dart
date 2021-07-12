@@ -25,7 +25,14 @@ class HomePage extends StatelessWidget {
     final authState = context.watch<AuthenticationBloc>().state;
     return Scaffold(
       drawer: Drawer(
-        child: _buildDrawer(context),
+        child: BlocProvider<DrawerCubit>(
+          create: (context) => DrawerCubit(),
+          child: Builder(
+            builder: (context) {
+              return _buildDrawer(context);
+            },
+          ),
+        ),
       ),
       appBar: AppBar(
         centerTitle: true,
@@ -155,6 +162,7 @@ class HomePage extends StatelessWidget {
 
   _buildDrawer(BuildContext context) {
     final authState = context.watch<AuthenticationBloc>().state;
+    final drawerState = context.watch<DrawerCubit>().state;
     return Column(
       children: [
         Expanded(
@@ -177,29 +185,46 @@ class HomePage extends StatelessWidget {
               ),
               authState.status == AuthenticationStatus.authenticated
                   ? ListTile(
-                      trailing: Icon(Icons.sports_soccer_rounded),
+                      trailing: Icon(
+                        Icons.sports_soccer_rounded,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       title: Text('Aggiorna marcatori'),
-                      onTap: () => showOkAlertDialog(
-                          context: context,
-                          title: 'Coming soon',
-                          message:
-                              'Questa funzione sarà disponibile con i prossimi aggiornamenti'),
+                      onTap: () async {
+                        final result = await showOkCancelAlertDialog(
+                            context: context,
+                            title: 'Aggiorna Marcatori',
+                            message: 'Vuoi aggiornare i marcatori?');
+                        if (result == OkCancelResult.ok) {
+                          context.read<DrawerCubit>().aggiornaMarcatori();
+                        }
+                      },
                     )
                   : ListTile(),
               authState.status == AuthenticationStatus.authenticated
                   ? ListTile(
-                      trailing: Icon(Icons.calculate),
+                      trailing: Icon(
+                        Icons.calculate,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       title: Text('Calcola classifica'),
-                      onTap: () => showOkAlertDialog(
-                          context: context,
-                          title: 'Coming soon',
-                          message:
-                              'Questa funzione sarà disponibile con i prossimi aggiornamenti'),
+                      onTap: () async {
+                        final result = await showOkCancelAlertDialog(
+                            context: context,
+                            title: 'Aggiorna Classifica',
+                            message: 'Vuoi aggiornare la classifica?');
+                        if (result == OkCancelResult.ok) {
+                          context.read<DrawerCubit>().aggiornaClassifica();
+                        }
+                      },
                     )
                   : ListTile(),
               authState.status == AuthenticationStatus.authenticated
                   ? ListTile(
-                      trailing: Icon(Icons.restart_alt),
+                      trailing: Icon(
+                        Icons.restart_alt,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       title: Text('Reset classifica'),
                       onTap: () => showOkAlertDialog(
                           context: context,
@@ -208,6 +233,15 @@ class HomePage extends StatelessWidget {
                               'Questa funzione sarà disponibile con i prossimi aggiornamenti'),
                     )
                   : ListTile(),
+              Padding(
+                padding: EdgeInsets.all(5.0),
+                child: drawerState.loading
+                    ? LinearProgressIndicator(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                      )
+                    : Container(),
+              ),
             ],
           ),
         ),

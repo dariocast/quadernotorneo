@@ -25,4 +25,14 @@ class HomeSuccess extends HomeState {
   @override
   String toString() =>
       'HomeSuccess(partite: $partite, infoGruppi: $infoGruppi)';
+
+  HomeSuccess copyWith({
+    List<PartitaModel>? partite,
+    List<Gruppo>? infoGruppi,
+  }) {
+    return HomeSuccess(
+      partite: partite ?? this.partite,
+      infoGruppi: infoGruppi ?? this.infoGruppi,
+    );
+  }
 }
