@@ -34,6 +34,7 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: _buildBottomNavigation(context),
       appBar: AppBar(
         centerTitle: true,
         title: Text('Quaderno Torneo'),
@@ -284,6 +285,29 @@ class HomePage extends StatelessWidget {
             ),
           ),
         ),
+      ],
+    );
+  }
+
+  _buildBottomNavigation(BuildContext context) {
+    return BottomNavigationBar(
+      onTap: (value) {
+        switch (value) {
+          case 1:
+            break;
+          default:
+        }
+      },
+      selectedItemColor: Theme.of(context).colorScheme.secondary,
+      unselectedItemColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      items: [
+        BottomNavigationBarItem(
+            icon: Icon(Icons.live_tv_rounded), label: 'Partite'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.sports_soccer_rounded), label: 'Marcatori'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.leaderboard), label: 'Classifica'),
       ],
     );
   }
