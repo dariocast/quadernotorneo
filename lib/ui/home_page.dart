@@ -1,5 +1,6 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -7,6 +8,8 @@ import 'package:quaderno_flutter/blocs/blocs.dart';
 import 'package:quaderno_flutter/models/models.dart';
 import 'package:quaderno_flutter/ui/crea_page.dart';
 import 'package:quaderno_flutter/ui/ui.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class HomePage extends StatelessWidget {
   static const String routeName = '/';
@@ -34,7 +37,6 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigation(context),
       appBar: AppBar(
         centerTitle: true,
         title: Text('Quaderno Torneo'),
@@ -111,13 +113,57 @@ class HomePage extends StatelessWidget {
                               ],
                             )),
                             Expanded(
-                              child: Text(
-                                '${state.partite[index].golSquadraUno} - ${state.partite[index].golSquadraDue}',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 25,
-                                ),
-                              ),
+                              child: Builder(builder: (context) {
+                                initializeDateFormatting('it_IT');
+                                final partita = state.partite[index];
+                                final String dataAsString =
+                                    DateFormat.yMMMMd('it_IT')
+                                        .format(partita.data);
+                                final String orarioAsString =
+                                    DateFormat.Hm().format(partita.data);
+                                final isLive = DateTime.now()
+                                        .difference(partita.data)
+                                        .inMinutes <=
+                                    50;
+                                return Column(
+                                  children: [
+                                    Text(
+                                      '${partita.golSquadraUno} - ${partita.golSquadraDue}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 25,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5.0),
+                                      child: Text(
+                                        dataAsString,
+                                        style:
+                                            Theme.of(context).textTheme.caption,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 5.0),
+                                      child: Text(
+                                        orarioAsString,
+                                        style:
+                                            Theme.of(context).textTheme.caption,
+                                      ),
+                                    ),
+                                    isLive
+                                        ? BlinkText(
+                                            'LIVE',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            beginColor: Colors.red,
+                                            endColor: Colors.white,
+                                          )
+                                        : Container(),
+                                  ],
+                                );
+                              }),
                             ),
                             Expanded(
                                 child: Column(
@@ -184,10 +230,34 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
+              ListTile(
+                  trailing: Icon(
+                    Icons.sports_soccer_rounded,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  title: Text('Marcatori'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MarcatoriPage.route());
+                  }),
+              ListTile(
+                trailing: Icon(
+                  Icons.leaderboard_rounded,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: Text('Classifiche'),
+                onTap: () {},
+              ),
+              Divider(),
+              authState.status == AuthenticationStatus.authenticated
+                  ? Center(
+                      child: Text('Gestione'),
+                    )
+                  : ListTile(),
               authState.status == AuthenticationStatus.authenticated
                   ? ListTile(
                       trailing: Icon(
-                        Icons.sports_soccer_rounded,
+                        Icons.update,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                       title: Text('Aggiorna marcatori'),
@@ -246,7 +316,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-        Spacer(),
+        // Spacer(),
         Container(
           height: 50,
           decoration: BoxDecoration(
@@ -285,29 +355,6 @@ class HomePage extends StatelessWidget {
             ),
           ),
         ),
-      ],
-    );
-  }
-
-  _buildBottomNavigation(BuildContext context) {
-    return BottomNavigationBar(
-      onTap: (value) {
-        switch (value) {
-          case 1:
-            break;
-          default:
-        }
-      },
-      selectedItemColor: Theme.of(context).colorScheme.secondary,
-      unselectedItemColor: Colors.white,
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      items: [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.live_tv_rounded), label: 'Partite'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.sports_soccer_rounded), label: 'Marcatori'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.leaderboard), label: 'Classifica'),
       ],
     );
   }

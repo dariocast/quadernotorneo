@@ -21,4 +21,5 @@ class Repository {
   Future<bool> aggiornaClassifica() => adminApiProvider.aggiornaClassifica();
   Future<List<Marcatore>> aggiornaMarcatori() =>
       adminApiProvider.aggiornaMarcatori();
+  Future<List<Marcatore>> marcatori() => partitaApiProvider.marcatori();
 }

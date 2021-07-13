@@ -5,16 +5,19 @@ import 'package:equatable/equatable.dart';
 class Marcatore extends Equatable {
   final String nome;
   final String gruppo;
-
-  Marcatore(this.nome, this.gruppo);
+  final int? id;
+  final int? gol;
+  Marcatore(this.nome, this.gruppo, this.id, this.gol);
 
   @override
-  List<Object> get props => [nome, gruppo];
+  List<Object?> get props => [nome, gruppo, id, gol];
 
   Map<String, dynamic> toMap() {
     return {
       'nome': nome,
       'gruppo': gruppo,
+      '_id': id,
+      'gol': gol,
     };
   }
 
@@ -22,6 +25,8 @@ class Marcatore extends Equatable {
     return Marcatore(
       map['nome'],
       map['gruppo'],
+      map['_id'],
+      map['gol'],
     );
   }
 
@@ -33,10 +38,14 @@ class Marcatore extends Equatable {
   Marcatore copyWith({
     String? nome,
     String? gruppo,
+    int? id,
+    int? gol,
   }) {
     return Marcatore(
       nome ?? this.nome,
       gruppo ?? this.gruppo,
+      id ?? this.id,
+      gol ?? this.gol,
     );
   }
 }
