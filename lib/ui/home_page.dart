@@ -246,7 +246,10 @@ class HomePage extends StatelessWidget {
                   color: Theme.of(context).colorScheme.secondary,
                 ),
                 title: Text('Classifiche'),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(ClassificaPage.route());
+                },
               ),
               Divider(),
               authState.status == AuthenticationStatus.authenticated

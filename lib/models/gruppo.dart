@@ -104,4 +104,10 @@ class Gruppo extends Equatable {
       ultime ?? this.ultime,
     );
   }
+
+  ordinaClassifica(Gruppo other) {
+    return this.pt != other.pt
+        ? this.pt.compareTo(other.pt)
+        : (this.gf - this.gs).compareTo(other.gf - other.gs);
+  }
 }
