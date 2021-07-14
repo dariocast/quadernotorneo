@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:quaderno_flutter/repositories/repository.dart';
+import '../../repositories/repository.dart';
 
 part 'drawer_state.dart';
 

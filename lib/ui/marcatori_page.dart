@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/blocs/blocs.dart';
+import '../blocs/blocs.dart';
 
 class MarcatoriPage extends StatelessWidget {
   static Route route() {

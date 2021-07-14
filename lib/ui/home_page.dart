@@ -4,10 +4,10 @@ import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:quaderno_flutter/blocs/blocs.dart';
-import 'package:quaderno_flutter/models/models.dart';
-import 'package:quaderno_flutter/ui/crea_page.dart';
-import 'package:quaderno_flutter/ui/ui.dart';
+import '../blocs/blocs.dart';
+import '../models/models.dart';
+import 'crea_page.dart';
+import 'ui.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 

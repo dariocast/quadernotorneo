@@ -1,9 +1,9 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/blocs/blocs.dart';
+import '../blocs/blocs.dart';
 import 'package:flutter/material.dart';
-import 'package:quaderno_flutter/models/models.dart';
-import 'package:quaderno_flutter/ui/ui.dart';
+import '../models/models.dart';
+import 'ui.dart';
 
 class LoginPage extends StatelessWidget {
   static const String routeName = '/login';

@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:quaderno_flutter/blocs/blocs.dart';
+import '../blocs/blocs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/models/models.dart';
-import 'package:quaderno_flutter/ui/style_helpers.dart';
+import '../models/models.dart';
+import 'style_helpers.dart';
 
 class PartitaWidget extends StatelessWidget {
   PartitaWidget();

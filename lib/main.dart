@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:quaderno_flutter/blocs/blocs.dart';
-import 'package:quaderno_flutter/theme.dart';
-import 'package:quaderno_flutter/ui/ui.dart';
+import 'blocs/blocs.dart';
+import 'theme.dart';
+import 'ui/ui.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();

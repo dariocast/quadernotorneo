@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:quaderno_flutter/models/models.dart';
-import 'package:quaderno_flutter/repositories/repository.dart';
+import '../../models/models.dart';
+import '../../repositories/repository.dart';
 
 part 'classifica_event.dart';
 part 'classifica_state.dart';

@@ -2,8 +2,9 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/blocs/blocs.dart';
-import 'package:quaderno_flutter/models/gruppo.dart';
+import '../blocs/blocs.dart';
+import '../models/gruppo.dart';
+import 'widgets/widgets.dart';
 
 class ClassificaPage extends StatefulWidget {
   static Route route() {
@@ -49,7 +50,6 @@ class _ClassificaPageState extends State<ClassificaPage> {
                   _currentIndex = index;
                 });
               },
-              // unselectedItemColor: Colors.white,
             )
           : null,
       body: BlocBuilder<ClassificaBloc, ClassificaState>(
@@ -63,122 +63,10 @@ class _ClassificaPageState extends State<ClassificaPage> {
               .where((element) => element.girone == gironi[_currentIndex])
               .toList();
           gruppiPerGirone.sort((a, b) => b.ordinaClassifica(a));
-          return _landscapeListClassifiche(gruppiPerGirone);
+          return ClassificaWidget(gruppiPerGirone);
         }
         return Center(child: CircularProgressIndicator());
       }),
-    );
-  }
-
-  ListView _landscapeListClassifiche(List<Gruppo> gruppiPerGirone) {
-    return ListView(children: [
-      Card(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 8.0,
-              bottom: 8.0,
-            ),
-            child: DataTable(
-              headingRowHeight: 60.0,
-              headingTextStyle:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              dataRowHeight: 60.0,
-              columns: [
-                DataColumn(label: Text('Gruppo')),
-                DataColumn(label: Text('Punti')),
-                DataColumn(label: Text('Partite Giocate')),
-                DataColumn(label: Text('Vittorie')),
-                DataColumn(label: Text('Pareggi')),
-                DataColumn(label: Text('Sconfitte')),
-                DataColumn(label: Text('Gol Fatti')),
-                DataColumn(label: Text('Gol Subiti')),
-                DataColumn(label: Text('Differenza reti')),
-                // DataColumn(label: Text('Ultime')),
-              ],
-              rows: gruppiPerGirone
-                  .map((gruppo) => DataRow(cells: <DataCell>[
-                        DataCell(Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                                width: 50.0,
-                                height: 50.0,
-                                child: Image.network(gruppo.logo)),
-                            Text(gruppo.nome),
-                          ],
-                        )),
-                        DataCell(Text(gruppo.pt.toString())),
-                        DataCell(Text(gruppo.pg.toString())),
-                        DataCell(Text(gruppo.v.toString())),
-                        DataCell(Text(gruppo.p.toString())),
-                        DataCell(Text(gruppo.s.toString())),
-                        DataCell(Text(gruppo.gf.toString())),
-                        DataCell(Text(gruppo.gs.toString())),
-                        DataCell(Text((gruppo.gf - gruppo.gs).toString())),
-                        // DataCell(Text(gruppo.ultime.toString())),
-                      ]))
-                  .toList(),
-            ),
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  ListView _portraitListClassifiche(List<Gruppo> gruppiPerGirone) {
-    return ListView(
-      children: [
-        Card(
-          elevation: 3,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 8.0,
-                bottom: 8.0,
-              ),
-              child: DataTable(
-                headingRowHeight: 60.0,
-                headingTextStyle:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-                dataRowHeight: 60.0,
-                columns: [
-                  DataColumn(label: Text('Gruppo')),
-                  DataColumn(
-                    label: Text('Differenza reti'),
-                  ),
-                  DataColumn(
-                    label: Text('Punti'),
-                  ),
-                ],
-                rows: gruppiPerGirone
-                    .map(
-                      (gruppo) => DataRow(
-                        cells: <DataCell>[
-                          DataCell(Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                width: 50.0,
-                                height: 50.0,
-                                child: Image.network(gruppo.logo),
-                              ),
-                              Text(gruppo.nome),
-                            ],
-                          )),
-                          DataCell(Text((gruppo.gf - gruppo.gs).toString())),
-                          DataCell(Text(gruppo.pt.toString())),
-                        ],
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-          ),
-        )
-      ],
     );
   }
 }
