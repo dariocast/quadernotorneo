@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:quaderno_flutter/database.dart';
-import 'package:quaderno_flutter/models/models.dart';
+import '../../database.dart';
+import '../../models/models.dart';
 import 'package:formz/formz.dart';
 import 'package:meta/meta.dart';
 
