@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "795195349660",
+    "project_id": "quadernotorneo",
+    "storage_bucket": "quadernotorneo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795195349660:android:c4cff0c9d2ca3e5023eb59",
+        "android_client_info": {
+          "package_name": "it.dariocast.quadernotorneo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "795195349660-htld1cuqruf7id6qtemps9ma23imtpf1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.dariocast.quadernotorneo",
+            "certificate_hash": "b6f297321ae05dc2891fd3e5c5700f2b1ef49526"
+          }
+        },
+        {
+          "client_id": "795195349660-3u4eldastbpm5rmkdsapgkqtveg2injl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEvY31zkKIbDCgYAh8-EVswkiWzLvmw3E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "795195349660-3u4eldastbpm5rmkdsapgkqtveg2injl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

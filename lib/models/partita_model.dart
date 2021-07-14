@@ -15,6 +15,7 @@ class PartitaModel extends Equatable {
   final List<Giocatore> marcatori;
   final List<Giocatore> ammoniti;
   final List<Giocatore> espulsi;
+  final DateTime data;
 
   const PartitaModel({
     required this.id,
@@ -27,6 +28,7 @@ class PartitaModel extends Equatable {
     required this.marcatori,
     required this.ammoniti,
     required this.espulsi,
+    required this.data,
   });
   PartitaModel.empty()
       : this(
@@ -40,6 +42,7 @@ class PartitaModel extends Equatable {
           marcatori: List.empty(),
           ammoniti: List.empty(),
           espulsi: List.empty(),
+          data: DateTime.now(),
         );
 
   @override
@@ -53,7 +56,8 @@ class PartitaModel extends Equatable {
         falliSquadraDue,
         marcatori,
         ammoniti,
-        espulsi
+        espulsi,
+        data,
       ];
 
   @override
@@ -71,6 +75,7 @@ class PartitaModel extends Equatable {
     List<Giocatore>? marcatori,
     List<Giocatore>? ammoniti,
     List<Giocatore>? espulsi,
+    DateTime? data,
   }) {
     return PartitaModel(
       id: id ?? this.id,
@@ -83,6 +88,7 @@ class PartitaModel extends Equatable {
       marcatori: marcatori ?? this.marcatori,
       ammoniti: ammoniti ?? this.ammoniti,
       espulsi: espulsi ?? this.espulsi,
+      data: data ?? this.data,
     );
   }
 
@@ -98,6 +104,7 @@ class PartitaModel extends Equatable {
       'marcatori': marcatori.map((x) => x.toMap()).toList(),
       'ammoniti': ammoniti.map((x) => x.toMap()).toList(),
       'espulsi': espulsi.map((x) => x.toMap()).toList(),
+      'data': data.millisecondsSinceEpoch / 1000
     };
   }
 
@@ -116,6 +123,7 @@ class PartitaModel extends Equatable {
           map['ammoniti']?.map((x) => Giocatore.fromMap(x))),
       espulsi: List<Giocatore>.from(
           map['espulsi']?.map((x) => Giocatore.fromMap(x))),
+      data: DateTime.fromMillisecondsSinceEpoch(map['data'] * 1000),
     );
   }
 

@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/models/models.dart';
-import 'package:quaderno_flutter/repositories/repository.dart';
+import '../../models/models.dart';
+import '../../repositories/repository.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';

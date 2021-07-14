@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' show Client;
-import 'package:quaderno_flutter/models/models.dart';
+import '../models/models.dart';
 
 const String partitaUrl =
     'https://dariocast.altervista.org/fantazama/api/partita';
@@ -87,6 +87,18 @@ class PartitaApiProvider {
           .toList();
     } else {
       throw Exception('Impossibile ottenere i gruppi');
+    }
+  }
+
+  Future<List<Marcatore>> marcatori() async {
+    final response =
+        await client.get(Uri.parse('$giocatoriUrl/getOrdered.php'));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)
+          .map<Marcatore>((json) => Marcatore.fromMap(json))
+          .toList();
+    } else {
+      throw Exception('Impossibile ottenere i marcatori');
     }
   }
 }

@@ -1,12 +1,15 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:quaderno_flutter/blocs/blocs.dart';
-import 'package:quaderno_flutter/models/models.dart';
-import 'package:quaderno_flutter/ui/crea_page.dart';
-import 'package:quaderno_flutter/ui/ui.dart';
+import '../blocs/blocs.dart';
+import '../models/models.dart';
+import 'crea_page.dart';
+import 'ui.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class HomePage extends StatelessWidget {
   static const String routeName = '/';
@@ -25,7 +28,14 @@ class HomePage extends StatelessWidget {
     final authState = context.watch<AuthenticationBloc>().state;
     return Scaffold(
       drawer: Drawer(
-        child: _buildDrawer(context),
+        child: BlocProvider<DrawerCubit>(
+          create: (context) => DrawerCubit(),
+          child: Builder(
+            builder: (context) {
+              return _buildDrawer(context);
+            },
+          ),
+        ),
       ),
       appBar: AppBar(
         centerTitle: true,
@@ -103,13 +113,57 @@ class HomePage extends StatelessWidget {
                               ],
                             )),
                             Expanded(
-                              child: Text(
-                                '${state.partite[index].golSquadraUno} - ${state.partite[index].golSquadraDue}',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 25,
-                                ),
-                              ),
+                              child: Builder(builder: (context) {
+                                initializeDateFormatting('it_IT');
+                                final partita = state.partite[index];
+                                final String dataAsString =
+                                    DateFormat.yMMMMd('it_IT')
+                                        .format(partita.data);
+                                final String orarioAsString =
+                                    DateFormat.Hm().format(partita.data);
+                                final isLive = DateTime.now()
+                                        .difference(partita.data)
+                                        .inMinutes <=
+                                    50;
+                                return Column(
+                                  children: [
+                                    Text(
+                                      '${partita.golSquadraUno} - ${partita.golSquadraDue}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 25,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5.0),
+                                      child: Text(
+                                        dataAsString,
+                                        style:
+                                            Theme.of(context).textTheme.caption,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 5.0),
+                                      child: Text(
+                                        orarioAsString,
+                                        style:
+                                            Theme.of(context).textTheme.caption,
+                                      ),
+                                    ),
+                                    isLive
+                                        ? BlinkText(
+                                            'LIVE',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            beginColor: Colors.red,
+                                            endColor: Colors.white,
+                                          )
+                                        : Container(),
+                                  ],
+                                );
+                              }),
                             ),
                             Expanded(
                                 child: Column(
@@ -155,6 +209,7 @@ class HomePage extends StatelessWidget {
 
   _buildDrawer(BuildContext context) {
     final authState = context.watch<AuthenticationBloc>().state;
+    final drawerState = context.watch<DrawerCubit>().state;
     return Column(
       children: [
         Expanded(
@@ -175,31 +230,75 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
+              ListTile(
+                  trailing: Icon(
+                    Icons.sports_soccer_rounded,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  title: Text('Marcatori'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MarcatoriPage.route());
+                  }),
+              ListTile(
+                trailing: Icon(
+                  Icons.leaderboard_rounded,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: Text('Classifiche'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(ClassificaPage.route());
+                },
+              ),
+              Divider(),
+              authState.status == AuthenticationStatus.authenticated
+                  ? Center(
+                      child: Text('Gestione'),
+                    )
+                  : ListTile(),
               authState.status == AuthenticationStatus.authenticated
                   ? ListTile(
-                      trailing: Icon(Icons.sports_soccer_rounded),
+                      trailing: Icon(
+                        Icons.update,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       title: Text('Aggiorna marcatori'),
-                      onTap: () => showOkAlertDialog(
-                          context: context,
-                          title: 'Coming soon',
-                          message:
-                              'Questa funzione sarà disponibile con i prossimi aggiornamenti'),
+                      onTap: () async {
+                        final result = await showOkCancelAlertDialog(
+                            context: context,
+                            title: 'Aggiorna Marcatori',
+                            message: 'Vuoi aggiornare i marcatori?');
+                        if (result == OkCancelResult.ok) {
+                          context.read<DrawerCubit>().aggiornaMarcatori();
+                        }
+                      },
                     )
                   : ListTile(),
               authState.status == AuthenticationStatus.authenticated
                   ? ListTile(
-                      trailing: Icon(Icons.calculate),
+                      trailing: Icon(
+                        Icons.calculate,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       title: Text('Calcola classifica'),
-                      onTap: () => showOkAlertDialog(
-                          context: context,
-                          title: 'Coming soon',
-                          message:
-                              'Questa funzione sarà disponibile con i prossimi aggiornamenti'),
+                      onTap: () async {
+                        final result = await showOkCancelAlertDialog(
+                            context: context,
+                            title: 'Aggiorna Classifica',
+                            message: 'Vuoi aggiornare la classifica?');
+                        if (result == OkCancelResult.ok) {
+                          context.read<DrawerCubit>().aggiornaClassifica();
+                        }
+                      },
                     )
                   : ListTile(),
               authState.status == AuthenticationStatus.authenticated
                   ? ListTile(
-                      trailing: Icon(Icons.restart_alt),
+                      trailing: Icon(
+                        Icons.restart_alt,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       title: Text('Reset classifica'),
                       onTap: () => showOkAlertDialog(
                           context: context,
@@ -208,10 +307,19 @@ class HomePage extends StatelessWidget {
                               'Questa funzione sarà disponibile con i prossimi aggiornamenti'),
                     )
                   : ListTile(),
+              Padding(
+                padding: EdgeInsets.all(5.0),
+                child: drawerState.loading
+                    ? LinearProgressIndicator(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                      )
+                    : Container(),
+              ),
             ],
           ),
         ),
-        Spacer(),
+        // Spacer(),
         Container(
           height: 50,
           decoration: BoxDecoration(

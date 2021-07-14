@@ -1,9 +1,11 @@
 import 'dart:async';
-import 'package:quaderno_flutter/models/models.dart';
+import '../models/models.dart';
+import 'admin_api_provider.dart';
 import 'partita_api_provider.dart';
 
 class Repository {
   final partitaApiProvider = PartitaApiProvider();
+  final adminApiProvider = AdminApiProvider();
 
   Future<List<PartitaModel>> listaPartite() => partitaApiProvider.tutte();
   Future<PartitaModel> creaPartita(
@@ -16,4 +18,8 @@ class Repository {
   Future<List<String>> giocatoriGruppo(String gruppo) =>
       partitaApiProvider.giocatoriByGruppo(gruppo);
   Future<List<Gruppo>> gruppi() => partitaApiProvider.gruppi();
+  Future<bool> aggiornaClassifica() => adminApiProvider.aggiornaClassifica();
+  Future<List<Marcatore>> aggiornaMarcatori() =>
+      adminApiProvider.aggiornaMarcatori();
+  Future<List<Marcatore>> marcatori() => partitaApiProvider.marcatori();
 }
