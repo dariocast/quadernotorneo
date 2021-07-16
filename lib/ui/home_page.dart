@@ -251,12 +251,14 @@ class HomePage extends StatelessWidget {
                   Navigator.of(context).push(ClassificaPage.route());
                 },
               ),
-              Divider(),
+              authState.status == AuthenticationStatus.authenticated
+                  ? Divider()
+                  : Container(),
               authState.status == AuthenticationStatus.authenticated
                   ? Center(
                       child: Text('Gestione'),
                     )
-                  : ListTile(),
+                  : Container(),
               authState.status == AuthenticationStatus.authenticated
                   ? ListTile(
                       trailing: Icon(
@@ -274,7 +276,7 @@ class HomePage extends StatelessWidget {
                         }
                       },
                     )
-                  : ListTile(),
+                  : Container(),
               authState.status == AuthenticationStatus.authenticated
                   ? ListTile(
                       trailing: Icon(
@@ -292,7 +294,7 @@ class HomePage extends StatelessWidget {
                         }
                       },
                     )
-                  : ListTile(),
+                  : Container(),
               authState.status == AuthenticationStatus.authenticated
                   ? ListTile(
                       trailing: Icon(
@@ -306,7 +308,19 @@ class HomePage extends StatelessWidget {
                           message:
                               'Questa funzione sarà disponibile con i prossimi aggiornamenti'),
                     )
-                  : ListTile(),
+                  : Container(),
+              Divider(),
+              ListTile(
+                trailing: Icon(
+                  Icons.info_outline_rounded,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: Text('Informazioni'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(InfoPage.route());
+                },
+              ),
               Padding(
                 padding: EdgeInsets.all(5.0),
                 child: drawerState.loading
