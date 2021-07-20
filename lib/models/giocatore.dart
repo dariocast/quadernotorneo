@@ -3,25 +3,30 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
 class Giocatore extends Equatable {
-  final String giocatore;
-  final String squadra;
-
-  Giocatore(this.giocatore, this.squadra);
+  final String nome;
+  final String gruppo;
+  final int? id;
+  final int? gol;
+  Giocatore(this.nome, this.gruppo, this.id, this.gol);
 
   @override
-  List<Object> get props => [giocatore, squadra];
+  List<Object?> get props => [nome, gruppo, id, gol];
 
   Map<String, dynamic> toMap() {
     return {
-      'giocatore': giocatore,
-      'squadra': squadra,
+      'nome': nome,
+      'gruppo': gruppo,
+      '_id': id,
+      'gol': gol,
     };
   }
 
   factory Giocatore.fromMap(Map<String, dynamic> map) {
     return Giocatore(
-      map['giocatore'],
-      map['squadra'],
+      map['nome'],
+      map['gruppo'],
+      map['_id'],
+      map['gol'],
     );
   }
 
@@ -31,12 +36,16 @@ class Giocatore extends Equatable {
       Giocatore.fromMap(json.decode(source));
 
   Giocatore copyWith({
-    String? giocatore,
-    String? squadra,
+    String? nome,
+    String? gruppo,
+    int? id,
+    int? gol,
   }) {
     return Giocatore(
-      giocatore ?? this.giocatore,
-      squadra ?? this.squadra,
+      nome ?? this.nome,
+      gruppo ?? this.gruppo,
+      id ?? this.id,
+      gol ?? this.gol,
     );
   }
 }

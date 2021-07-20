@@ -53,7 +53,7 @@ class PartitaWidget extends StatelessWidget {
                                 );
                                 if (choice != null) {
                                   context.read<DettaglioBloc>().add(
-                                      DettaglioAggiungiGol(Giocatore(
+                                      DettaglioAggiungiGol(GiocatoreToRemove(
                                           choice, partita.squadraUno)));
                                 }
                               },
@@ -76,8 +76,9 @@ class PartitaWidget extends StatelessWidget {
                                 );
                                 if (choice != null) {
                                   context.read<DettaglioBloc>().add(
-                                      DettaglioAggiungiAutogol(Giocatore(
-                                          choice, partita.squadraUno)));
+                                      DettaglioAggiungiAutogol(
+                                          GiocatoreToRemove(
+                                              choice, partita.squadraUno)));
                                 }
                               },
                               child: Text('Autogol'),
@@ -99,7 +100,7 @@ class PartitaWidget extends StatelessWidget {
                                 );
                                 if (choice != null) {
                                   context.read<DettaglioBloc>().add(
-                                      DettaglioAmmonisci(Giocatore(
+                                      DettaglioAmmonisci(GiocatoreToRemove(
                                           choice, partita.squadraUno)));
                                 }
                               },
@@ -122,7 +123,7 @@ class PartitaWidget extends StatelessWidget {
                                 );
                                 if (choice != null) {
                                   context.read<DettaglioBloc>().add(
-                                      DettaglioEspelli(Giocatore(
+                                      DettaglioEspelli(GiocatoreToRemove(
                                           choice, partita.squadraUno)));
                                 }
                               },
@@ -212,7 +213,7 @@ class PartitaWidget extends StatelessWidget {
                                 );
                                 if (choice != null) {
                                   context.read<DettaglioBloc>().add(
-                                      DettaglioAggiungiGol(Giocatore(
+                                      DettaglioAggiungiGol(GiocatoreToRemove(
                                           choice, partita.squadraDue)));
                                 }
                               },
@@ -235,8 +236,9 @@ class PartitaWidget extends StatelessWidget {
                                 );
                                 if (choice != null) {
                                   context.read<DettaglioBloc>().add(
-                                      DettaglioAggiungiAutogol(Giocatore(
-                                          choice, partita.squadraDue)));
+                                      DettaglioAggiungiAutogol(
+                                          GiocatoreToRemove(
+                                              choice, partita.squadraDue)));
                                 }
                               },
                               child: Text('Autogol'),
@@ -258,7 +260,7 @@ class PartitaWidget extends StatelessWidget {
                                 );
                                 if (choice != null) {
                                   context.read<DettaglioBloc>().add(
-                                      DettaglioAmmonisci(Giocatore(
+                                      DettaglioAmmonisci(GiocatoreToRemove(
                                           choice, partita.squadraDue)));
                                 }
                               },
@@ -281,7 +283,7 @@ class PartitaWidget extends StatelessWidget {
                                 );
                                 if (choice != null) {
                                   context.read<DettaglioBloc>().add(
-                                      DettaglioEspelli(Giocatore(
+                                      DettaglioEspelli(GiocatoreToRemove(
                                           choice, partita.squadraDue)));
                                 }
                               },

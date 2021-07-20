@@ -5,4 +5,5 @@ export './login/login_bloc.dart';
 export './crea/crea_bloc.dart';
 export './drawer/drawer_cubit.dart';
 export './marcatori/marcatori_bloc.dart';
+export './giocatori/giocatori_bloc.dart';
 export './classifica/classifica_bloc.dart';

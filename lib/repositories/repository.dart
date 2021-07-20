@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:quaderno_flutter/repositories/giocatore_api_provider.dart';
+
 import '../models/models.dart';
 import 'admin_api_provider.dart';
 import 'partita_api_provider.dart';
@@ -6,6 +8,7 @@ import 'partita_api_provider.dart';
 class Repository {
   final partitaApiProvider = PartitaApiProvider();
   final adminApiProvider = AdminApiProvider();
+  final giocatoreApiProvider = GiocatoreApiProvider();
 
   Future<List<PartitaModel>> listaPartite() => partitaApiProvider.tutte();
   Future<PartitaModel> creaPartita(
@@ -16,10 +19,19 @@ class Repository {
       partitaApiProvider.aggiorna(partitaDaAggiornare);
   Future<bool> eliminaPartita(int id) => partitaApiProvider.elimina(id);
   Future<List<String>> giocatoriGruppo(String gruppo) =>
-      partitaApiProvider.giocatoriByGruppo(gruppo);
-  Future<List<Gruppo>> gruppi() => partitaApiProvider.gruppi();
+      giocatoreApiProvider.giocatoriByGruppo(gruppo);
   Future<bool> aggiornaClassifica() => adminApiProvider.aggiornaClassifica();
-  Future<List<Marcatore>> aggiornaMarcatori() =>
+  Future<List<Giocatore>> aggiornaMarcatori() =>
       adminApiProvider.aggiornaMarcatori();
-  Future<List<Marcatore>> marcatori() => partitaApiProvider.marcatori();
+
+  Future<List<Giocatore>> giocatori() => giocatoreApiProvider.tutti();
+  Future<Giocatore> singoloGiocatore(int id) =>
+      giocatoreApiProvider.singolo(id);
+  Future<Giocatore> creaGiocatore(String nome, String gruppo, {int gol = 0}) =>
+      giocatoreApiProvider.creaGiocatore(nome, gruppo, gol);
+  Future<bool> aggiornaGiocatore(Giocatore giocatoreDaAggiornare) =>
+      giocatoreApiProvider.aggiorna(giocatoreDaAggiornare);
+  Future<bool> eliminaGiocatore(int id) => giocatoreApiProvider.elimina(id);
+  Future<List<Gruppo>> gruppi() => giocatoreApiProvider.gruppi();
+  Future<List<Giocatore>> marcatori() => giocatoreApiProvider.marcatori();
 }

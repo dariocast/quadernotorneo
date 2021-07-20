@@ -5,10 +5,6 @@ import '../models/models.dart';
 
 const String partitaUrl =
     'https://dariocast.altervista.org/fantazama/api/partita';
-const String giocatoriUrl =
-    'https://dariocast.altervista.org/fantazama/api/giocatore';
-const String gruppiUrl =
-    'https://dariocast.altervista.org/fantazama/api/gruppo';
 
 class PartitaApiProvider {
   Client client = Client();
@@ -66,39 +62,6 @@ class PartitaApiProvider {
       return json.decode(response.body)['deleted'];
     } else {
       throw Exception('Impossibile eliminare la partita');
-    }
-  }
-
-  Future<List<String>> giocatoriByGruppo(String gruppo) async {
-    final response = await client.get(
-        Uri.parse('$giocatoriUrl/getGiocatoriPerGruppo.php?gruppo=$gruppo'));
-    if (response.statusCode == 200) {
-      return List.from(json.decode(response.body));
-    } else {
-      throw Exception('Impossibile ottenere i giocatori');
-    }
-  }
-
-  Future<List<Gruppo>> gruppi() async {
-    final response = await client.get(Uri.parse('$gruppiUrl/getGruppi.php'));
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)
-          .map<Gruppo>((json) => Gruppo.fromMap(json))
-          .toList();
-    } else {
-      throw Exception('Impossibile ottenere i gruppi');
-    }
-  }
-
-  Future<List<Marcatore>> marcatori() async {
-    final response =
-        await client.get(Uri.parse('$giocatoriUrl/getOrdered.php'));
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)
-          .map<Marcatore>((json) => Marcatore.fromMap(json))
-          .toList();
-    } else {
-      throw Exception('Impossibile ottenere i marcatori');
     }
   }
 }
