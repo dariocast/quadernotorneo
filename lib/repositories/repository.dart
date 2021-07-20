@@ -25,6 +25,13 @@ class Repository {
       adminApiProvider.aggiornaMarcatori();
 
   Future<List<Giocatore>> giocatori() => giocatoreApiProvider.tutti();
+  Future<List<Giocatore>> filtroGruppo(String gruppo) async {
+    final giocatori = await giocatoreApiProvider.tutti();
+    final filtered =
+        giocatori.where((giocatore) => giocatore.gruppo == gruppo).toList();
+    return filtered;
+  }
+
   Future<Giocatore> singoloGiocatore(int id) =>
       giocatoreApiProvider.singolo(id);
   Future<Giocatore> creaGiocatore(String nome, String gruppo, {int gol = 0}) =>

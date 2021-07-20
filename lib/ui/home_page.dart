@@ -265,10 +265,10 @@ class HomePage extends StatelessWidget {
                         Icons.person,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
-                      title: Text('Gestisci giocatori'),
+                      title: Text('Gestisci gruppi'),
                       onTap: () {
                         Navigator.of(context).pop();
-                        Navigator.of(context).push(GiocatoriPage.route());
+                        Navigator.of(context).push(GruppiPage.route());
                       },
                     )
                   : Container(),
