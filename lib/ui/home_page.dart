@@ -262,6 +262,19 @@ class HomePage extends StatelessWidget {
               authState.status == AuthenticationStatus.authenticated
                   ? ListTile(
                       trailing: Icon(
+                        Icons.person,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      title: Text('Gestisci giocatori'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(GiocatoriPage.route());
+                      },
+                    )
+                  : Container(),
+              authState.status == AuthenticationStatus.authenticated
+                  ? ListTile(
+                      trailing: Icon(
                         Icons.update,
                         color: Theme.of(context).colorScheme.secondary,
                       ),

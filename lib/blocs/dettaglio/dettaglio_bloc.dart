@@ -26,21 +26,20 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
           await _repository.giocatoriGruppo(event.partita.squadraDue);
       final List<Evento> eventi = List.empty(growable: true);
       event.partita.marcatori.forEach((giocatore) {
-        if (giocatore.giocatore.contains(' (Aut)')) {
-          eventi.add(Evento(giocatore.giocatore.replaceAll(' (Aut)', ''),
-              giocatore.squadra, TipoEvento.AUTOGOL));
+        if (giocatore.nome.contains(' (Aut)')) {
+          eventi.add(Evento(giocatore.nome.replaceAll(' (Aut)', ''),
+              giocatore.gruppo, TipoEvento.AUTOGOL));
         } else {
-          eventi.add(
-              Evento(giocatore.giocatore, giocatore.squadra, TipoEvento.GOL));
+          eventi.add(Evento(giocatore.nome, giocatore.gruppo, TipoEvento.GOL));
         }
       });
       event.partita.ammoniti.forEach((giocatore) {
-        eventi.add(Evento(
-            giocatore.giocatore, giocatore.squadra, TipoEvento.AMMONIZIONE));
+        eventi.add(
+            Evento(giocatore.nome, giocatore.gruppo, TipoEvento.AMMONIZIONE));
       });
       event.partita.espulsi.forEach((giocatore) {
-        eventi.add(Evento(
-            giocatore.giocatore, giocatore.squadra, TipoEvento.ESPULSIONE));
+        eventi.add(
+            Evento(giocatore.nome, giocatore.gruppo, TipoEvento.ESPULSIONE));
       });
       yield state.copyWith(
         partita: event.partita,
@@ -53,17 +52,17 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
       final marcatori = state.partita!.marcatori;
       marcatori.add(event.giocatore);
       final partitaAggiornata = state.partita!.copyWith(
-        golSquadraUno: event.giocatore.squadra == state.partita!.squadraUno
+        golSquadraUno: event.giocatore.gruppo == state.partita!.squadraUno
             ? state.partita!.golSquadraUno + 1
             : state.partita!.golSquadraUno,
-        golSquadraDue: event.giocatore.squadra == state.partita!.squadraDue
+        golSquadraDue: event.giocatore.gruppo == state.partita!.squadraDue
             ? state.partita!.golSquadraDue + 1
             : state.partita!.golSquadraDue,
         marcatori: marcatori,
       );
       final eventi = state.eventi;
-      eventi!.add(Evento(
-          event.giocatore.giocatore, event.giocatore.squadra, TipoEvento.GOL));
+      eventi!.add(
+          Evento(event.giocatore.nome, event.giocatore.gruppo, TipoEvento.GOL));
       yield state.copyWith(
         partita: partitaAggiornata,
         eventi: eventi,
@@ -72,21 +71,21 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
       );
     } else if (event is DettaglioAggiungiAutogol) {
       final marcatori = state.partita!.marcatori;
-      final giocatoreAutogol = event.giocatore
-          .copyWith(giocatore: '${event.giocatore.giocatore} (Aut)');
+      final giocatoreAutogol =
+          event.giocatore.copyWith(giocatore: '${event.giocatore.nome} (Aut)');
       marcatori.add(giocatoreAutogol);
       final partitaAggiornata = state.partita!.copyWith(
-        golSquadraUno: event.giocatore.squadra == state.partita!.squadraUno
+        golSquadraUno: event.giocatore.gruppo == state.partita!.squadraUno
             ? state.partita!.golSquadraUno
             : state.partita!.golSquadraUno + 1,
-        golSquadraDue: event.giocatore.squadra == state.partita!.squadraDue
+        golSquadraDue: event.giocatore.gruppo == state.partita!.squadraDue
             ? state.partita!.golSquadraDue
             : state.partita!.golSquadraDue + 1,
         marcatori: marcatori,
       );
       final eventi = state.eventi;
-      eventi!.add(Evento(event.giocatore.giocatore, event.giocatore.squadra,
-          TipoEvento.AUTOGOL));
+      eventi!.add(Evento(
+          event.giocatore.nome, event.giocatore.gruppo, TipoEvento.AUTOGOL));
       yield state.copyWith(
         partita: partitaAggiornata,
         eventi: eventi,
@@ -98,7 +97,7 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
       ammoniti.add(event.giocatore);
       final partitaAggiornata = state.partita!.copyWith(ammoniti: ammoniti);
       final eventi = state.eventi;
-      eventi!.add(Evento(event.giocatore.giocatore, event.giocatore.squadra,
+      eventi!.add(Evento(event.giocatore.nome, event.giocatore.gruppo,
           TipoEvento.AMMONIZIONE));
       yield state.copyWith(
         partita: partitaAggiornata,
@@ -111,8 +110,8 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
       espulsi.add(event.giocatore);
       final partitaAggiornata = state.partita!.copyWith(espulsi: espulsi);
       final eventi = state.eventi;
-      eventi!.add(Evento(event.giocatore.giocatore, event.giocatore.squadra,
-          TipoEvento.ESPULSIONE));
+      eventi!.add(Evento(
+          event.giocatore.nome, event.giocatore.gruppo, TipoEvento.ESPULSIONE));
 
       yield state.copyWith(
         partita: partitaAggiornata,
@@ -176,8 +175,8 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
         if (eventoRimosso.tipo == TipoEvento.GOL) {
           final marcatori = state.partita!.marcatori;
           marcatori.removeWhere((element) =>
-              element.giocatore == eventoRimosso.nome &&
-              element.squadra == eventoRimosso.squadra);
+              element.nome == eventoRimosso.nome &&
+              element.gruppo == eventoRimosso.squadra);
           final partitaAggiornata = state.partita!.copyWith(
             golSquadraUno: eventoRimosso.squadra == state.partita!.squadraUno
                 ? state.partita!.golSquadraUno - 1
@@ -195,9 +194,9 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
         } else if (eventoRimosso.tipo == TipoEvento.AUTOGOL) {
           final marcatori = state.partita!.marcatori;
           marcatori.removeWhere((element) =>
-              '${element.giocatore.replaceAll(' (Aut)', '')}' ==
+              '${element.nome.replaceAll(' (Aut)', '')}' ==
                   eventoRimosso.nome &&
-              element.squadra == eventoRimosso.squadra);
+              element.gruppo == eventoRimosso.squadra);
           final partitaAggiornata = state.partita!.copyWith(
             golSquadraUno: eventoRimosso.squadra == state.partita!.squadraUno
                 ? state.partita!.golSquadraUno
@@ -215,8 +214,8 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
         } else if (eventoRimosso.tipo == TipoEvento.AMMONIZIONE) {
           final ammoniti = state.partita!.ammoniti;
           ammoniti.removeWhere((element) =>
-              element.giocatore == eventoRimosso.nome &&
-              element.squadra == eventoRimosso.squadra);
+              element.nome == eventoRimosso.nome &&
+              element.gruppo == eventoRimosso.squadra);
           final partitaAggiornata = state.partita!.copyWith(
             ammoniti: ammoniti,
           );
@@ -228,8 +227,8 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
         } else if (eventoRimosso.tipo == TipoEvento.ESPULSIONE) {
           final espulsi = state.partita!.espulsi;
           espulsi.removeWhere((element) =>
-              element.giocatore == eventoRimosso.nome &&
-              element.squadra == eventoRimosso.squadra);
+              element.nome == eventoRimosso.nome &&
+              element.gruppo == eventoRimosso.squadra);
           final partitaAggiornata = state.partita!.copyWith(
             espulsi: espulsi,
           );

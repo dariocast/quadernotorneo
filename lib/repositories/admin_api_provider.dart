@@ -18,13 +18,13 @@ class AdminApiProvider {
     }
   }
 
-  Future<List<Marcatore>> aggiornaMarcatori() async {
+  Future<List<Giocatore>> aggiornaMarcatori() async {
     final response =
         await client.post(Uri.parse('$adminUrl/aggiornaMarcatori.php'));
     if (response.statusCode == 200) {
       final jsonDecoded = jsonDecode(response.body);
       final mapDone =
-          jsonDecoded.map<Marcatore>((json) => Marcatore.fromMap(json));
+          jsonDecoded.map<Giocatore>((json) => Giocatore.fromMap(json));
       final lista = mapDone.toList();
       return lista;
     } else {
