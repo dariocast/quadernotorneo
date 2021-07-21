@@ -20,15 +20,24 @@ class Repository {
   Future<bool> eliminaPartita(int id) => partitaApiProvider.elimina(id);
   Future<List<String>> giocatoriGruppo(String gruppo) =>
       giocatoreApiProvider.giocatoriByGruppo(gruppo);
+
   Future<bool> aggiornaClassifica() => adminApiProvider.aggiornaClassifica();
+  Future<bool> resetClassifica() => adminApiProvider.resetClassifica();
   Future<List<Giocatore>> aggiornaMarcatori() =>
       adminApiProvider.aggiornaMarcatori();
 
   Future<List<Giocatore>> giocatori() => giocatoreApiProvider.tutti();
+  Future<List<Giocatore>> filtroGruppo(String gruppo) async {
+    final giocatori = await giocatoreApiProvider.tutti();
+    final filtered =
+        giocatori.where((giocatore) => giocatore.gruppo == gruppo).toList();
+    return filtered;
+  }
+
   Future<Giocatore> singoloGiocatore(int id) =>
       giocatoreApiProvider.singolo(id);
-  Future<Giocatore> creaGiocatore(String nome, String gruppo, {int gol = 0}) =>
-      giocatoreApiProvider.creaGiocatore(nome, gruppo, gol);
+  Future<Giocatore> creaGiocatore(String nome, String gruppo, int immagine) =>
+      giocatoreApiProvider.creaGiocatore(nome, gruppo, immagine);
   Future<bool> aggiornaGiocatore(Giocatore giocatoreDaAggiornare) =>
       giocatoreApiProvider.aggiorna(giocatoreDaAggiornare);
   Future<bool> eliminaGiocatore(int id) => giocatoreApiProvider.elimina(id);

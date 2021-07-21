@@ -216,17 +216,27 @@ class HomePage extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                ),
-                child: Center(
-                  child: Text(
-                    'Benvenuto!',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline3!
-                        .copyWith(color: Colors.white),
+              Container(
+                height: 300,
+                child: DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/players.png'),
+                    ),
+                  ),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        'Benvenuto!',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline4!
+                            .copyWith(color: Colors.white),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -251,25 +261,23 @@ class HomePage extends StatelessWidget {
                   Navigator.of(context).push(ClassificaPage.route());
                 },
               ),
+              ListTile(
+                trailing: Icon(
+                  Icons.people_alt_rounded,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: Text('Gruppi'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(GruppiPage.route());
+                },
+              ),
               authState.status == AuthenticationStatus.authenticated
                   ? Divider()
                   : Container(),
               authState.status == AuthenticationStatus.authenticated
                   ? Center(
                       child: Text('Gestione'),
-                    )
-                  : Container(),
-              authState.status == AuthenticationStatus.authenticated
-                  ? ListTile(
-                      trailing: Icon(
-                        Icons.person,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      title: Text('Gestisci giocatori'),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).push(GiocatoriPage.route());
-                      },
                     )
                   : Container(),
               authState.status == AuthenticationStatus.authenticated
@@ -315,11 +323,16 @@ class HomePage extends StatelessWidget {
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                       title: Text('Reset classifica'),
-                      onTap: () => showOkAlertDialog(
-                          context: context,
-                          title: 'Coming soon',
-                          message:
-                              'Questa funzione sarà disponibile con i prossimi aggiornamenti'),
+                      onTap: () async {
+                        final result = await showOkCancelAlertDialog(
+                            context: context,
+                            title: 'Reset Classifica',
+                            message:
+                                'La classifica verrà azzerata, continuare?');
+                        if (result == OkCancelResult.ok) {
+                          context.read<DrawerCubit>().resetClassifica();
+                        }
+                      },
                     )
                   : Container(),
               Divider(),

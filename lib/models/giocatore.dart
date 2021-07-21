@@ -1,16 +1,19 @@
 import 'dart:convert';
 
-import 'package:equatable/equatable.dart';
+import 'package:quaderno_flutter/models/models.dart';
 
-class Giocatore extends Equatable {
-  final String nome;
-  final String gruppo;
-  final int? id;
-  final int? gol;
-  Giocatore(this.nome, this.gruppo, this.id, this.gol);
+class Giocatore extends GiocatoreBase {
+  final int id;
+  final int gol;
+  final int ammonizioni;
+  final int espulsioni;
+  final int image;
+  Giocatore(nome, gruppo, this.id, this.gol, this.ammonizioni, this.espulsioni,
+      this.image)
+      : super(nome, gruppo);
 
   @override
-  List<Object?> get props => [nome, gruppo, id, gol];
+  List<Object> get props => [nome, gruppo, id, gol];
 
   Map<String, dynamic> toMap() {
     return {
@@ -18,6 +21,9 @@ class Giocatore extends Equatable {
       'gruppo': gruppo,
       '_id': id,
       'gol': gol,
+      'ammonizioni': ammonizioni,
+      'espulsioni': espulsioni,
+      'image': image,
     };
   }
 
@@ -27,6 +33,9 @@ class Giocatore extends Equatable {
       map['gruppo'],
       map['_id'],
       map['gol'],
+      map['ammonizioni'],
+      map['espulsioni'],
+      map['image'],
     );
   }
 
@@ -40,12 +49,18 @@ class Giocatore extends Equatable {
     String? gruppo,
     int? id,
     int? gol,
+    int? ammonizioni,
+    int? espulsioni,
+    int? image,
   }) {
     return Giocatore(
       nome ?? this.nome,
       gruppo ?? this.gruppo,
       id ?? this.id,
       gol ?? this.gol,
+      ammonizioni ?? this.ammonizioni,
+      espulsioni ?? this.espulsioni,
+      image ?? this.image,
     );
   }
 }
