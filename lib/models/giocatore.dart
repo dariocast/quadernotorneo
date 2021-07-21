@@ -7,7 +7,9 @@ class Giocatore extends GiocatoreBase {
   final int gol;
   final int ammonizioni;
   final int espulsioni;
-  Giocatore(nome, gruppo, this.id, this.gol, this.ammonizioni, this.espulsioni)
+  final int image;
+  Giocatore(nome, gruppo, this.id, this.gol, this.ammonizioni, this.espulsioni,
+      this.image)
       : super(nome, gruppo);
 
   @override
@@ -21,6 +23,7 @@ class Giocatore extends GiocatoreBase {
       'gol': gol,
       'ammonizioni': ammonizioni,
       'espulsioni': espulsioni,
+      'image': image,
     };
   }
 
@@ -32,6 +35,7 @@ class Giocatore extends GiocatoreBase {
       map['gol'],
       map['ammonizioni'],
       map['espulsioni'],
+      map['image'],
     );
   }
 
@@ -47,6 +51,7 @@ class Giocatore extends GiocatoreBase {
     int? gol,
     int? ammonizioni,
     int? espulsioni,
+    int? image,
   }) {
     return Giocatore(
       nome ?? this.nome,
@@ -55,6 +60,7 @@ class Giocatore extends GiocatoreBase {
       gol ?? this.gol,
       ammonizioni ?? this.ammonizioni,
       espulsioni ?? this.espulsioni,
+      image ?? this.image,
     );
   }
 }

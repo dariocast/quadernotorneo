@@ -43,12 +43,13 @@ class GiocatoreApiProvider {
     }
   }
 
-  Future<Giocatore> creaGiocatore(String nome, String gruppo, int gol) async {
+  Future<Giocatore> creaGiocatore(
+      String nome, String gruppo, int immagine) async {
     final response = await client.post(Uri.parse('$giocatoriUrl/create.php'),
         body: jsonEncode({
           'nome': nome,
           'gruppo': gruppo,
-          'gol': gol,
+          'image': immagine,
         }));
     if (response.statusCode == 200) {
       return Giocatore.fromJson(response.body);

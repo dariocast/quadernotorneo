@@ -30,8 +30,8 @@ class GiocatoriBloc extends Bloc<GiocatoriEvent, GiocatoriState> {
       }
     } else if (event is GiocatoriCrea) {
       try {
-        final giocatore =
-            await _repository.creaGiocatore(event.nome, event.gruppo);
+        final giocatore = await _repository.creaGiocatore(
+            event.nome, event.gruppo, event.immagine);
         final giocatori = await _repository.giocatori();
         giocatori.sort((a, b) => a.gruppo.compareTo(b.gruppo));
         yield GiocatoriLoadSuccess(giocatori);

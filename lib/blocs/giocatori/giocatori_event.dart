@@ -12,8 +12,8 @@ class GiocatoriLoaded extends GiocatoriEvent {}
 class GiocatoriCrea extends GiocatoriEvent {
   final String nome;
   final String gruppo;
-
-  GiocatoriCrea(this.nome, this.gruppo);
+  final int immagine;
+  GiocatoriCrea(this.nome, this.gruppo, this.immagine);
 }
 
 class GiocatoriElimina extends GiocatoriEvent {

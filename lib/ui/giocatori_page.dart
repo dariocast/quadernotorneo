@@ -36,31 +36,45 @@ class GiocatoriPage extends StatelessWidget {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton:
-          authState.status == AuthenticationStatus.authenticated
-              ? FloatingActionButton(
-                  child: Center(child: Icon(Icons.person_add_alt_1_rounded)),
-                  onPressed: () async {
-                    final result = await showTextInputDialog(
-                      context: context,
-                      title: 'Che bel giocatore!',
-                      message: 'Inserisci nome del nuovo giocatore',
-                      textFields: [
-                        DialogTextField(
-                          hintText: 'nome',
-                          validator: (input) =>
-                              input!.isNotEmpty ? null : 'Inserire nome valido',
-                        )
-                      ],
-                    );
-                    if (result != null && result.length == 1) {
-                      context
-                          .read<GiocatoriBloc>()
-                          .add(GiocatoriCrea(result[0], this.gruppo));
-                    }
-                  },
-                )
-              : null,
+      floatingActionButton: authState.status ==
+              AuthenticationStatus.authenticated
+          ? FloatingActionButton(
+              child: Center(child: Icon(Icons.person_add_alt_1_rounded)),
+              onPressed: () async {
+                final result = await showTextInputDialog(
+                  context: context,
+                  title: 'Che bel giocatore!',
+                  message: 'Inserisci nome del nuovo giocatore',
+                  textFields: [
+                    DialogTextField(
+                      hintText: 'nome',
+                      validator: (input) =>
+                          input!.isNotEmpty ? null : 'Inserire nome valido',
+                    ),
+                  ],
+                );
+                if (result != null && result.length == 1) {
+                  final immagine = await showConfirmationDialog(
+                    context: context,
+                    title: 'Che bel giocatore!',
+                    message: 'Scegli il ruolo',
+                    actions: [
+                      AlertDialogAction(key: 0, label: 'Portiere'),
+                      AlertDialogAction(key: 1, label: 'Difensore'),
+                      AlertDialogAction(key: 2, label: 'Terzino'),
+                      AlertDialogAction(key: 3, label: 'Ala'),
+                      AlertDialogAction(key: 4, label: 'Centravanti'),
+                    ],
+                  );
+                  if (immagine != null) {
+                    context
+                        .read<GiocatoriBloc>()
+                        .add(GiocatoriCrea(result[0], this.gruppo, immagine));
+                  }
+                }
+              },
+            )
+          : null,
       body: BlocBuilder<GiocatoriBloc, GiocatoriState>(
         builder: (context, state) {
           if (state is GiocatoriLoading || state is GiocatoriInitial) {
@@ -76,10 +90,8 @@ class GiocatoriPage extends StatelessWidget {
             final filtered = giocatori
                 .where((giocatore) => giocatore.gruppo == gruppo)
                 .toList();
-            final mappaGiocatori = Map.fromIterable(filtered,
-                key: (item) => item as Giocatore,
-                value: (item) => (playerImages..shuffle()).first);
-            return GrigliaGiocatori(giocatori: mappaGiocatori);
+
+            return GrigliaGiocatori(giocatori: filtered);
           }
         },
       ),
@@ -93,8 +105,7 @@ class GrigliaGiocatori extends StatefulWidget {
     required this.giocatori,
   }) : super(key: key);
 
-  // final List<Giocatore> giocatori;
-  final Map<Giocatore, Image> giocatori;
+  final List<Giocatore> giocatori;
 
   @override
   State<GrigliaGiocatori> createState() => _GrigliaGiocatoriState();
@@ -115,7 +126,7 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
           mainAxisSpacing: 0),
       itemCount: widget.giocatori.length,
       itemBuilder: (context, index) {
-        final entry = widget.giocatori.entries.elementAt(index);
+        final giocatore = widget.giocatori.elementAt(index);
         return WillPopScope(
           onWillPop: () async {
             if (!deletable)
@@ -136,10 +147,10 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
             onTap: !deletable &&
                     authState.status == AuthenticationStatus.authenticated
                 ? () async {
-                    final result = await showTextInputDialog(
+                    final nome = await showTextInputDialog(
                       context: context,
                       title: 'Che bel giocatore!',
-                      message: 'Modifica il giocatore',
+                      message: 'Modifica il nome',
                       textFields: [
                         DialogTextField(
                           hintText: 'nome',
@@ -147,18 +158,49 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                           // * Use a space after text or the above keyboard
                           // * type to avoid replication issue
                           // initialText: entry.key.nome + ' ',
-                          initialText: entry.key.nome,
+                          initialText: giocatore.nome,
                           validator: (input) =>
                               input!.isNotEmpty ? null : 'Inserire nome valido',
-                        )
+                        ),
                       ],
                     );
-                    if (result != null && result.length == 1) {
-                      giocatoriBloc.add(GiocatoriAggiorna(
-                          entry.key.copyWith(nome: result[0])));
+                    if (nome != null && nome.length == 1) {
+                      final immagine = await showConfirmationDialog(
+                        context: context,
+                        title: 'Che bel giocatore!',
+                        message: 'Modifica il ruolo',
+                        initialSelectedActionKey: giocatore.image,
+                        actions: [
+                          AlertDialogAction(key: 0, label: 'Portiere'),
+                          AlertDialogAction(key: 1, label: 'Difensore'),
+                          AlertDialogAction(key: 2, label: 'Terzino'),
+                          AlertDialogAction(key: 3, label: 'Ala'),
+                          AlertDialogAction(key: 4, label: 'Centravanti'),
+                        ],
+                      );
+                      if (immagine != null) {
+                        giocatoriBloc.add(
+                          GiocatoriAggiorna(
+                            giocatore.copyWith(
+                              nome: nome[0],
+                              image: immagine,
+                            ),
+                          ),
+                        );
+                      }
                     }
                   }
-                : null,
+                : () async {
+                    final result = await showOkCancelAlertDialog(
+                      context: context,
+                      title: 'Attenzione',
+                      message:
+                          'Eliminare ${giocatore.nome} (${giocatore.gruppo})?',
+                    );
+                    if (result == OkCancelResult.ok) {
+                      giocatoriBloc.add(GiocatoriElimina(giocatore.id));
+                    }
+                  },
             child: Card(
               margin: EdgeInsets.all(4.0),
               elevation: deletable ? 8 : 1,
@@ -173,23 +215,9 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                         ? Positioned(
                             right: 0,
                             top: 0,
-                            child: InkWell(
-                              onTap: () async {
-                                final result = await showOkCancelAlertDialog(
-                                  context: context,
-                                  title: 'Attenzione',
-                                  message:
-                                      'Eliminare ${entry.key.nome} (${entry.key.gruppo})?',
-                                );
-                                if (result == OkCancelResult.ok) {
-                                  giocatoriBloc
-                                      .add(GiocatoriElimina(entry.key.id));
-                                }
-                              },
-                              child: Icon(
-                                Icons.close,
-                                color: Colors.red,
-                              ),
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.red,
                             ))
                         : Container(),
                     Positioned(
@@ -198,7 +226,7 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                       child: SizedBox(
                         width: 120,
                         height: 120,
-                        child: entry.value,
+                        child: playerImages[giocatore.image],
                       ),
                     ),
                     Positioned(
@@ -206,7 +234,7 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                          entry.key.nome,
+                          giocatore.nome,
                           style: Theme.of(context)
                               .textTheme
                               .bodyText1!
@@ -223,7 +251,7 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
-                                child: Text('${entry.key.gol}'),
+                                child: Text('${giocatore.gol}'),
                               ),
                               Image.asset(
                                 'assets/images/golfatto.png',
@@ -235,7 +263,7 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
-                                child: Text('${entry.key.ammonizioni}'),
+                                child: Text('${giocatore.ammonizioni}'),
                               ),
                               Image.asset(
                                 'assets/images/ammonito.png',
@@ -247,7 +275,7 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
-                                child: Text('${entry.key.espulsioni}'),
+                                child: Text('${giocatore.espulsioni}'),
                               ),
                               Image.asset(
                                 'assets/images/espulso.png',

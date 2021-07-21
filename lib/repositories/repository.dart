@@ -36,8 +36,8 @@ class Repository {
 
   Future<Giocatore> singoloGiocatore(int id) =>
       giocatoreApiProvider.singolo(id);
-  Future<Giocatore> creaGiocatore(String nome, String gruppo, {int gol = 0}) =>
-      giocatoreApiProvider.creaGiocatore(nome, gruppo, gol);
+  Future<Giocatore> creaGiocatore(String nome, String gruppo, int immagine) =>
+      giocatoreApiProvider.creaGiocatore(nome, gruppo, immagine);
   Future<bool> aggiornaGiocatore(Giocatore giocatoreDaAggiornare) =>
       giocatoreApiProvider.aggiorna(giocatoreDaAggiornare);
   Future<bool> eliminaGiocatore(int id) => giocatoreApiProvider.elimina(id);
