@@ -9,12 +9,22 @@ class AdminApiProvider {
   Client client = Client();
 
   Future<bool> aggiornaClassifica() async {
-    final response = await client
-        .get(Uri.parse('$adminUrl/aggiornaClassifica.php?password=centroZAMA'));
+    final response = await client.post(
+        Uri.parse('$adminUrl/aggiornaClassifica.php?password=centroZAMA'));
     if (response.statusCode == 200) {
       return json.decode(response.body)['updated'];
     } else {
       throw Exception('Impossibile aggiornare la classifica');
+    }
+  }
+
+  Future<bool> resetClassifica() async {
+    final response = await client
+        .post(Uri.parse('$adminUrl/resetClassifica.php?password=centroZAMA'));
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['reset'];
+    } else {
+      throw Exception('Impossibile resettare la classifica');
     }
   }
 

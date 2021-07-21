@@ -14,6 +14,12 @@ class DrawerCubit extends Cubit<DrawerState> {
     emit(state.copyWith(updateClassificaSuccess: updated, loading: false));
   }
 
+  resetClassifica() async {
+    emit(state.copyWith(loading: true));
+    final reset = await _repository.resetClassifica();
+    emit(state.copyWith(updateClassificaSuccess: reset, loading: false));
+  }
+
   aggiornaMarcatori() async {
     emit(state.copyWith(loading: true));
     final updated = await _repository.aggiornaMarcatori();

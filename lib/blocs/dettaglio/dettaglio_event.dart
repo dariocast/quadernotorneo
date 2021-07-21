@@ -14,25 +14,25 @@ class DettaglioLoaded extends DettaglioEvent {
 }
 
 class DettaglioAmmonisci extends DettaglioEvent {
-  final GiocatoreToRemove giocatore;
+  final GiocatoreBase giocatore;
 
   DettaglioAmmonisci(this.giocatore);
 }
 
 class DettaglioEspelli extends DettaglioEvent {
-  final GiocatoreToRemove giocatore;
+  final GiocatoreBase giocatore;
 
   DettaglioEspelli(this.giocatore);
 }
 
 class DettaglioAggiungiGol extends DettaglioEvent {
-  final GiocatoreToRemove giocatore;
+  final GiocatoreBase giocatore;
 
   DettaglioAggiungiGol(this.giocatore);
 }
 
 class DettaglioAggiungiAutogol extends DettaglioEvent {
-  final GiocatoreToRemove giocatore;
+  final GiocatoreBase giocatore;
 
   DettaglioAggiungiAutogol(this.giocatore);
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quaderno_flutter/blocs/classifica/classifica_bloc.dart';
 import 'package:quaderno_flutter/ui/ui.dart';
@@ -24,10 +25,11 @@ class GruppiPage extends StatelessWidget {
             // debugPrint(state.toString());
             if (state is ClassificaLoadSuccess) {
               final gruppi = state.gruppi;
+              gruppi.sort((a, b) => a.nome.compareTo(b.nome));
               return GridView.builder(
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 2 / 2,
+                      maxCrossAxisExtent: 250,
+                      childAspectRatio: 1 / 1,
                       crossAxisSpacing: 0,
                       mainAxisSpacing: 0),
                   itemCount: gruppi.length,
@@ -45,13 +47,16 @@ class GruppiPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 40,
-                                height: 40,
+                                width: 100,
+                                height: 100,
                                 child: Image.network(gruppi[index].logo),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text('${gruppi[index].nome}'),
+                                child: Text(
+                                  '${gruppi[index].nome}',
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
                               ),
                             ],
                           ),
