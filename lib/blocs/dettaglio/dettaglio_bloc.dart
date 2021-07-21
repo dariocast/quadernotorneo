@@ -72,7 +72,7 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
     } else if (event is DettaglioAggiungiAutogol) {
       final marcatori = state.partita!.marcatori;
       final giocatoreAutogol =
-          event.giocatore.copyWith(giocatore: '${event.giocatore.nome} (Aut)');
+          event.giocatore.copyWith(nome: '${event.giocatore.nome} (Aut)');
       marcatori.add(giocatoreAutogol);
       final partitaAggiornata = state.partita!.copyWith(
         golSquadraUno: event.giocatore.gruppo == state.partita!.squadraUno
