@@ -190,17 +190,19 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                       }
                     }
                   }
-                : () async {
-                    final result = await showOkCancelAlertDialog(
-                      context: context,
-                      title: 'Attenzione',
-                      message:
-                          'Eliminare ${giocatore.nome} (${giocatore.gruppo})?',
-                    );
-                    if (result == OkCancelResult.ok) {
-                      giocatoriBloc.add(GiocatoriElimina(giocatore.id));
-                    }
-                  },
+                : authState.status == AuthenticationStatus.authenticated
+                    ? () async {
+                        final result = await showOkCancelAlertDialog(
+                          context: context,
+                          title: 'Attenzione',
+                          message:
+                              'Eliminare ${giocatore.nome} (${giocatore.gruppo})?',
+                        );
+                        if (result == OkCancelResult.ok) {
+                          giocatoriBloc.add(GiocatoriElimina(giocatore.id));
+                        }
+                      }
+                    : null,
             child: Card(
               margin: EdgeInsets.all(4.0),
               elevation: deletable ? 8 : 1,
