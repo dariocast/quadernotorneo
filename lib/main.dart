@@ -172,6 +172,7 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Quaderno Torneo',
       debugShowCheckedModeBanner: false,
       theme: QuadernoTheme.themeData,
       navigatorKey: _navigatorKey,
