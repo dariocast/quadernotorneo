@@ -49,5 +49,8 @@
         <meta-data
           android:name="com.google.firebase.messaging.default_notification_channel_id"
           android:value="quadernotorneo_channel" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8225784208582563~4062879531"/>
     </application>
 </manifest>
