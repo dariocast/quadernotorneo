@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quaderno_flutter/blocs/blocs.dart';
 import 'package:quaderno_flutter/models/giocatore.dart';
+import 'package:quaderno_flutter/ui/widgets/widgets.dart';
 import 'package:quaderno_flutter/utils/ui_helpers.dart';
 
 class GiocatoriPage extends StatelessWidget {
@@ -75,25 +76,34 @@ class GiocatoriPage extends StatelessWidget {
               },
             )
           : null,
-      body: BlocBuilder<GiocatoriBloc, GiocatoriState>(
-        builder: (context, state) {
-          if (state is GiocatoriLoading || state is GiocatoriInitial) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is GiocatoriLoadFailure) {
-            return Center(
-              child: Text(state.message),
-            );
-          } else {
-            final giocatori = (state as GiocatoriLoadSuccess).giocatori;
-            final filtered = giocatori
-                .where((giocatore) => giocatore.gruppo == gruppo)
-                .toList();
+      body: Stack(
+        children: [
+          BlocBuilder<GiocatoriBloc, GiocatoriState>(
+            builder: (context, state) {
+              if (state is GiocatoriLoading || state is GiocatoriInitial) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is GiocatoriLoadFailure) {
+                return Center(
+                  child: Text(state.message),
+                );
+              } else {
+                final giocatori = (state as GiocatoriLoadSuccess).giocatori;
+                final filtered = giocatori
+                    .where((giocatore) => giocatore.gruppo == gruppo)
+                    .toList();
 
-            return GrigliaGiocatori(giocatori: filtered);
-          }
-        },
+                return GrigliaGiocatori(giocatori: filtered);
+              }
+            },
+          ),
+          Positioned(
+            width: MediaQuery.of(context).size.width,
+            bottom: 100.0,
+            child: QuadernoBannerAd(),
+          )
+        ],
       ),
     );
   }
