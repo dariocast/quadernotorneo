@@ -52,21 +52,30 @@ class _ClassificaPageState extends State<ClassificaPage> {
               },
             )
           : null,
-      body: BlocBuilder<ClassificaBloc, ClassificaState>(
-          builder: (context, state) {
-        if (state is ClassificaLoadFailure) {
-          return Center(
-            child: Text('Impossibile caricare le classifiche'),
-          );
-        } else if (state is ClassificaLoadSuccess) {
-          final gruppiPerGirone = state.gruppi
-              .where((element) => element.girone == gironi[_currentIndex])
-              .toList();
-          gruppiPerGirone.sort((a, b) => b.ordinaClassifica(a));
-          return ClassificaWidget(gruppiPerGirone);
-        }
-        return Center(child: CircularProgressIndicator());
-      }),
+      body: Stack(
+        children: [
+          BlocBuilder<ClassificaBloc, ClassificaState>(
+              builder: (context, state) {
+            if (state is ClassificaLoadFailure) {
+              return Center(
+                child: Text('Impossibile caricare le classifiche'),
+              );
+            } else if (state is ClassificaLoadSuccess) {
+              final gruppiPerGirone = state.gruppi
+                  .where((element) => element.girone == gironi[_currentIndex])
+                  .toList();
+              gruppiPerGirone.sort((a, b) => b.ordinaClassifica(a));
+              return ClassificaWidget(gruppiPerGirone);
+            }
+            return Center(child: CircularProgressIndicator());
+          }),
+          Positioned(
+            width: MediaQuery.of(context).size.width,
+            bottom: 5.0,
+            child: QuadernoBannerAd(),
+          )
+        ],
+      ),
     );
   }
 }

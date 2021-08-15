@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'package:crypto/crypto.dart';
 import 'dart:convert'; // for the utf8.encode method
 
-import 'package:meta/meta.dart';
+import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' show Client;
 
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }

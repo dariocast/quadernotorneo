@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:quaderno_flutter/ui/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InfoPage extends StatefulWidget {
@@ -39,6 +40,7 @@ class _InfoPageState extends State<InfoPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -88,6 +90,8 @@ class _InfoPageState extends State<InfoPage> {
                   ..onTap = () => launch('https://paypal.me/dariocast'),
               ),
             ),
+            Spacer(),
+            QuadernoBannerAd(),
           ],
         ),
       ),
