@@ -21,7 +21,7 @@ class CreaPage extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
-                content: Text('Partita inserita con succcesso'),
+                content: Text('Partita inserita con successo'),
                 duration: Duration(
                   seconds: 3,
                 )));

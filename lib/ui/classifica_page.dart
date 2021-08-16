@@ -39,6 +39,7 @@ class _ClassificaPageState extends State<ClassificaPage> {
       ),
       bottomNavigationBar: gironi.length >= 2
           ? BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
               items: gironi
                   .map((e) => BottomNavigationBarItem(
                       icon: Icon(Icons.flag_rounded),
