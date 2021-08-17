@@ -76,20 +76,20 @@ class _InfoPageState extends State<InfoPage> {
                 ),
               ),
             ),
-            const Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: const Text('Se ti piace questa app'),
-            ),
-            RichText(
-              text: TextSpan(
-                text: 'offrimi una birra 🍺',
-                style: Theme.of(context).textTheme.headline5!.copyWith(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => launch('https://paypal.me/dariocast'),
-              ),
-            ),
+            // const Padding(
+            //   padding: const EdgeInsets.only(top: 50.0),
+            //   child: const Text('Se ti piace questa app'),
+            // ),
+            // RichText(
+            //   text: TextSpan(
+            //     text: 'offrimi una birra 🍺',
+            //     style: Theme.of(context).textTheme.headline5!.copyWith(
+            //           color: Theme.of(context).colorScheme.secondary,
+            //         ),
+            //     recognizer: TapGestureRecognizer()
+            //       ..onTap = () => launch('https://paypal.me/dariocast'),
+            //   ),
+            // ),
             Spacer(),
             QuadernoBannerAd(),
           ],
