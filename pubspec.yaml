@@ -9,18 +9,18 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
+  adaptive_dialog: ^1.0.1
   authentication_repository:
     path: packages/authentication_repository
-  adaptive_dialog: ^1.0.1
   blinking_text: ^1.0.1+2
   cupertino_icons: ^1.0.3
   data_table_2: ^2.0.4
   equatable: ^2.0.3
   firebase_core: ^1.4.0
   firebase_messaging: ^10.0.4
-  flutter_bloc: ^7.1.0
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^7.3.0
   flutter_local_notifications: ^6.0.0
   formz: ^0.4.0
   google_fonts: ^2.1.0
@@ -35,10 +35,10 @@ dependencies:
   url_launcher: ^6.0.9
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   # flutter_launcher_icons: "^0.9.0"
   flutter_native_splash: ^1.2.0
+  flutter_test:
+    sdk: flutter
   lint: ^1.0.0
 
 flutter_native_splash:
