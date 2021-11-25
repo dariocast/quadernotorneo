@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/blocs/classifica/classifica_bloc.dart';
-import 'package:quaderno_flutter/ui/ui.dart';
-import 'package:quaderno_flutter/ui/widgets/widgets.dart';
+import '../blocs/classifica/classifica_bloc.dart';
+import 'ui.dart';
+import 'widgets/widgets.dart';
 
 class GruppiPage extends StatelessWidget {
   static Route route() {

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
+
 import '../../database.dart';
 
 part 'authentication_event.dart';
@@ -18,6 +18,27 @@ class AuthenticationBloc
     _authenticationStatusSubscription = _authenticationRepository.status.listen(
       (status) => add(AuthenticationStatusChanged(status)),
     );
+
+    // Handler for auth changed
+    on<AuthenticationStatusChanged>((event, emit) {
+      switch (event.status) {
+        case AuthenticationStatus.unauthenticated:
+          emit(const AuthenticationState.unauthenticated());
+          break;
+        case AuthenticationStatus.authenticated:
+          emit(const AuthenticationState.authenticated());
+          break;
+        default:
+          emit(const AuthenticationState.unknown());
+          break;
+      }
+    });
+
+    // Handler for logout
+    on<AuthenticationLogoutRequested>((event, emit) async {
+      _authenticationRepository.logOut();
+      await Database.remove();
+    });
   }
 
   final AuthenticationRepository _authenticationRepository;
@@ -25,34 +46,9 @@ class AuthenticationBloc
       _authenticationStatusSubscription;
 
   @override
-  Stream<AuthenticationState> mapEventToState(
-    AuthenticationEvent event,
-  ) async* {
-    if (event is AuthenticationStatusChanged) {
-      yield await _mapAuthenticationStatusChangedToState(event);
-    } else if (event is AuthenticationLogoutRequested) {
-      _authenticationRepository.logOut();
-      await Database.remove();
-    }
-  }
-
-  @override
   Future<void> close() {
     _authenticationStatusSubscription.cancel();
     _authenticationRepository.dispose();
     return super.close();
-  }
-
-  Future<AuthenticationState> _mapAuthenticationStatusChangedToState(
-    AuthenticationStatusChanged event,
-  ) async {
-    switch (event.status) {
-      case AuthenticationStatus.unauthenticated:
-        return const AuthenticationState.unauthenticated();
-      case AuthenticationStatus.authenticated:
-        return const AuthenticationState.authenticated();
-      default:
-        return const AuthenticationState.unknown();
-    }
   }
 }

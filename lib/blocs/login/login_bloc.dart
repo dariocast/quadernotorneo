@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:formz/formz.dart';
+
 import '../../database.dart';
 import '../../models/models.dart';
-import 'package:formz/formz.dart';
-import 'package:meta/meta.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -14,94 +14,40 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc({
     required AuthenticationRepository authenticationRepository,
-  })  : assert(authenticationRepository != null),
-        _authenticationRepository = authenticationRepository,
-        super(const LoginState());
+  })  : _authenticationRepository = authenticationRepository,
+        super(const LoginState()) {
+    on<LoginUsernameChanged>(
+        (event, emit) => _handleUsernameChanged(event, emit));
+    on<LoginPasswordChanged>(
+        (event, emit) => _handlePasswordChanged(event, emit));
+    on<LoginSubmitted>((event, emit) => _handleLoginSubmitted(event, emit));
+    on<LoginPersistChanged>(
+        (event, emit) => _handleLoginPersistChanged(event, emit));
+    on<LoginLoaded>(
+        (event, emit) => _handleLoginPersistenceLoaded(event, emit));
+  }
 
   final AuthenticationRepository _authenticationRepository;
 
-  @override
-  Stream<LoginState> mapEventToState(
-    LoginEvent event,
-  ) async* {
-    if (event is LoginUsernameChanged) {
-      yield _mapUsernameChangedToState(event, state);
-    } else if (event is LoginPasswordChanged) {
-      yield _mapPasswordChangedToState(event, state);
-    } else if (event is LoginSubmitted) {
-      yield* _mapLoginSubmittedToState(event, state);
-    } else if (event is LoginPersistChanged) {
-      yield _mapLoginPersistChangedToState(event, state);
-    } else if (event is LoginLoaded) {
-      yield* _mapLoginPersistenceLoadedToState(event, state);
-    }
-  }
-
-  Stream<LoginState> _mapLoginPersistenceLoadedToState(
-    LoginLoaded event,
-    LoginState state,
-  ) async* {
-    var persistenceObj = await Database.get('persistence');
-    if (persistenceObj != null) {
-      final persistence =
-          Persistence(persistenceObj['username'], persistenceObj['password']);
-      final username = Username.dirty(persistence.username);
-      final password = Password.dirty(persistence.password);
-      yield state.copyWith(
-        status: Formz.validate([username, password]),
-        username: username,
-        password: password,
-      );
-      try {
-        await _authenticationRepository.logIn(
-          username: persistence.username,
-          password: persistence.password,
-        );
-        yield state.copyWith(status: FormzStatus.submissionSuccess);
-      } on Exception catch (_) {
-        yield state.copyWith(status: FormzStatus.submissionFailure);
-      }
-    } else {
-      yield state.copyWith();
-    }
-  }
-
-  LoginState _mapLoginPersistChangedToState(
-      LoginPersistChanged event, LoginState state) {
-    final persist = event.persist;
-    return state.copyWith(
-        persist: persist,
-        status: Formz.validate([state.password, state.username]));
-  }
-
-  LoginState _mapUsernameChangedToState(
-    LoginUsernameChanged event,
-    LoginState state,
-  ) {
+  _handleUsernameChanged(LoginUsernameChanged event, Emitter<LoginState> emit) {
     final username = Username.dirty(event.username);
-    return state.copyWith(
+    emit(state.copyWith(
       username: username,
       status: Formz.validate([state.password, username]),
-    );
+    ));
   }
 
-  LoginState _mapPasswordChangedToState(
-    LoginPasswordChanged event,
-    LoginState state,
-  ) {
+  _handlePasswordChanged(LoginPasswordChanged event, Emitter<LoginState> emit) {
     final password = Password.dirty(event.password);
-    return state.copyWith(
+    emit(state.copyWith(
       password: password,
       status: Formz.validate([password, state.username]),
-    );
+    ));
   }
 
-  Stream<LoginState> _mapLoginSubmittedToState(
-    LoginSubmitted event,
-    LoginState state,
-  ) async* {
+  _handleLoginSubmitted(LoginSubmitted event, Emitter<LoginState> emit) async {
     if (state.status.isValidated) {
-      yield state.copyWith(status: FormzStatus.submissionInProgress);
+      emit(state.copyWith(status: FormzStatus.submissionInProgress));
       try {
         await _authenticationRepository.logIn(
           username: state.username.value,
@@ -113,10 +59,45 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             'password': state.password.value
           });
         }
-        yield state.copyWith(status: FormzStatus.submissionSuccess);
+        emit(state.copyWith(status: FormzStatus.submissionSuccess));
       } on Exception catch (_) {
-        yield state.copyWith(status: FormzStatus.submissionFailure);
+        emit(state.copyWith(status: FormzStatus.submissionFailure));
       }
+    }
+  }
+
+  _handleLoginPersistChanged(
+      LoginPersistChanged event, Emitter<LoginState> emit) {
+    final persist = event.persist;
+    emit(state.copyWith(
+        persist: persist,
+        status: Formz.validate([state.password, state.username])));
+  }
+
+  _handleLoginPersistenceLoaded(
+      LoginLoaded event, Emitter<LoginState> emit) async {
+    var persistenceObj = await Database.get('persistence');
+    if (persistenceObj != null) {
+      final persistence =
+          Persistence(persistenceObj['username'], persistenceObj['password']);
+      final username = Username.dirty(persistence.username);
+      final password = Password.dirty(persistence.password);
+      emit(state.copyWith(
+        status: Formz.validate([username, password]),
+        username: username,
+        password: password,
+      ));
+      try {
+        await _authenticationRepository.logIn(
+          username: persistence.username,
+          password: persistence.password,
+        );
+        emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      } on Exception catch (_) {
+        emit(state.copyWith(status: FormzStatus.submissionFailure));
+      }
+    } else {
+      emit(state.copyWith());
     }
   }
 }

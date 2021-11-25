@@ -3,7 +3,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/ui/widgets/widgets.dart';
+import 'widgets/widgets.dart';
 import '../blocs/blocs.dart';
 import 'ui.dart';
 

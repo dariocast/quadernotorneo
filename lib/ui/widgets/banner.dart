@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:quaderno_flutter/utils/ad_helper.dart';
+import '../../utils/ad_helper.dart';
 
 class QuadernoBannerAd extends StatefulWidget {
   @override

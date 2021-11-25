@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:quaderno_flutter/models/models.dart';
+import 'models.dart';
 
 class Giocatore extends GiocatoreBase {
   final int id;

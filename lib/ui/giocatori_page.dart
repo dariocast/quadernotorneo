@@ -3,10 +3,10 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quaderno_flutter/blocs/blocs.dart';
-import 'package:quaderno_flutter/models/giocatore.dart';
-import 'package:quaderno_flutter/ui/widgets/widgets.dart';
-import 'package:quaderno_flutter/utils/ui_helpers.dart';
+import '../blocs/blocs.dart';
+import '../models/giocatore.dart';
+import 'widgets/widgets.dart';
+import '../utils/ui_helpers.dart';
 
 class GiocatoriPage extends StatelessWidget {
   final String gruppo;
