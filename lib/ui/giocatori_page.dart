@@ -94,7 +94,17 @@ class GiocatoriPage extends StatelessWidget {
                     .where((giocatore) => giocatore.gruppo == gruppo)
                     .toList();
 
-                return GrigliaGiocatori(giocatori: filtered);
+                return filtered.isNotEmpty
+                    ? GrigliaGiocatori(giocatori: filtered)
+                    : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.info_outline, size: 30.0),
+                            Text('Questo gruppo non ha giocatori'),
+                          ],
+                        ),
+                      );
               }
             },
           ),
@@ -123,6 +133,7 @@ class GrigliaGiocatori extends StatefulWidget {
 
 class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
   bool deletable = false;
+
   @override
   Widget build(BuildContext context) {
     final giocatoriBloc = BlocProvider.of<GiocatoriBloc>(context);

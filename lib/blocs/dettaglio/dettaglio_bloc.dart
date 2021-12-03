@@ -1,9 +1,7 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../models/models.dart';
-import '../../repositories/partita_api_provider.dart';
 import '../../repositories/repository.dart';
 
 part 'dettaglio_event.dart';

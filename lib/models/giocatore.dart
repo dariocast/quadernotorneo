@@ -19,7 +19,7 @@ class Giocatore extends GiocatoreBase {
     return {
       'nome': nome,
       'gruppo': gruppo,
-      '_id': id,
+      'id': id,
       'gol': gol,
       'ammonizioni': ammonizioni,
       'espulsioni': espulsioni,
@@ -31,7 +31,7 @@ class Giocatore extends GiocatoreBase {
     return Giocatore(
       map['nome'],
       map['gruppo'],
-      map['_id'],
+      map['id'],
       map['gol'],
       map['ammonizioni'],
       map['espulsioni'],

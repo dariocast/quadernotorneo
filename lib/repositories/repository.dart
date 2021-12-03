@@ -3,12 +3,14 @@ import 'dart:async';
 import '../models/models.dart';
 import 'admin_api_provider.dart';
 import 'giocatore_api_provider.dart';
+import 'gruppo_api_provider.dart';
 import 'partita_api_provider.dart';
 
 class Repository {
   final partitaApiProvider = PartitaApiProvider();
   final adminApiProvider = AdminApiProvider();
   final giocatoreApiProvider = GiocatoreApiProvider();
+  final gruppoApiProvider = GruppoApiProvider();
 
   Future<List<PartitaModel>> listaPartite() => partitaApiProvider.tutte();
   Future<PartitaModel> creaPartita(
@@ -41,6 +43,12 @@ class Repository {
   Future<bool> aggiornaGiocatore(Giocatore giocatoreDaAggiornare) =>
       giocatoreApiProvider.aggiorna(giocatoreDaAggiornare);
   Future<bool> eliminaGiocatore(int id) => giocatoreApiProvider.elimina(id);
-  Future<List<Gruppo>> gruppi() => giocatoreApiProvider.gruppi();
   Future<List<Giocatore>> marcatori() => giocatoreApiProvider.marcatori();
+
+  Future<List<Gruppo>> gruppi() => gruppoApiProvider.gruppi();
+  Future<Gruppo> creaGruppo(String nome, String girone, String logo) =>
+      gruppoApiProvider.crea(nome, girone, logo);
+  Future<bool> aggiornaGruppo(Gruppo gruppo) =>
+      gruppoApiProvider.aggiorna(gruppo);
+  Future<bool> eliminaGruppo(int id) => gruppoApiProvider.elimina(id);
 }

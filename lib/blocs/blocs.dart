@@ -7,3 +7,4 @@ export './drawer/drawer_cubit.dart';
 export './marcatori/marcatori_bloc.dart';
 export './giocatori/giocatori_bloc.dart';
 export './classifica/classifica_bloc.dart';
+export './gruppi/gruppi_bloc.dart';

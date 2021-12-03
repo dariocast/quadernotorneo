@@ -6,13 +6,12 @@ class QuadernoTheme {
     final ThemeData theme = ThemeData();
     return theme.copyWith(
       primaryColor: Colors.green,
-      accentColor: Colors.amber,
+      textTheme: GoogleFonts.latoTextTheme(),
+      iconTheme: theme.iconTheme.copyWith(),
       colorScheme: theme.colorScheme.copyWith(
         primary: Colors.green,
         secondary: Colors.amber,
       ),
-      textTheme: GoogleFonts.latoTextTheme(),
-      iconTheme: theme.iconTheme.copyWith(),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../models/models.dart';
 import '../../repositories/repository.dart';
@@ -17,6 +18,7 @@ class ClassificaBloc extends Bloc<ClassificaEvent, ClassificaState> {
         final gruppi = await _repo.gruppi();
         emit(ClassificaLoadSuccess(gruppi));
       } catch (e) {
+        debugPrint(e.toString());
         emit(ClassificaLoadFailure());
       }
     });
