@@ -11,12 +11,10 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
   final _repository = Repository();
 
   DettaglioBloc() : super(DettaglioState()) {
-    on<DettaglioLoaded>((event, emit) {
-      emit(state.copyWith(loading: true));
-      _handleDettaglioLoadedEvent(event, emit);
+    on<DettaglioLoaded>((event, emit) async {
+      await _handleDettaglioLoadedEvent(event, emit);
     });
     on<DettaglioAggiungiGol>((event, emit) {
-      emit(state.copyWith(loading: true));
       _handleDettaglioAggiungiGolEvent(event, emit);
     });
     on<DettaglioAggiungiAutogol>((event, emit) {
@@ -49,13 +47,13 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
         isEdit: !result,
       ));
     });
-    on<DettaglioRimuoviPartita>((event, emit) {
+    on<DettaglioRimuoviPartita>((event, emit) async {
       emit(state.copyWith(loading: true));
-      _repository.eliminaPartita(state.partita!.id);
+      await _repository.eliminaPartita(state.partita!.id);
       emit(state.copyWith(partita: null, loading: false));
     });
 
-    on<DettaglioUndo>((event, emit) {
+    on<DettaglioUndo>((event, emit) async {
       emit(state.copyWith(loading: true));
       _handleDettaglioUndoEvent(event, emit);
     });
@@ -63,6 +61,7 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
 
   _handleDettaglioLoadedEvent(
       DettaglioLoaded event, Emitter<DettaglioState> emit) async {
+    emit(state.copyWith(loading: true));
     final giocatoriSquadraUno =
         await _repository.giocatoriGruppo(event.partita.squadraUno);
     final giocatoriSquadraDue =
@@ -95,6 +94,7 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
 
   _handleDettaglioAggiungiGolEvent(
       DettaglioAggiungiGol event, Emitter<DettaglioState> emit) {
+    emit(state.copyWith(loading: true));
     final marcatori = state.partita!.marcatori;
     marcatori.add(event.giocatore);
     final partitaAggiornata = state.partita!.copyWith(

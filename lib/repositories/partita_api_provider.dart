@@ -42,13 +42,16 @@ class PartitaApiProvider {
     final response = await supabase.from('partita').insert({
       'squadraUno': squadra1,
       'squadraDue': squadra2,
+      'marcatori': List.empty(),
+      'ammoniti': List.empty(),
+      'espulsi': List.empty(),
       'data': data.toIso8601String()
     }).execute();
     final error = response.error;
-    if (response.status == 200) {
-      return PartitaModel.fromJson(response.data);
-    } else {
+    if (error != null && response.status != 200) {
       throw Exception('Impossibile creare la partita: error: ${error}');
+    } else {
+      return PartitaModel.fromMap(response.data[0]);
     }
   }
 

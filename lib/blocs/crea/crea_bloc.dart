@@ -32,6 +32,7 @@ class CreaBloc extends Bloc<CreaEvent, CreaState> {
         state.orario != null;
     emit(state.copyWith(
       gruppi: nomiGruppi,
+      hasGruppi: nomiGruppi.isNotEmpty,
       isLoading: false,
       isValid: isValid,
     ));

@@ -94,7 +94,7 @@ class PartitaModel extends Equatable {
 
   Map<String, dynamic> toMap() {
     return {
-      '_id': id,
+      'id': id,
       'squadraUno': squadraUno,
       'squadraDue': squadraDue,
       'golSquadraUno': golSquadraUno,
@@ -104,26 +104,26 @@ class PartitaModel extends Equatable {
       'marcatori': marcatori.map((x) => x.toMap()).toList(),
       'ammoniti': ammoniti.map((x) => x.toMap()).toList(),
       'espulsi': espulsi.map((x) => x.toMap()).toList(),
-      'data': data.millisecondsSinceEpoch / 1000
+      'data': data.toIso8601String(),
     };
   }
 
   factory PartitaModel.fromMap(Map<String, dynamic> map) {
     return PartitaModel(
-      id: map['_id'],
-      squadraUno: map['squadraUno'],
-      squadraDue: map['squadraDue'],
-      golSquadraUno: map['golSquadraUno'],
-      falliSquadraUno: map['falliSquadraUno'],
-      golSquadraDue: map['golSquadraDue'],
-      falliSquadraDue: map['falliSquadraDue'],
+      id: map['id']?.toInt() ?? 0,
+      squadraUno: map['squadraUno'] ?? '',
+      squadraDue: map['squadraDue'] ?? '',
+      golSquadraUno: map['golSquadraUno']?.toInt() ?? 0,
+      falliSquadraUno: map['falliSquadraUno']?.toInt() ?? 0,
+      golSquadraDue: map['golSquadraDue']?.toInt() ?? 0,
+      falliSquadraDue: map['falliSquadraDue']?.toInt() ?? 0,
       marcatori: List<GiocatoreBase>.from(
           map['marcatori']?.map((x) => GiocatoreBase.fromMap(x))),
       ammoniti: List<GiocatoreBase>.from(
           map['ammoniti']?.map((x) => GiocatoreBase.fromMap(x))),
       espulsi: List<GiocatoreBase>.from(
           map['espulsi']?.map((x) => GiocatoreBase.fromMap(x))),
-      data: DateTime.fromMillisecondsSinceEpoch(map['data'] * 1000),
+      data: DateTime.parse((map['data'])),
     );
   }
 

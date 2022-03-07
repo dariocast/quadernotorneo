@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../models/models.dart';
 
 class GiocatoreApiProvider {
@@ -12,7 +11,10 @@ class GiocatoreApiProvider {
         .eq('gruppo', gruppo)
         .execute();
     if (response.status == 200) {
-      return response.data;
+      final listaNomi = response.data as List;
+      final listaNomiSemplice =
+          listaNomi.map<String>((entry) => entry['nome']).toList();
+      return listaNomiSemplice;
     } else {
       throw Exception('Impossibile ottenere i giocatori');
     }

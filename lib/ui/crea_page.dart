@@ -14,7 +14,6 @@ class CreaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<CreaBloc>().state;
     return BlocConsumer<CreaBloc, CreaState>(
       listener: (context, state) {
         if (state.creationSuccess) {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../helpers/extensions/extensions.dart';
 import 'widgets/banner.dart';
 import '../utils/ad_helper.dart';
 import '../blocs/blocs.dart';
@@ -160,10 +161,11 @@ class _HomePageState extends State<HomePage> {
                                               .format(partita.data);
                                       final String orarioAsString =
                                           DateFormat.Hm().format(partita.data);
-                                      final isLive = DateTime.now()
-                                              .difference(partita.data)
-                                              .inMinutes <=
-                                          50;
+                                      final timeDiff = DateTime.now()
+                                          .debugDifference(partita.data)
+                                          .inMinutes;
+                                      final isLive =
+                                          timeDiff <= 50 && timeDiff >= 0;
                                       return Column(
                                         children: [
                                           Text(
