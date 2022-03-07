@@ -6,6 +6,7 @@ class CreaState extends Equatable {
   final String? gruppoDue;
   final DateTime? data;
   final TimeOfDay? orario;
+  final bool hasGruppi;
   final bool isLoading;
   final bool isValid;
   final bool creationSuccess;
@@ -15,6 +16,7 @@ class CreaState extends Equatable {
     this.gruppoDue,
     this.data,
     this.orario,
+    this.hasGruppi = false,
     this.isLoading = true,
     this.isValid = false,
     this.creationSuccess = false,
@@ -28,6 +30,7 @@ class CreaState extends Equatable {
       gruppoDue,
       data,
       orario,
+      hasGruppi,
       isLoading,
       isValid,
       creationSuccess,
@@ -40,6 +43,7 @@ class CreaState extends Equatable {
       String? gruppoDue,
       DateTime? data,
       TimeOfDay? orario,
+      bool? hasGruppi,
       bool? isLoading,
       bool? isValid,
       bool? creationSuccess}) {
@@ -49,6 +53,7 @@ class CreaState extends Equatable {
       gruppoDue: gruppoDue ?? this.gruppoDue,
       data: data ?? this.data,
       orario: orario ?? this.orario,
+      hasGruppi: hasGruppi ?? this.hasGruppi,
       isLoading: isLoading ?? this.isLoading,
       isValid: isValid ?? this.isValid,
       creationSuccess: creationSuccess ?? this.creationSuccess,
