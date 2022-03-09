@@ -58,12 +58,34 @@ class GiocatoreApiProvider {
         .update({
           'nome': giocatore.nome,
           'image': giocatore.image,
+          'gruppo': giocatore.gruppo,
+          'gol': giocatore.gol,
+          'ammonizioni': giocatore.ammonizioni,
+          'espulsioni': giocatore.espulsioni,
         })
         .eq('id', giocatore.id)
         .execute();
-    return response.status == 200
+    return response.error == null && response.data != null
         ? true
         : throw Exception('Impossibile aggiornare il giocatore');
+  }
+
+  Future<List<Giocatore>> aggiornaTutti(List<Giocatore> giocatori) async {
+    final supabase = Supabase.instance.client;
+    final response = await supabase
+        .from('giocatore')
+        .upsert(giocatori.map((e) => e.toMap()).toList())
+        .execute();
+    if (response.error == null && response.data != null) {
+      final listaGiocatoriDB = response.data as List;
+      final mapDone =
+          listaGiocatoriDB.map<Giocatore>((json) => Giocatore.fromMap(json));
+      final lista = mapDone.toList();
+      lista.sort((a, b) => b.gol.compareTo(a.gol));
+      return lista;
+    } else {
+      throw Exception('Impossibile aggiornare il giocatore');
+    }
   }
 
   Future<bool> elimina(int id) async {
@@ -88,15 +110,19 @@ class GiocatoreApiProvider {
     }
   }
 
-  Future<Giocatore> singolo(int id) async {
+  Future<Giocatore> singolo(String nome, String gruppo) async {
     final supabase = Supabase.instance.client;
-    final response =
-        await supabase.from('giocatore').select('*').eq('id', id).execute();
+    final response = await supabase
+        .from('giocatore')
+        .select('*')
+        .eq('nome', nome)
+        .eq('gruppo', gruppo)
+        .execute();
     final error = response.error;
-    if (response.status == 200 && error == null) {
-      return Giocatore.fromMap(response.data[0]);
+    if (response.status != 200 && error != null) {
+      throw Exception('Impossibile caricare $nome gruppo $gruppo');
     } else {
-      throw Exception('Impossibile caricare il giocatore con id: $id');
+      return Giocatore.fromMap(response.data[0]);
     }
   }
 }

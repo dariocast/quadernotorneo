@@ -25,7 +25,7 @@ class Repository {
 
   Future<bool> aggiornaClassifica() => adminApiProvider.aggiornaClassifica();
   Future<bool> resetClassifica() => adminApiProvider.resetClassifica();
-  Future<List<Giocatore>> aggiornaMarcatori() =>
+  Future<List<Giocatore>> aggiornaMarcatoriOld() =>
       adminApiProvider.aggiornaMarcatori();
 
   Future<List<Giocatore>> giocatori() => giocatoreApiProvider.tutti();
@@ -36,14 +36,63 @@ class Repository {
     return filtered;
   }
 
-  Future<Giocatore> singoloGiocatore(int id) =>
-      giocatoreApiProvider.singolo(id);
+  // Future<Giocatore> singoloGiocatore(int id) => giocatoreApiProvider.singolo(id);
   Future<Giocatore> creaGiocatore(String nome, String gruppo, int immagine) =>
       giocatoreApiProvider.creaGiocatore(nome, gruppo, immagine);
   Future<bool> aggiornaGiocatore(Giocatore giocatoreDaAggiornare) =>
       giocatoreApiProvider.aggiorna(giocatoreDaAggiornare);
   Future<bool> eliminaGiocatore(int id) => giocatoreApiProvider.elimina(id);
   Future<List<Giocatore>> marcatori() => giocatoreApiProvider.marcatori();
+  Future<List<Giocatore>> aggiornaMarcatori() async {
+    List<PartitaModel> partite = await partitaApiProvider.tutte();
+    List<Giocatore> giocatori = await giocatoreApiProvider.tutti();
+
+    giocatori = giocatori
+        .map((e) => e.copyWith(gol: 0, ammonizioni: 0, espulsioni: 0))
+        .toList();
+
+    for (var partita in partite) {
+      // aggiornamento gol
+      for (var marcatore in partita.marcatori) {
+        if (!marcatore.nome.contains('(Aut)')) {
+          int giocatoreIndex = giocatori.indexWhere(
+            (element) =>
+                element.nome == marcatore.nome &&
+                element.gruppo == marcatore.gruppo,
+          );
+          Giocatore aggiornato = giocatori[giocatoreIndex]
+              .copyWith(gol: giocatori[giocatoreIndex].gol + 1);
+          giocatori
+              .replaceRange(giocatoreIndex, giocatoreIndex + 1, [aggiornato]);
+        }
+      }
+      // aggiornamento ammonizioni
+      for (var ammonito in partita.ammoniti) {
+        int giocatoreIndex = giocatori.indexWhere(
+          (element) =>
+              element.nome == ammonito.nome &&
+              element.gruppo == ammonito.gruppo,
+        );
+        Giocatore aggiornato = giocatori[giocatoreIndex]
+            .copyWith(ammonizioni: giocatori[giocatoreIndex].ammonizioni + 1);
+        giocatori
+            .replaceRange(giocatoreIndex, giocatoreIndex + 1, [aggiornato]);
+      }
+      // aggiornamento espulsioni
+      for (var espulso in partita.espulsi) {
+        int giocatoreIndex = giocatori.indexWhere(
+          (element) =>
+              element.nome == espulso.nome && element.gruppo == espulso.gruppo,
+        );
+        Giocatore aggiornato = giocatori[giocatoreIndex]
+            .copyWith(espulsioni: giocatori[giocatoreIndex].espulsioni + 1);
+        giocatori
+            .replaceRange(giocatoreIndex, giocatoreIndex + 1, [aggiornato]);
+      }
+    }
+    return giocatoreApiProvider.aggiornaTutti(giocatori);
+    // return giocatoreApiProvider.marcatori();
+  }
 
   Future<List<Gruppo>> gruppi() => gruppoApiProvider.gruppi();
   Future<Gruppo> creaGruppo(String nome, String girone, String logo) =>

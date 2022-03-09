@@ -13,14 +13,14 @@ class PartitaApiProvider {
     final response = await supabase.from('partita').select('*').execute();
     final error = response.error;
 
-    if (response.status == 200 && response.data != null) {
+    if (error != null && response.status != 200) {
+      throw Exception('Impossibile caricare le partite');
+    } else {
       final listaPartiteDB = response.data as List;
       final mapDone = listaPartiteDB
           .map<PartitaModel>((json) => PartitaModel.fromMap(json));
       final lista = mapDone.toList();
       return lista;
-    } else {
-      throw Exception('Impossibile caricare le partite');
     }
   }
 
@@ -29,10 +29,10 @@ class PartitaApiProvider {
     final response =
         await supabase.from('partita').select('*').eq('id', id).execute();
     final error = response.error;
-    if (response.status == 200 && response.data != null) {
-      return PartitaModel.fromMap(response.data[0]);
-    } else {
+    if (error != null && response.status != 200) {
       throw Exception('Impossibile caricare la partita con id: $id');
+    } else {
+      return PartitaModel.fromMap(response.data[0]);
     }
   }
 
@@ -72,13 +72,14 @@ class PartitaApiProvider {
           'marcatori': partita.marcatori,
           'ammoniti': partita.ammoniti,
           'espulsi': partita.espulsi,
-          'data': partita.data
+          'data': partita.data.toIso8601String()
         })
         .eq('id', partita.id)
         .execute();
-    return response.status == 200
-        ? true
-        : throw Exception('Impossibile aggiornare la partita');
+    final error = response.error;
+    return error != null && response.status != 200
+        ? throw Exception('Impossibile aggiornare la partita')
+        : true;
   }
 
   Future<bool> elimina(int id) async {
@@ -87,10 +88,9 @@ class PartitaApiProvider {
         await supabase.from('partita').delete().eq('id', id).execute();
     final partitaEliminata = PartitaModel.fromMap(response.data[0]);
     developer.log('Partita rimossa', name: 'repositories.partita.delete');
-    if (response.status == 200) {
-      return true;
-    } else {
-      throw Exception('Impossibile eliminare la partita');
-    }
+    final error = response.error;
+    return error != null && response.status != 200
+        ? throw Exception('Impossibile eliminare la partita')
+        : true;
   }
 }

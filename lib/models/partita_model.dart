@@ -118,11 +118,11 @@ class PartitaModel extends Equatable {
       golSquadraDue: map['golSquadraDue']?.toInt() ?? 0,
       falliSquadraDue: map['falliSquadraDue']?.toInt() ?? 0,
       marcatori: List<GiocatoreBase>.from(
-          map['marcatori']?.map((x) => GiocatoreBase.fromMap(x))),
+          map['marcatori']?.map((x) => GiocatoreBase.fromJson(x))),
       ammoniti: List<GiocatoreBase>.from(
-          map['ammoniti']?.map((x) => GiocatoreBase.fromMap(x))),
+          map['ammoniti']?.map((x) => GiocatoreBase.fromJson(x))),
       espulsi: List<GiocatoreBase>.from(
-          map['espulsi']?.map((x) => GiocatoreBase.fromMap(x))),
+          map['espulsi']?.map((x) => GiocatoreBase.fromJson(x))),
       data: DateTime.parse((map['data'])),
     );
   }
