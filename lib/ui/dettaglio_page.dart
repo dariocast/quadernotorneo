@@ -3,8 +3,10 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../blocs/blocs.dart';
 import 'ui.dart';
+import 'widgets/widgets.dart';
 
 class DettaglioPage extends StatelessWidget {
   static final String routeName = '/dettaglio';
@@ -78,7 +80,16 @@ class DettaglioPage extends StatelessWidget {
         ),
         body: state.loading
             ? Center(child: CircularProgressIndicator())
-            : PartitaWidget(),
+            : Stack(
+                children: [
+                  PartitaWidget(),
+                  Positioned(
+                    width: MediaQuery.of(context).size.width,
+                    bottom: 5.0,
+                    child: QuadernoBannerAd(),
+                  )
+                ],
+              ),
         floatingActionButton:
             authState.status == AuthenticationStatus.authenticated
                 ? FloatingActionButton(

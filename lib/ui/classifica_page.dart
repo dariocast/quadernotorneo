@@ -1,9 +1,6 @@
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/blocs.dart';
-import '../models/gruppo.dart';
 import 'widgets/widgets.dart';
 
 class ClassificaPage extends StatefulWidget {
@@ -39,6 +36,7 @@ class _ClassificaPageState extends State<ClassificaPage> {
       ),
       bottomNavigationBar: gironi.length >= 2
           ? BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
               items: gironi
                   .map((e) => BottomNavigationBarItem(
                       icon: Icon(Icons.flag_rounded),
@@ -52,21 +50,30 @@ class _ClassificaPageState extends State<ClassificaPage> {
               },
             )
           : null,
-      body: BlocBuilder<ClassificaBloc, ClassificaState>(
-          builder: (context, state) {
-        if (state is ClassificaLoadFailure) {
-          return Center(
-            child: Text('Impossibile caricare le classifiche'),
-          );
-        } else if (state is ClassificaLoadSuccess) {
-          final gruppiPerGirone = state.gruppi
-              .where((element) => element.girone == gironi[_currentIndex])
-              .toList();
-          gruppiPerGirone.sort((a, b) => b.ordinaClassifica(a));
-          return ClassificaWidget(gruppiPerGirone);
-        }
-        return Center(child: CircularProgressIndicator());
-      }),
+      body: Stack(
+        children: [
+          BlocBuilder<ClassificaBloc, ClassificaState>(
+              builder: (context, state) {
+            if (state is ClassificaLoadFailure) {
+              return Center(
+                child: Text('Impossibile caricare le classifiche'),
+              );
+            } else if (state is ClassificaLoadSuccess) {
+              final gruppiPerGirone = state.gruppi
+                  .where((element) => element.girone == gironi[_currentIndex])
+                  .toList();
+              gruppiPerGirone.sort((a, b) => b.ordinaClassifica(a));
+              return ClassificaWidget(gruppiPerGirone);
+            }
+            return Center(child: CircularProgressIndicator());
+          }),
+          Positioned(
+            width: MediaQuery.of(context).size.width,
+            bottom: 5.0,
+            child: QuadernoBannerAd(),
+          )
+        ],
+      ),
     );
   }
 }

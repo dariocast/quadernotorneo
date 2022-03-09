@@ -3,7 +3,12 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../helpers/extensions/extensions.dart';
+import 'widgets/banner.dart';
+import '../utils/ad_helper.dart';
 import '../blocs/blocs.dart';
 import '../models/models.dart';
 import 'crea_page.dart';
@@ -11,7 +16,7 @@ import 'ui.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const String routeName = '/';
 
   static Route route() {
@@ -21,6 +26,38 @@ class HomePage extends StatelessWidget {
         child: HomePage(),
       ),
     );
+  }
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late BannerAd _ad;
+  bool _isAdLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _ad = BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+          print('Ad load failed (code=${error.code} message=${error.message})');
+        },
+      ),
+    );
+
+    _ad.load();
   }
 
   @override
@@ -58,135 +95,46 @@ class HomePage extends StatelessWidget {
         if (state is HomeSuccess) {
           if (state.partite.isEmpty) {
             return Center(
-              child: Text('Nessuna partita'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FaIcon(FontAwesomeIcons.exclamationTriangle,
+                        size: 30.0),
+                  ),
+                  Text('Nessuna partita'),
+                ],
+              ),
             );
           }
-          return ListView.builder(
-              itemCount: state.partite.length,
-              itemBuilder: (BuildContext context, int index) {
-                final logoUno = state.infoGruppi
-                    .firstWhere((gruppo) =>
-                        gruppo.nome == state.partite[index].squadraUno)
-                    .logo;
-                final logoDue = state.infoGruppi
-                    .firstWhere((gruppo) =>
-                        gruppo.nome == state.partite[index].squadraDue)
-                    .logo;
-                return Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListTile(
-                        onTap: () => Navigator.of(context)
-                            .push(
-                              MaterialPageRoute(
-                                builder: (context) => BlocProvider(
-                                  create: (_) => DettaglioBloc()
-                                    ..add(
-                                        DettaglioLoaded(state.partite[index])),
-                                  child: DettaglioPage(),
-                                ),
-                              ),
-                            )
-                            .whenComplete(() =>
-                                context.read<HomeBloc>().add(HomeLoaded())),
-                        title: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                                child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Text(state.partite[index].squadraUno,
-                                      textAlign: TextAlign.left),
-                                ),
-                                SizedBox(
-                                  width: 50,
-                                  height: 50,
-                                  child: Image.network(
-                                    logoUno,
-                                  ),
-                                ),
-                              ],
-                            )),
-                            Expanded(
-                              child: Builder(builder: (context) {
-                                initializeDateFormatting('it_IT');
-                                final partita = state.partite[index];
-                                final String dataAsString =
-                                    DateFormat.yMMMMd('it_IT')
-                                        .format(partita.data);
-                                final String orarioAsString =
-                                    DateFormat.Hm().format(partita.data);
-                                final isLive = DateTime.now()
-                                        .difference(partita.data)
-                                        .inMinutes <=
-                                    50;
-                                return Column(
-                                  children: [
-                                    Text(
-                                      '${partita.golSquadraUno} - ${partita.golSquadraDue}',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 5.0),
-                                      child: Text(
-                                        dataAsString,
-                                        style:
-                                            Theme.of(context).textTheme.caption,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 5.0),
-                                      child: Text(
-                                        orarioAsString,
-                                        style:
-                                            Theme.of(context).textTheme.caption,
-                                      ),
-                                    ),
-                                    isLive
-                                        ? BlinkText(
-                                            'LIVE',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            beginColor: Colors.red,
-                                            endColor: Colors.white,
-                                          )
-                                        : Container(),
-                                  ],
-                                );
-                              }),
-                            ),
-                            Expanded(
-                                child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Text(state.partite[index].squadraDue,
-                                      textAlign: TextAlign.right),
-                                ),
-                                SizedBox(
-                                  width: 50,
-                                  height: 50,
-                                  child: Image.network(
-                                    logoDue,
-                                  ),
-                                ),
-                              ],
-                            )),
-                          ],
-                        ),
-                      ),
-                    ));
-              });
+          return Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 60.0),
+                child: ListView.builder(
+                    itemCount: state.partite.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final partita = state.partite[index];
+                      final logoUno = state.infoGruppi
+                          .firstWhere(
+                              (gruppo) => gruppo.nome == partita.squadraUno)
+                          .logo;
+                      final logoDue = state.infoGruppi
+                          .firstWhere(
+                              (gruppo) => gruppo.nome == partita.squadraDue)
+                          .logo;
+                      return PartitaCard(
+                          partita: partita, logoUno: logoUno, logoDue: logoDue);
+                    }),
+              ),
+              Positioned(
+                width: MediaQuery.of(context).size.width,
+                bottom: 5.0,
+                child: QuadernoBannerAd(),
+              )
+            ],
+          );
         }
         return Center(
           child: CircularProgressIndicator(),
@@ -277,7 +225,10 @@ class HomePage extends StatelessWidget {
                   : Container(),
               authState.status == AuthenticationStatus.authenticated
                   ? Center(
-                      child: Text('Gestione'),
+                      child: Text(
+                        'Gestione',
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
                     )
                   : Container(),
               authState.status == AuthenticationStatus.authenticated
@@ -399,6 +350,183 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class PartitaCard extends StatelessWidget {
+  const PartitaCard({
+    Key? key,
+    required this.partita,
+    required this.logoUno,
+    required this.logoDue,
+  }) : super(key: key);
+
+  final Partita partita;
+  final String logoUno;
+  final String logoDue;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Navigator.of(context)
+          .push(
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (_) => DettaglioBloc()..add(DettaglioLoaded(partita)),
+                child: DettaglioPage(),
+              ),
+            ),
+          )
+          .whenComplete(() => context.read<HomeBloc>().add(HomeLoaded())),
+      child: Card(
+        margin: EdgeInsets.all(8.0),
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            GruppoDetailsColumn(
+                partita: partita,
+                squadra: partita.squadraUno,
+                logo: logoUno,
+                alignment: Alignment.centerLeft),
+            GruppoDetailsColumn(
+                partita: partita,
+                squadra: partita.squadraDue,
+                logo: logoDue,
+                alignment: Alignment.centerRight),
+            Align(
+              alignment: Alignment.center,
+              child: Builder(builder: (context) {
+                initializeDateFormatting('it_IT');
+                final String dataAsString =
+                    DateFormat.yMMMMd('it_IT').format(partita.data);
+                final String orarioAsString =
+                    DateFormat.Hm().format(partita.data);
+                final timeDiff =
+                    DateTime.now().difference(partita.data).inMinutes;
+                final isLive = timeDiff <= 50 && timeDiff >= 0;
+                final terminata = timeDiff > 50;
+                return SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: Column(
+                    children: [
+                      partita.descrizione.isNotEmpty
+                          ? Padding(
+                              padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
+                              child: Text(
+                                '${partita.descrizione}',
+                                maxLines: 2,
+                              ),
+                            )
+                          : Container(),
+                      Text(
+                        '${partita.golSquadraUno} - ${partita.golSquadraDue}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 25,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Text(
+                          dataAsString,
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: Text(
+                          orarioAsString,
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ),
+                      isLive
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: BlinkText(
+                                'LIVE',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                beginColor: Colors.red,
+                                endColor: Colors.white,
+                              ),
+                            )
+                          : Container(),
+                      terminata
+                          ? Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                'Terminata',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 10),
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class GruppoDetailsColumn extends StatelessWidget {
+  const GruppoDetailsColumn({
+    Key? key,
+    required this.partita,
+    required this.logo,
+    required this.alignment,
+    required this.squadra,
+  }) : super(key: key);
+
+  final Partita partita;
+  final String logo;
+  final String squadra;
+  final Alignment alignment;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: alignment,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                squadra,
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 8.0,
+                right: 8.0,
+                bottom: 8.0,
+              ),
+              child: SizedBox(
+                width: 60,
+                height: 60,
+                child: Image.network(
+                  logo,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

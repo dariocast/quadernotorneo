@@ -29,8 +29,10 @@ class _ClassificaWidgetState extends State<ClassificaWidget> {
               sortAscending: _isAscending,
               headingRowHeight: 60.0,
               columnSpacing: 5.0,
-              headingTextStyle:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              headingTextStyle: Theme.of(context)
+                  .textTheme
+                  .bodyText1!
+                  .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
               dataRowHeight: 60.0,
               columns: [
                 DataColumn(

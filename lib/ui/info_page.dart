@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InfoPage extends StatefulWidget {
@@ -39,6 +40,7 @@ class _InfoPageState extends State<InfoPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -74,20 +76,22 @@ class _InfoPageState extends State<InfoPage> {
                 ),
               ),
             ),
-            const Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: const Text('Se ti piace questa app'),
-            ),
-            RichText(
-              text: TextSpan(
-                text: 'offrimi una birra 🍺',
-                style: Theme.of(context).textTheme.headline5!.copyWith(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => launch('https://paypal.me/dariocast'),
-              ),
-            ),
+            // const Padding(
+            //   padding: const EdgeInsets.only(top: 50.0),
+            //   child: const Text('Se ti piace questa app'),
+            // ),
+            // RichText(
+            //   text: TextSpan(
+            //     text: 'offrimi una birra 🍺',
+            //     style: Theme.of(context).textTheme.headline5!.copyWith(
+            //           color: Theme.of(context).colorScheme.secondary,
+            //         ),
+            //     recognizer: TapGestureRecognizer()
+            //       ..onTap = () => launch('https://paypal.me/dariocast'),
+            //   ),
+            // ),
+            Spacer(),
+            QuadernoBannerAd(),
           ],
         ),
       ),

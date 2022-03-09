@@ -1,7 +1,7 @@
 part of 'dettaglio_bloc.dart';
 
 class DettaglioState extends Equatable {
-  final PartitaModel? partita;
+  final Partita? partita;
   final List<String>? giocatoriSquadraUno;
   final List<String>? giocatoriSquadraDue;
   final List<Evento>? eventi;
@@ -29,7 +29,7 @@ class DettaglioState extends Equatable {
   }
 
   DettaglioState copyWith({
-    PartitaModel? partita,
+    Partita? partita,
     List<String>? giocatoriSquadraUno,
     List<String>? giocatoriSquadraDue,
     List<Evento>? eventi,

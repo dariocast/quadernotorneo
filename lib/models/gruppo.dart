@@ -14,10 +14,9 @@ class Gruppo extends Equatable {
   final int gf;
   final int gs;
   final int pt;
-  final List<int> ultime;
 
   Gruppo(this.nome, this.girone, this.logo, this.id, this.pg, this.v, this.p,
-      this.s, this.gf, this.gs, this.pt, this.ultime);
+      this.s, this.gf, this.gs, this.pt);
 
   @override
   List<Object> get props {
@@ -33,7 +32,6 @@ class Gruppo extends Equatable {
       gf,
       gs,
       pt,
-      ultime,
     ];
   }
 
@@ -42,7 +40,7 @@ class Gruppo extends Equatable {
       'nome': nome,
       'girone': girone,
       'logo': logo,
-      '_id': id,
+      'id': id,
       'pg': pg,
       'v': v,
       'p': p,
@@ -50,7 +48,6 @@ class Gruppo extends Equatable {
       'gf': gf,
       'gs': gs,
       'pt': pt,
-      'ultime': ultime,
     };
   }
 
@@ -59,7 +56,7 @@ class Gruppo extends Equatable {
       map['nome'],
       map['girone'],
       map['logo'],
-      map['_id'],
+      map['id'],
       map['pg'],
       map['v'],
       map['p'],
@@ -67,7 +64,6 @@ class Gruppo extends Equatable {
       map['gf'],
       map['gs'],
       map['pt'],
-      List<int>.from(map['ultime']),
     );
   }
 
@@ -87,7 +83,6 @@ class Gruppo extends Equatable {
     int? gf,
     int? gs,
     int? pt,
-    List<int>? ultime,
   }) {
     return Gruppo(
       nome ?? this.nome,
@@ -101,7 +96,6 @@ class Gruppo extends Equatable {
       gf ?? this.gf,
       gs ?? this.gs,
       pt ?? this.pt,
-      ultime ?? this.ultime,
     );
   }
 

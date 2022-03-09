@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:quaderno_flutter/models/models.dart';
+import 'models.dart';
 
 class Giocatore extends GiocatoreBase {
   final int id;
@@ -19,7 +19,7 @@ class Giocatore extends GiocatoreBase {
     return {
       'nome': nome,
       'gruppo': gruppo,
-      '_id': id,
+      'id': id,
       'gol': gol,
       'ammonizioni': ammonizioni,
       'espulsioni': espulsioni,
@@ -31,7 +31,7 @@ class Giocatore extends GiocatoreBase {
     return Giocatore(
       map['nome'],
       map['gruppo'],
-      map['_id'],
+      map['id'],
       map['gol'],
       map['ammonizioni'],
       map['espulsioni'],
