@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'blocs/blocs.dart';
 import 'theme.dart';
 import 'ui/ui.dart';
@@ -25,6 +26,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
   await Firebase.initializeApp();
+
+  await Supabase.initialize(
+    url: 'https://qadszjfdpxjteuvhtgdr.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzNzg0OTY0NCwiZXhwIjoxOTUzNDI1NjQ0fQ.sjyG7VCc12_MyWkyPmB_Mx3gE2CYAb0TmE_DmwsMlfc',
+  );
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
@@ -126,13 +133,10 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   final _navigatorKey = GlobalKey<NavigatorState>();
   late Stream<String> _tokenStream;
-  late String _token;
 
   void setToken(String token) {
     print('FCM Token: $token');
-    setState(() {
-      _token = token;
-    });
+    setState(() {});
   }
 
   @override
@@ -168,8 +172,6 @@ class _AppViewState extends State<AppView> {
       // all'apertura dell'app tramite notifica
     });
   }
-
-  NavigatorState get _navigator => _navigatorKey.currentState!;
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../blocs/blocs.dart';
 import '../models/giocatore.dart';
 import 'widgets/widgets.dart';
@@ -29,6 +30,42 @@ class GiocatoriPage extends StatelessWidget {
         title: Text('${this.gruppo}'),
         centerTitle: true,
         actions: [
+          authState.status == AuthenticationStatus.authenticated
+              ? IconButton(
+                  onPressed: () async {
+                    final result = await showTextInputDialog(
+                      context: context,
+                      title: 'Che bel giocatore!',
+                      message: 'Inserisci nome del nuovo giocatore',
+                      textFields: [
+                        DialogTextField(
+                          hintText: 'nome',
+                          validator: (input) =>
+                              input!.isNotEmpty ? null : 'Inserire nome valido',
+                        ),
+                      ],
+                    );
+                    if (result != null && result.length == 1) {
+                      final immagine = await showConfirmationDialog(
+                        context: context,
+                        title: 'Che bel giocatore!',
+                        message: 'Scegli il ruolo',
+                        actions: [
+                          AlertDialogAction(key: 0, label: 'Portiere'),
+                          AlertDialogAction(key: 1, label: 'Difensore'),
+                          AlertDialogAction(key: 2, label: 'Terzino'),
+                          AlertDialogAction(key: 3, label: 'Ala'),
+                          AlertDialogAction(key: 4, label: 'Centravanti'),
+                        ],
+                      );
+                      if (immagine != null) {
+                        context.read<GiocatoriBloc>().add(
+                            GiocatoriCrea(result[0], this.gruppo, immagine));
+                      }
+                    }
+                  },
+                  icon: Icon(Icons.person_add_alt_1_rounded))
+              : Container(),
           IconButton(
             onPressed: () =>
                 context.read<GiocatoriBloc>().add(GiocatoriLoaded()),
@@ -36,46 +73,6 @@ class GiocatoriPage extends StatelessWidget {
           )
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: authState.status ==
-              AuthenticationStatus.authenticated
-          ? FloatingActionButton(
-              child: Center(child: Icon(Icons.person_add_alt_1_rounded)),
-              onPressed: () async {
-                final result = await showTextInputDialog(
-                  context: context,
-                  title: 'Che bel giocatore!',
-                  message: 'Inserisci nome del nuovo giocatore',
-                  textFields: [
-                    DialogTextField(
-                      hintText: 'nome',
-                      validator: (input) =>
-                          input!.isNotEmpty ? null : 'Inserire nome valido',
-                    ),
-                  ],
-                );
-                if (result != null && result.length == 1) {
-                  final immagine = await showConfirmationDialog(
-                    context: context,
-                    title: 'Che bel giocatore!',
-                    message: 'Scegli il ruolo',
-                    actions: [
-                      AlertDialogAction(key: 0, label: 'Portiere'),
-                      AlertDialogAction(key: 1, label: 'Difensore'),
-                      AlertDialogAction(key: 2, label: 'Terzino'),
-                      AlertDialogAction(key: 3, label: 'Ala'),
-                      AlertDialogAction(key: 4, label: 'Centravanti'),
-                    ],
-                  );
-                  if (immagine != null) {
-                    context
-                        .read<GiocatoriBloc>()
-                        .add(GiocatoriCrea(result[0], this.gruppo, immagine));
-                  }
-                }
-              },
-            )
-          : null,
       body: Stack(
         children: [
           BlocBuilder<GiocatoriBloc, GiocatoriState>(
@@ -94,7 +91,20 @@ class GiocatoriPage extends StatelessWidget {
                     .where((giocatore) => giocatore.gruppo == gruppo)
                     .toList();
 
-                return GrigliaGiocatori(giocatori: filtered);
+                return filtered.isNotEmpty
+                    ? GrigliaGiocatori(giocatori: filtered)
+                    : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: FaIcon(FontAwesomeIcons.users, size: 30.0),
+                            ),
+                            Text('Questo gruppo non ha giocatori'),
+                          ],
+                        ),
+                      );
               }
             },
           ),
@@ -123,6 +133,7 @@ class GrigliaGiocatori extends StatefulWidget {
 
 class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
   bool deletable = false;
+
   @override
   Widget build(BuildContext context) {
     final giocatoriBloc = BlocProvider.of<GiocatoriBloc>(context);

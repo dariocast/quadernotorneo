@@ -33,4 +33,10 @@ class CreaOrarioChanged extends CreaEvent {
   CreaOrarioChanged(this.orario);
 }
 
+class CreaDescrizioneChanged extends CreaEvent {
+  final String descrizione;
+
+  CreaDescrizioneChanged(this.descrizione);
+}
+
 class CreaSubmit extends CreaEvent {}

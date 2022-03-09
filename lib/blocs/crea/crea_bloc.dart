@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +20,8 @@ class CreaBloc extends Bloc<CreaEvent, CreaState> {
         (event, emit) => _handleCreaDataChangedEvent(event, emit));
     on<CreaOrarioChanged>(
         (event, emit) => _handleCreaOrarioChangedEvent(event, emit));
+    on<CreaDescrizioneChanged>(
+        (event, emit) => _handleCreaDescrizioneChangedEvent(event, emit));
     on<CreaSubmit>((event, emit) => _handleCreaSubmitEvent(event, emit));
   }
 
@@ -34,6 +34,7 @@ class CreaBloc extends Bloc<CreaEvent, CreaState> {
         state.orario != null;
     emit(state.copyWith(
       gruppi: nomiGruppi,
+      hasGruppi: nomiGruppi.isNotEmpty,
       isLoading: false,
       isValid: isValid,
     ));
@@ -51,6 +52,7 @@ class CreaBloc extends Bloc<CreaEvent, CreaState> {
           state.orario!.hour,
           state.orario!.minute,
         ),
+        state.descrizione!,
       );
       emit(state.copyWith(isLoading: false, creationSuccess: true));
     }
@@ -96,6 +98,19 @@ class CreaBloc extends Bloc<CreaEvent, CreaState> {
         state.gruppoDue != null && state.data != null && state.orario != null;
     emit(state.copyWith(
       gruppoUno: event.gruppo,
+      isLoading: false,
+      isValid: isValid,
+    ));
+  }
+
+  _handleCreaDescrizioneChangedEvent(
+      CreaDescrizioneChanged event, Emitter<CreaState> emit) {
+    final isValid = state.gruppoUno != null &&
+        state.gruppoDue != null &&
+        state.data != null &&
+        state.orario != null;
+    emit(state.copyWith(
+      descrizione: event.descrizione,
       isLoading: false,
       isValid: isValid,
     ));

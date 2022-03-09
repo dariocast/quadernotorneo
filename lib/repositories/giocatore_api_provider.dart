@@ -1,43 +1,38 @@
-import 'dart:convert';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:http/http.dart';
 import '../models/models.dart';
 
-const String giocatoriUrl =
-    'https://dariocast.altervista.org/fantazama/api/giocatore';
-const String gruppiUrl =
-    'https://dariocast.altervista.org/fantazama/api/gruppo';
-
 class GiocatoreApiProvider {
-  Client client = Client();
   Future<List<String>> giocatoriByGruppo(String gruppo) async {
-    final response = await client.get(
-        Uri.parse('$giocatoriUrl/getGiocatoriPerGruppo.php?gruppo=$gruppo'));
-    if (response.statusCode == 200) {
-      return List.from(json.decode(response.body));
+    final supabase = Supabase.instance.client;
+    final response = await supabase
+        .from('giocatore')
+        .select('nome')
+        .eq('gruppo', gruppo)
+        .execute();
+    if (response.status == 200) {
+      final listaNomi = response.data as List;
+      final listaNomiSemplice =
+          listaNomi.map<String>((entry) => entry['nome']).toList();
+      return listaNomiSemplice;
     } else {
       throw Exception('Impossibile ottenere i giocatori');
     }
   }
 
-  Future<List<Gruppo>> gruppi() async {
-    final response = await client.get(Uri.parse('$gruppiUrl/getGruppi.php'));
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)
-          .map<Gruppo>((json) => Gruppo.fromMap(json))
-          .toList();
-    } else {
-      throw Exception('Impossibile ottenere i gruppi');
-    }
-  }
-
   Future<List<Giocatore>> marcatori() async {
-    final response =
-        await client.get(Uri.parse('$giocatoriUrl/getOrdered.php'));
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)
-          .map<Giocatore>((json) => Giocatore.fromMap(json))
-          .toList();
+    final supabase = Supabase.instance.client;
+    final response = await supabase
+        .from('giocatore')
+        .select('*')
+        .gt('gol', 0)
+        .order('gol', ascending: false)
+        .execute();
+    if (response.status == 200) {
+      final listaGiocatoriDB = response.data as List;
+      final mapDone =
+          listaGiocatoriDB.map<Giocatore>((json) => Giocatore.fromMap(json));
+      return mapDone.toList();
     } else {
       throw Exception('Impossibile ottenere i marcatori');
     }
@@ -45,45 +40,69 @@ class GiocatoreApiProvider {
 
   Future<Giocatore> creaGiocatore(
       String nome, String gruppo, int immagine) async {
-    final response = await client.post(Uri.parse('$giocatoriUrl/create.php'),
-        body: jsonEncode({
-          'nome': nome,
-          'gruppo': gruppo,
-          'image': immagine,
-        }));
-    if (response.statusCode == 200) {
-      return Giocatore.fromJson(response.body);
+    final supabase = Supabase.instance.client;
+    final response = await supabase.from('giocatore').insert([
+      {'nome': nome, 'gruppo': gruppo, 'image': immagine}
+    ]).execute();
+    if (response.error == null && response.data != null) {
+      return Giocatore.fromMap(response.data[0]);
     } else {
       throw Exception('Impossibile creare nuovo giocatore');
     }
   }
 
   Future<bool> aggiorna(Giocatore giocatore) async {
-    final response = await client.post(Uri.parse('$giocatoriUrl/update.php'),
-        body: giocatore.toJson());
-    if (response.statusCode == 200) {
-      return json.decode(response.body)['updated'];
+    final supabase = Supabase.instance.client;
+    final response = await supabase
+        .from('giocatore')
+        .update({
+          'nome': giocatore.nome,
+          'image': giocatore.image,
+          'gruppo': giocatore.gruppo,
+          'gol': giocatore.gol,
+          'ammonizioni': giocatore.ammonizioni,
+          'espulsioni': giocatore.espulsioni,
+        })
+        .eq('id', giocatore.id)
+        .execute();
+    return response.error == null && response.data != null
+        ? true
+        : throw Exception('Impossibile aggiornare il giocatore');
+  }
+
+  Future<List<Giocatore>> aggiornaTutti(List<Giocatore> giocatori) async {
+    final supabase = Supabase.instance.client;
+    final response = await supabase
+        .from('giocatore')
+        .upsert(giocatori.map((e) => e.toMap()).toList())
+        .execute();
+    if (response.error == null && response.data != null) {
+      final listaGiocatoriDB = response.data as List;
+      final mapDone =
+          listaGiocatoriDB.map<Giocatore>((json) => Giocatore.fromMap(json));
+      final lista = mapDone.toList();
+      lista.sort((a, b) => b.gol.compareTo(a.gol));
+      return lista;
     } else {
-      throw Exception('Impossibile aggiornare il giocatore');
+      throw Exception('Impossibile aggiornare i giocatori');
     }
   }
 
   Future<bool> elimina(int id) async {
+    final supabase = Supabase.instance.client;
     final response =
-        await client.delete(Uri.parse('$giocatoriUrl/delete.php?id=$id'));
-    if (response.statusCode == 200) {
-      return json.decode(response.body)['deleted'];
-    } else {
-      throw Exception('Impossibile eliminare il giocatore');
-    }
+        await supabase.from('giocatore').delete().eq('id', id).execute();
+    return response.status == 200;
   }
 
   Future<List<Giocatore>> tutti() async {
-    final response = await client.get(Uri.parse('$giocatoriUrl/getAll.php'));
-    if (response.statusCode == 200) {
-      final jsonDecoded = jsonDecode(response.body);
+    final supabase = Supabase.instance.client;
+    final response = await supabase.from('giocatore').select('*').execute();
+    final error = response.error;
+    if (response.status == 200 && error == null) {
+      final listaGruppiDB = response.data as List;
       final mapDone =
-          jsonDecoded.map<Giocatore>((json) => Giocatore.fromMap(json));
+          listaGruppiDB.map<Giocatore>((json) => Giocatore.fromMap(json));
       final lista = mapDone.toList();
       return lista;
     } else {
@@ -91,13 +110,19 @@ class GiocatoreApiProvider {
     }
   }
 
-  Future<Giocatore> singolo(int id) async {
-    final response =
-        await client.get(Uri.parse('$giocatoriUrl/get.php?id=$id'));
-    if (response.statusCode == 200) {
-      return Giocatore.fromJson(response.body);
+  Future<Giocatore> singolo(String nome, String gruppo) async {
+    final supabase = Supabase.instance.client;
+    final response = await supabase
+        .from('giocatore')
+        .select('*')
+        .eq('nome', nome)
+        .eq('gruppo', gruppo)
+        .execute();
+    final error = response.error;
+    if (response.status != 200 && error != null) {
+      throw Exception('Impossibile caricare $nome gruppo $gruppo');
     } else {
-      throw Exception('Impossibile caricare il giocatore con id: $id');
+      return Giocatore.fromMap(response.data[0]);
     }
   }
 }

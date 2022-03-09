@@ -8,7 +8,7 @@ abstract class DettaglioEvent extends Equatable {
 }
 
 class DettaglioLoaded extends DettaglioEvent {
-  final PartitaModel partita;
+  final Partita partita;
 
   DettaglioLoaded(this.partita);
 }

@@ -58,5 +58,8 @@
 		<false/>
 		<key>GADApplicationIdentifier</key>
 		<string>ca-app-pub-8225784208582563~7765255165</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Caricamento loghi personalizzati</string>
+
 	</dict>
 </plist>
