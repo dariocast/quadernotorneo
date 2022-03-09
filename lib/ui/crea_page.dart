@@ -173,6 +173,27 @@ class CreaPage extends StatelessWidget {
                                   : Container(),
                             ],
                           ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: 8.0,
+                              bottom: 8.0,
+                              right: 50,
+                              left: 50,
+                            ),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                  hintText: 'Descrizione (opzionale)'),
+                              key: const Key(
+                                  'creationDialog_descrizioneInput_textField'),
+                              onChanged: (String? descrizione) {
+                                if (descrizione != null) {
+                                  context
+                                      .read<CreaBloc>()
+                                      .add(CreaDescrizioneChanged(descrizione));
+                                }
+                              },
+                            ),
+                          ),
                           Spacer(),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 25.0),

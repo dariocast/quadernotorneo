@@ -6,6 +6,7 @@ class CreaState extends Equatable {
   final String? gruppoDue;
   final DateTime? data;
   final TimeOfDay? orario;
+  final String? descrizione;
   final bool hasGruppi;
   final bool isLoading;
   final bool isValid;
@@ -20,6 +21,7 @@ class CreaState extends Equatable {
     this.isLoading = true,
     this.isValid = false,
     this.creationSuccess = false,
+    this.descrizione = '',
   });
 
   @override
@@ -34,19 +36,22 @@ class CreaState extends Equatable {
       isLoading,
       isValid,
       creationSuccess,
+      descrizione,
     ];
   }
 
-  CreaState copyWith(
-      {List<String>? gruppi,
-      String? gruppoUno,
-      String? gruppoDue,
-      DateTime? data,
-      TimeOfDay? orario,
-      bool? hasGruppi,
-      bool? isLoading,
-      bool? isValid,
-      bool? creationSuccess}) {
+  CreaState copyWith({
+    List<String>? gruppi,
+    String? gruppoUno,
+    String? gruppoDue,
+    DateTime? data,
+    TimeOfDay? orario,
+    bool? hasGruppi,
+    bool? isLoading,
+    bool? isValid,
+    bool? creationSuccess,
+    String? descrizione,
+  }) {
     return CreaState(
       gruppi: gruppi ?? this.gruppi,
       gruppoUno: gruppoUno ?? this.gruppoUno,
@@ -57,6 +62,7 @@ class CreaState extends Equatable {
       isLoading: isLoading ?? this.isLoading,
       isValid: isValid ?? this.isValid,
       creationSuccess: creationSuccess ?? this.creationSuccess,
+      descrizione: descrizione ?? this.descrizione,
     );
   }
 }

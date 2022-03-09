@@ -3,6 +3,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../blocs/blocs.dart';
 import '../models/giocatore.dart';
 import 'widgets/widgets.dart';
@@ -96,7 +97,10 @@ class GiocatoriPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.info_outline, size: 30.0),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: FaIcon(FontAwesomeIcons.users, size: 30.0),
+                            ),
                             Text('Questo gruppo non ha giocatori'),
                           ],
                         ),

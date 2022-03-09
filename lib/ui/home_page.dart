@@ -3,6 +3,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../helpers/extensions/extensions.dart';
@@ -94,7 +95,17 @@ class _HomePageState extends State<HomePage> {
         if (state is HomeSuccess) {
           if (state.partite.isEmpty) {
             return Center(
-              child: Text('Nessuna partita'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FaIcon(FontAwesomeIcons.exclamationTriangle,
+                        size: 30.0),
+                  ),
+                  Text('Nessuna partita'),
+                ],
+              ),
             );
           }
           return Stack(
@@ -214,7 +225,10 @@ class _HomePageState extends State<HomePage> {
                   : Container(),
               authState.status == AuthenticationStatus.authenticated
                   ? Center(
-                      child: Text('Gestione'),
+                      child: Text(
+                        'Gestione',
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
                     )
                   : Container(),
               authState.status == AuthenticationStatus.authenticated
@@ -400,7 +414,7 @@ class PartitaCard extends StatelessWidget {
                     children: [
                       partita.descrizione.isNotEmpty
                           ? Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
                               child: Text(
                                 '${partita.descrizione}',
                                 maxLines: 2,
@@ -429,20 +443,26 @@ class PartitaCard extends StatelessWidget {
                         ),
                       ),
                       isLive
-                          ? BlinkText(
-                              'LIVE',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: BlinkText(
+                                'LIVE',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                beginColor: Colors.red,
+                                endColor: Colors.white,
                               ),
-                              beginColor: Colors.red,
-                              endColor: Colors.white,
                             )
                           : Container(),
                       terminata
-                          ? Text(
-                              'Terminata',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 10),
+                          ? Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                'Terminata',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 10),
+                              ),
                             )
                           : Container(),
                     ],

@@ -11,9 +11,10 @@ class Repository {
   final gruppoApiProvider = GruppoApiProvider();
 
   Future<List<Partita>> listaPartite() => partitaApiProvider.tutte();
-  Future<Partita> creaPartita(
-          String nomeSquadra1, String nomeSquadra2, DateTime dateTime) =>
-      partitaApiProvider.crea(nomeSquadra1, nomeSquadra2, dateTime);
+  Future<Partita> creaPartita(String nomeSquadra1, String nomeSquadra2,
+          DateTime dateTime, String descrizione) =>
+      partitaApiProvider.crea(
+          nomeSquadra1, nomeSquadra2, dateTime, descrizione);
   Future<Partita> singolaPartita(int id) => partitaApiProvider.singola(id);
   Future<bool> aggiornaPartita(Partita partitaDaAggiornare) =>
       partitaApiProvider.aggiorna(partitaDaAggiornare);

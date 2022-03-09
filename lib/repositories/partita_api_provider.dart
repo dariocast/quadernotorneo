@@ -36,7 +36,8 @@ class PartitaApiProvider {
     }
   }
 
-  Future<Partita> crea(String squadra1, String squadra2, DateTime data) async {
+  Future<Partita> crea(String squadra1, String squadra2, DateTime data,
+      String descrizione) async {
     final supabase = Supabase.instance.client;
     final response = await supabase.from('partita').insert({
       'squadraUno': squadra1,
@@ -44,7 +45,8 @@ class PartitaApiProvider {
       'marcatori': List.empty(),
       'ammoniti': List.empty(),
       'espulsi': List.empty(),
-      'data': data.toIso8601String()
+      'data': data.toIso8601String(),
+      'descrizione': descrizione,
     }).execute();
     final error = response.error;
     if (error != null && response.status != 200) {

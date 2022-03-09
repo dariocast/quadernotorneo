@@ -6,7 +6,7 @@ class QuadernoTheme {
     final ThemeData theme = ThemeData();
     return theme.copyWith(
       primaryColor: Colors.green,
-      textTheme: GoogleFonts.latoTextTheme(),
+      textTheme: GoogleFonts.openSansTextTheme(),
       iconTheme: theme.iconTheme.copyWith(),
       colorScheme: theme.colorScheme.copyWith(
         primary: Colors.green,
