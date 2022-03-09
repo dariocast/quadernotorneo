@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 
 import 'models.dart';
 
-class PartitaModel extends Equatable {
+class Partita extends Equatable {
   final int id;
   final String squadraUno;
   final String squadraDue;
@@ -16,8 +16,9 @@ class PartitaModel extends Equatable {
   final List<GiocatoreBase> ammoniti;
   final List<GiocatoreBase> espulsi;
   final DateTime data;
+  final String descrizione;
 
-  const PartitaModel({
+  const Partita({
     required this.id,
     required this.squadraUno,
     required this.squadraDue,
@@ -29,8 +30,9 @@ class PartitaModel extends Equatable {
     required this.ammoniti,
     required this.espulsi,
     required this.data,
+    required this.descrizione,
   });
-  PartitaModel.empty()
+  Partita.empty()
       : this(
           id: 0,
           squadraUno: '',
@@ -43,6 +45,7 @@ class PartitaModel extends Equatable {
           ammoniti: List.empty(),
           espulsi: List.empty(),
           data: DateTime.now(),
+          descrizione: '',
         );
 
   @override
@@ -58,13 +61,10 @@ class PartitaModel extends Equatable {
         ammoniti,
         espulsi,
         data,
+        descrizione,
       ];
 
-  @override
-  String toString() =>
-      'Partita { id: $id, squadraUno: $squadraUno, squadraDue: $squadraDue }';
-
-  PartitaModel copyWith({
+  Partita copyWith({
     int? id,
     String? squadraUno,
     String? squadraDue,
@@ -76,8 +76,9 @@ class PartitaModel extends Equatable {
     List<GiocatoreBase>? ammoniti,
     List<GiocatoreBase>? espulsi,
     DateTime? data,
+    String? descrizione,
   }) {
-    return PartitaModel(
+    return Partita(
       id: id ?? this.id,
       squadraUno: squadraUno ?? this.squadraUno,
       squadraDue: squadraDue ?? this.squadraDue,
@@ -89,6 +90,7 @@ class PartitaModel extends Equatable {
       ammoniti: ammoniti ?? this.ammoniti,
       espulsi: espulsi ?? this.espulsi,
       data: data ?? this.data,
+      descrizione: descrizione ?? this.descrizione,
     );
   }
 
@@ -105,11 +107,12 @@ class PartitaModel extends Equatable {
       'ammoniti': ammoniti.map((x) => x.toMap()).toList(),
       'espulsi': espulsi.map((x) => x.toMap()).toList(),
       'data': data.toIso8601String(),
+      'descrizione': descrizione,
     };
   }
 
-  factory PartitaModel.fromMap(Map<String, dynamic> map) {
-    return PartitaModel(
+  factory Partita.fromMap(Map<String, dynamic> map) {
+    return Partita(
       id: map['id']?.toInt() ?? 0,
       squadraUno: map['squadraUno'] ?? '',
       squadraDue: map['squadraDue'] ?? '',
@@ -124,11 +127,17 @@ class PartitaModel extends Equatable {
       espulsi: List<GiocatoreBase>.from(
           map['espulsi']?.map((x) => GiocatoreBase.fromJson(x))),
       data: DateTime.parse((map['data'])),
+      descrizione: map['descrizione'] ?? '',
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory PartitaModel.fromJson(String source) =>
-      PartitaModel.fromMap(json.decode(source));
+  factory Partita.fromJson(String source) =>
+      Partita.fromMap(json.decode(source));
+
+  @override
+  String toString() {
+    return 'Partita(id: $id, squadraUno: $squadraUno, squadraDue: $squadraDue, golSquadraUno: $golSquadraUno, falliSquadraUno: $falliSquadraUno, golSquadraDue: $golSquadraDue, falliSquadraDue: $falliSquadraDue, marcatori: $marcatori, ammoniti: $ammoniti, espulsi: $espulsi, data: $data, descrizione: $descrizione)';
+  }
 }

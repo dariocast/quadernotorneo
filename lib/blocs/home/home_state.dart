@@ -14,7 +14,7 @@ class HomeFailure extends HomeState {}
 class HomeLoading extends HomeState {}
 
 class HomeSuccess extends HomeState {
-  final List<PartitaModel> partite;
+  final List<Partita> partite;
   final List<Gruppo> infoGruppi;
 
   const HomeSuccess({required this.partite, required this.infoGruppi});
@@ -27,7 +27,7 @@ class HomeSuccess extends HomeState {
       'HomeSuccess(partite: $partite, infoGruppi: $infoGruppi)';
 
   HomeSuccess copyWith({
-    List<PartitaModel>? partite,
+    List<Partita>? partite,
     List<Gruppo>? infoGruppi,
   }) {
     return HomeSuccess(

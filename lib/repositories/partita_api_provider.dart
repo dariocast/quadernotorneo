@@ -8,7 +8,7 @@ import '../models/models.dart';
 
 class PartitaApiProvider {
   Client client = Client();
-  Future<List<PartitaModel>> tutte() async {
+  Future<List<Partita>> tutte() async {
     final supabase = Supabase.instance.client;
     final response = await supabase.from('partita').select('*').execute();
     final error = response.error;
@@ -17,14 +17,14 @@ class PartitaApiProvider {
       throw Exception('Impossibile caricare le partite');
     } else {
       final listaPartiteDB = response.data as List;
-      final mapDone = listaPartiteDB
-          .map<PartitaModel>((json) => PartitaModel.fromMap(json));
+      final mapDone =
+          listaPartiteDB.map<Partita>((json) => Partita.fromMap(json));
       final lista = mapDone.toList();
       return lista;
     }
   }
 
-  Future<PartitaModel> singola(int id) async {
+  Future<Partita> singola(int id) async {
     final supabase = Supabase.instance.client;
     final response =
         await supabase.from('partita').select('*').eq('id', id).execute();
@@ -32,12 +32,11 @@ class PartitaApiProvider {
     if (error != null && response.status != 200) {
       throw Exception('Impossibile caricare la partita con id: $id');
     } else {
-      return PartitaModel.fromMap(response.data[0]);
+      return Partita.fromMap(response.data[0]);
     }
   }
 
-  Future<PartitaModel> crea(
-      String squadra1, String squadra2, DateTime data) async {
+  Future<Partita> crea(String squadra1, String squadra2, DateTime data) async {
     final supabase = Supabase.instance.client;
     final response = await supabase.from('partita').insert({
       'squadraUno': squadra1,
@@ -51,11 +50,11 @@ class PartitaApiProvider {
     if (error != null && response.status != 200) {
       throw Exception('Impossibile creare la partita: error: ${error}');
     } else {
-      return PartitaModel.fromMap(response.data[0]);
+      return Partita.fromMap(response.data[0]);
     }
   }
 
-  Future<bool> aggiorna(PartitaModel partita) async {
+  Future<bool> aggiorna(Partita partita) async {
     // final response = await client.post(Uri.parse('$partitaUrl/update.php'),
     //     body: partita.toJson());
 
@@ -86,7 +85,7 @@ class PartitaApiProvider {
     final supabase = Supabase.instance.client;
     final response =
         await supabase.from('partita').delete().eq('id', id).execute();
-    final partitaEliminata = PartitaModel.fromMap(response.data[0]);
+    final partitaEliminata = Partita.fromMap(response.data[0]);
     developer.log('Partita rimossa', name: 'repositories.partita.delete');
     final error = response.error;
     return error != null && response.status != 200
