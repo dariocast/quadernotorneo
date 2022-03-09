@@ -84,7 +84,7 @@ class GiocatoreApiProvider {
       lista.sort((a, b) => b.gol.compareTo(a.gol));
       return lista;
     } else {
-      throw Exception('Impossibile aggiornare il giocatore');
+      throw Exception('Impossibile aggiornare i giocatori');
     }
   }
 

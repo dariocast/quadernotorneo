@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:developer' as developer;
 
 import 'package:http/http.dart' show Client;
+import 'package:quaderno_flutter/models/models.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:path/path.dart' as p;
 
@@ -115,5 +116,22 @@ class GruppoApiProvider {
     return response.status == 200 && resDeletedPlayers.status == 200
         ? true
         : throw Exception('Impossibile eliminare il gruppo');
+  }
+
+  Future<List<Gruppo>> aggiornaTutti(List<Gruppo> gruppi) async {
+    final supabase = Supabase.instance.client;
+    final response = await supabase
+        .from('gruppo')
+        .upsert(gruppi.map((e) => e.toMap()).toList())
+        .execute();
+    if (response.error == null && response.data != null) {
+      final gruppiDB = response.data as List;
+      final mapDone = gruppiDB.map<Gruppo>((json) => Gruppo.fromMap(json));
+      final lista = mapDone.toList();
+      lista.sort((a, b) => b.pt.compareTo(a.pt));
+      return lista;
+    } else {
+      throw Exception('Impossibile aggiornare i gruppi');
+    }
   }
 }
