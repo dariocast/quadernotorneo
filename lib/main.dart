@@ -38,8 +38,8 @@ void main() async {
   if (!kIsWeb) {
     channel = const AndroidNotificationChannel(
       'quadernotorneo_channel', // id
-      'Canale Notifiche Quaderno Torneo', // title
-      'Qui arrivano tutte le notifiche dell\'app.', // description
+      'Qui arrivano tutte le notifiche dell\'app.', // title
+      description: 'Canale Notifiche Quaderno Torneo', // description
       importance: Importance.high,
     );
 
@@ -158,7 +158,7 @@ class _AppViewState extends State<AppView> {
               android: AndroidNotificationDetails(
                 channel.id,
                 channel.name,
-                channel.description,
+                channelDescription: channel.description,
                 // TODO add a proper drawable resource to android, for now using
                 //      one that already exists in example app.
                 icon: 'ic_launcher_foreground',
