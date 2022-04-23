@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../helpers/extensions/extensions.dart';
 import 'widgets/banner.dart';
 import '../utils/ad_helper.dart';
@@ -218,6 +219,16 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(GruppiPage.route());
+                },
+              ),
+              ListTile(
+                trailing: Icon(
+                  Icons.extension_rounded,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: Text('FantaTorneo'),
+                onTap: () {
+                  launch("https://dariocast.altervista.org/fantatorneo");
                 },
               ),
               authState.status == AuthenticationStatus.authenticated
