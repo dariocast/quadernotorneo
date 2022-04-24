@@ -111,8 +111,18 @@ class GruppoApiProvider {
         .from('giocatore')
         .delete()
         .match({'gruppo': gruppoEliminato.nome}).execute();
-    developer.log('Giocatori rimossi', name: 'repositories.gruppo.delete');
 
+    developer.log('Giocatori rimossi', name: 'repositories.gruppo.delete');
+    for (var giocatoreMap in resDeletedPlayers.data) {
+      final giocatore = Giocatore.fromMap(giocatoreMap);
+      if (giocatore.photo != null) {
+        final deletePhoto = await supabase.storage.from('giocatori').remove([
+          '${giocatore.gruppo}${giocatore.nome}${p.extension(giocatore.photo!)}'
+        ]);
+        developer.log('Foto rimossa dal bucket',
+            name: 'repositories.gruppo.delete');
+      }
+    }
     return response.status == 200 && resDeletedPlayers.status == 200
         ? true
         : throw Exception('Impossibile eliminare il gruppo');

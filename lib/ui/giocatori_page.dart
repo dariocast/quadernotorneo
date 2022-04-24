@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import '../blocs/blocs.dart';
 import '../models/giocatore.dart';
 import 'widgets/widgets.dart';
@@ -31,39 +35,65 @@ class GiocatoriPage extends StatelessWidget {
         centerTitle: true,
         actions: [
           authState.status == AuthenticationStatus.authenticated
+              // ? IconButton(
+              //     onPressed: () async {
+              //       final result = await showTextInputDialog(
+              //         context: context,
+              //         title: 'Che bel giocatore!',
+              //         message: 'Inserisci nome del nuovo giocatore',
+              //         textFields: [
+              //           DialogTextField(
+              //             hintText: 'nome',
+              //             validator: (input) =>
+              //                 input!.isNotEmpty ? null : 'Inserire nome valido',
+              //           ),
+              //         ],
+              //       );
+              //       if (result != null && result.length == 1) {
+              //         final immagine = await showConfirmationDialog(
+              //           context: context,
+              //           title: 'Che bel giocatore!',
+              //           message: 'Scegli il ruolo',
+              //           actions: [
+              //             AlertDialogAction(key: 0, label: 'Portiere'),
+              //             AlertDialogAction(key: 1, label: 'Difensore'),
+              //             AlertDialogAction(key: 2, label: 'Terzino'),
+              //             AlertDialogAction(key: 3, label: 'Ala'),
+              //             AlertDialogAction(key: 4, label: 'Centravanti'),
+              //           ],
+              //         );
+              //         if (immagine != null) {
+              //           FilePickerResult? photo =
+              //               await FilePicker.platform.pickFiles(
+              //             type: FileType.image,
+              //             allowMultiple: false,
+              //           );
+              //           if (photo != null) {
+              //             final photoFile = photo.files.first;
+              //             context.read<GiocatoriBloc>().add(
+              //                   GiocatoriCrea(
+              //                     result[0],
+              //                     this.gruppo,
+              //                     immagine,
+              //                     photoFile.path!,
+              //                   ),
+              //                 );
+              //           }
+              //         }
+              //       }
+              //     },
+              //     icon: Icon(Icons.person_add_alt_1_rounded))
               ? IconButton(
-                  onPressed: () async {
-                    final result = await showTextInputDialog(
-                      context: context,
-                      title: 'Che bel giocatore!',
-                      message: 'Inserisci nome del nuovo giocatore',
-                      textFields: [
-                        DialogTextField(
-                          hintText: 'nome',
-                          validator: (input) =>
-                              input!.isNotEmpty ? null : 'Inserire nome valido',
-                        ),
-                      ],
-                    );
-                    if (result != null && result.length == 1) {
-                      final immagine = await showConfirmationDialog(
+                  onPressed: () => showModalBottomSheet(
                         context: context,
-                        title: 'Che bel giocatore!',
-                        message: 'Scegli il ruolo',
-                        actions: [
-                          AlertDialogAction(key: 0, label: 'Portiere'),
-                          AlertDialogAction(key: 1, label: 'Difensore'),
-                          AlertDialogAction(key: 2, label: 'Terzino'),
-                          AlertDialogAction(key: 3, label: 'Ala'),
-                          AlertDialogAction(key: 4, label: 'Centravanti'),
-                        ],
-                      );
-                      if (immagine != null) {
-                        context.read<GiocatoriBloc>().add(
-                            GiocatoriCrea(result[0], this.gruppo, immagine));
-                      }
-                    }
-                  },
+                        builder: (_) {
+                          return BlocProvider.value(
+                            value: BlocProvider.of<GiocatoriBloc>(context),
+                            child:
+                                WidgetCreazioneGiocatore(gruppo: this.gruppo),
+                          );
+                        },
+                      ),
                   icon: Icon(Icons.person_add_alt_1_rounded))
               : Container(),
           IconButton(
@@ -225,10 +255,10 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                       }
                     : null,
             child: Card(
-              margin: EdgeInsets.all(4.0),
               elevation: deletable ? 8 : 1,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(4.0, 10.0, 4.0, 4.0),
+                padding:
+                    const EdgeInsets.only(left: 3.0, top: 5.0, bottom: 4.0),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -244,12 +274,14 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                             ))
                         : Container(),
                     Positioned(
-                      top: 0.0,
-                      left: 20,
+                      top: 10.0,
+                      right: 0.0,
                       child: SizedBox(
-                        width: 120,
-                        height: 120,
-                        child: playerImages[giocatore.image],
+                        width: 150,
+                        height: 150,
+                        child: giocatore.photo == null
+                            ? playerImages[giocatore.image]
+                            : Image.network(giocatore.photo!),
                       ),
                     ),
                     Positioned(
@@ -316,6 +348,186 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
           ),
         );
       },
+    );
+  }
+}
+
+class WidgetCreazioneGiocatore extends StatefulWidget {
+  final String gruppo;
+
+  const WidgetCreazioneGiocatore({
+    Key? key,
+    required this.gruppo,
+  }) : super(key: key);
+
+  @override
+  State<WidgetCreazioneGiocatore> createState() =>
+      _WidgetCreazioneGiocatoreState();
+}
+
+class _WidgetCreazioneGiocatoreState extends State<WidgetCreazioneGiocatore> {
+  String? nome;
+  XFile? file;
+  int source = 0;
+  int ruolo = 3;
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Text('Un nuovo giocatore, eh?',
+                  style: Theme.of(context).textTheme.headline4),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: TextField(
+                  onChanged: (value) => setState(() {
+                    this.nome = value;
+                  }),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Nome',
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(3.0),
+          //     child: SizedBox(
+          //       width: MediaQuery.of(context).size.width * 0.8,
+          //       child: TextButton(
+          //         child: Text('Scegli il ruolo'),
+          //         onPressed: () async {
+          //           final ruolo = await showConfirmationDialog(
+          //             context: context,
+          //             title: 'Che bel giocatore!',
+          //             message: 'Modifica il ruolo',
+          //             initialSelectedActionKey: this.ruolo,
+          //             actions: [
+          //               AlertDialogAction(key: 0, label: 'Portiere'),
+          //               AlertDialogAction(key: 1, label: 'Difensore'),
+          //               AlertDialogAction(key: 2, label: 'Terzino'),
+          //               AlertDialogAction(key: 3, label: 'Ala'),
+          //               AlertDialogAction(key: 4, label: 'Centravanti'),
+          //             ],
+          //           );
+          //           if (ruolo != null) {
+          //             setState(() {
+          //               this.ruolo = ruolo;
+          //             });
+          //           }
+          //         },
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text('Carica una foto'),
+                        Spacer(),
+                        IconButton(
+                          icon: Icon(
+                            Icons.photo,
+                            color: this.file != null && this.source == 1
+                                ? Colors.green
+                                : Colors.red,
+                          ),
+                          onPressed: () async {
+                            XFile? result = await ImagePicker()
+                                .pickImage(source: ImageSource.gallery);
+                            if (result != null) {
+                              setState(() {
+                                this.file = result;
+                                this.source = 1;
+                              });
+                            }
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.camera_alt_rounded,
+                            color: this.file != null && this.source == 2
+                                ? Colors.green
+                                : Colors.red,
+                          ),
+                          onPressed: () async {
+                            XFile? result = await ImagePicker()
+                                .pickImage(source: ImageSource.camera);
+                            if (result != null) {
+                              setState(() {
+                                this.file = result;
+                                this.source = 2;
+                              });
+                            }
+                          },
+                        ),
+                        this.file != null
+                            ? SizedBox(
+                                height: 50.0,
+                                child: Image.file(File(this.file!.path)),
+                              )
+                            : Container(),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlinedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Center(
+                    child: Text('Annulla'),
+                  ),
+                ),
+                SizedBox(
+                  width: 30,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (this.nome != null &&
+                        this.ruolo != null &&
+                        this.file != null) {
+                      context.read<GiocatoriBloc>().add(GiocatoriCrea(
+                            this.nome!.trim(),
+                            widget.gruppo,
+                            this.ruolo,
+                            this.file!.path,
+                          ));
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: Center(
+                    child: Text('Crea'),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

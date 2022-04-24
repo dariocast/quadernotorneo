@@ -40,7 +40,7 @@ class GiocatoriBloc extends Bloc<GiocatoriEvent, GiocatoriState> {
     emit(GiocatoriLoading());
     try {
       final created = await _repository.creaGiocatore(
-          event.nome, event.gruppo, event.immagine);
+          event.nome, event.gruppo, event.immagine, event.photo);
       final giocatori = await _repository.giocatori();
       emit(GiocatoriLoadSuccess(giocatori));
     } catch (e) {

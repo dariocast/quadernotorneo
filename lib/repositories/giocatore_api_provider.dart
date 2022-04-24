@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'package:path/path.dart' as p;
+import 'dart:developer' as developer;
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/models.dart';
@@ -39,10 +43,18 @@ class GiocatoreApiProvider {
   }
 
   Future<Giocatore> creaGiocatore(
-      String nome, String gruppo, int immagine) async {
+      String nome, String gruppo, int immagine, String photo) async {
     final supabase = Supabase.instance.client;
+    final logoFile = File(photo);
+    final uploadResult = await supabase.storage.from('giocatori').upload(
+        '$gruppo$nome${p.extension(photo)}', logoFile,
+        fileOptions: FileOptions(cacheControl: '3600', upsert: true));
+    final publicURL = supabase.storage
+        .from('giocatori')
+        .getPublicUrl('$gruppo$nome${p.extension(photo)}')
+        .data;
     final response = await supabase.from('giocatore').insert([
-      {'nome': nome, 'gruppo': gruppo, 'image': immagine}
+      {'nome': nome, 'gruppo': gruppo, 'image': immagine, 'photo': publicURL}
     ]).execute();
     if (response.error == null && response.data != null) {
       return Giocatore.fromMap(response.data[0]);
@@ -89,10 +101,27 @@ class GiocatoreApiProvider {
   }
 
   Future<bool> elimina(int id) async {
+    // final supabase = Supabase.instance.client;
+    // final response =
+    //     await supabase.from('giocatore').delete().eq('id', id).execute();
+    // return response.status == 200;
+
     final supabase = Supabase.instance.client;
     final response =
         await supabase.from('giocatore').delete().eq('id', id).execute();
-    return response.status == 200;
+    final giocatoreEliminato = Giocatore.fromMap(response.data[0]);
+    developer.log('Giocatore rimosso', name: 'repositories.giocatore.delete');
+    if (giocatoreEliminato.photo != null) {
+      final deletePhoto = await supabase.storage.from('giocatori').remove([
+        '${giocatoreEliminato.gruppo}${giocatoreEliminato.nome}${p.extension(giocatoreEliminato.photo!)}'
+      ]);
+      developer.log('Foto rimossa dal bucket',
+          name: 'repositories.giocatore.delete');
+    }
+
+    return response.status == 200
+        ? true
+        : throw Exception('Impossibile eliminare il gruppo');
   }
 
   Future<List<Giocatore>> tutti() async {
