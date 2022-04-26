@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'dart:developer' as developer;

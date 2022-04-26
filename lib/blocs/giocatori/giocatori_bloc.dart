@@ -22,16 +22,13 @@ class GiocatoriBloc extends Bloc<GiocatoriEvent, GiocatoriState> {
   _handleGiocatoriLoaded(
       GiocatoriLoaded event, Emitter<GiocatoriState> emit) async {
     emit(GiocatoriLoading());
-    if (event is GiocatoriLoaded) {
-      try {
-        final giocatori = await _repository.giocatori();
-        giocatori.sort((a, b) => a.gruppo.compareTo(b.gruppo));
-        emit(GiocatoriLoadSuccess(giocatori));
-      } catch (e) {
-        debugPrint(e.toString());
-        emit(GiocatoriLoadFailure(
-            'Impossibile caricare i giocatori al momento'));
-      }
+    try {
+      final giocatori = await _repository.giocatori();
+      giocatori.sort((a, b) => a.gruppo.compareTo(b.gruppo));
+      emit(GiocatoriLoadSuccess(giocatori));
+    } catch (e) {
+      debugPrint(e.toString());
+      emit(GiocatoriLoadFailure('Impossibile caricare i giocatori al momento'));
     }
   }
 
@@ -39,6 +36,7 @@ class GiocatoriBloc extends Bloc<GiocatoriEvent, GiocatoriState> {
       GiocatoriCrea event, Emitter<GiocatoriState> emit) async {
     emit(GiocatoriLoading());
     try {
+      // ignore: unused_local_variable
       final created = await _repository.creaGiocatore(
           event.nome, event.gruppo, event.immagine, event.photo);
       final giocatori = await _repository.giocatori();

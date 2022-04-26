@@ -1,15 +1,17 @@
 import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../blocs/blocs.dart';
+import '../utils/ui_helpers.dart';
 import 'ui.dart';
 import 'widgets/widgets.dart';
-import 'package:authentication_repository/authentication_repository.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GruppiPage extends StatelessWidget {
   static Route route() {
@@ -63,7 +65,7 @@ class WidgetCreazioneGruppo extends StatefulWidget {
 class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
   String? nome;
   String? girone;
-  PlatformFile? file;
+  File? file;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -72,7 +74,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
           Padding(
             padding: const EdgeInsets.all(30.0),
             child: Text('Un nuovo gruppo, eh?',
-                style: Theme.of(context).textTheme.headline4),
+                style: Theme.of(context).textTheme.headline5),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -109,26 +111,36 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  TextButton(
+                  OutlinedButton(
                     child: this.file == null
                         ? Text('Carica un logo')
                         : Text('Cambia logo'),
                     onPressed: () async {
-                      FilePickerResult? result =
-                          await FilePicker.platform.pickFiles(
-                        type: FileType.image,
-                        allowMultiple: false,
-                      );
+                      XFile? result = await ImagePicker()
+                          .pickImage(source: ImageSource.gallery);
                       if (result != null) {
-                        setState(() {
-                          this.file = result.files.first;
-                        });
-                        this.file = result.files.first;
+                        final croppedImage = await cropImage(
+                          this.context,
+                          'Ritaglia l\'immagine',
+                          File(result.path),
+                          CropAspectRatio(ratioX: 1, ratioY: 1),
+                        );
+                        if (croppedImage != null) {
+                          setState(() {
+                            this.file = croppedImage;
+                          });
+                        }
                       }
                     },
                   ),
-                  this.file != null ? Text(this.file!.name) : Container(),
+                  SizedBox.square(
+                    dimension: 150,
+                    child: this.file != null
+                        ? Image.file(File(this.file!.path))
+                        : Container(),
+                  )
                 ],
               ),
             ),
@@ -153,7 +165,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
                     context.read<GruppiBloc>().add(GruppiCrea(
                           this.nome!.trim(),
                           this.girone!.trim(),
-                          this.file!.path!,
+                          this.file!.path,
                         ));
                     Navigator.of(context).pop();
                   }
@@ -180,7 +192,7 @@ class VistaGruppi extends StatefulWidget {
 }
 
 class _VistaGruppiState extends State<VistaGruppi> {
-  bool deletable = false;
+  bool editable = false;
 
   @override
   Widget build(BuildContext context) {
@@ -221,25 +233,25 @@ class _VistaGruppiState extends State<VistaGruppi> {
                           itemBuilder: (context, index) {
                             return WillPopScope(
                               onWillPop: () async {
-                                if (!deletable)
+                                if (!editable)
                                   return true;
                                 else {
                                   setState(() {
-                                    deletable = !deletable;
+                                    editable = !editable;
                                   });
                                 }
                                 return false;
                               },
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(0.0),
                                 child: InkWell(
                                   onLongPress: authState.status ==
                                           AuthenticationStatus.authenticated
                                       ? () => setState(() {
-                                            deletable = !deletable;
+                                            editable = !editable;
                                           })
                                       : null,
-                                  onTap: !deletable &&
+                                  onTap: !editable &&
                                           authState.status ==
                                               AuthenticationStatus.authenticated
                                       ? () {
@@ -264,10 +276,10 @@ class _VistaGruppiState extends State<VistaGruppi> {
                                             }
                                           : null,
                                   child: Card(
-                                    elevation: deletable ? 8 : 1,
+                                    elevation: editable ? 8 : 1,
                                     child: Stack(
                                       children: [
-                                        deletable &&
+                                        editable &&
                                                 authState.status ==
                                                     AuthenticationStatus
                                                         .authenticated
@@ -275,7 +287,7 @@ class _VistaGruppiState extends State<VistaGruppi> {
                                                 right: 0,
                                                 top: 0,
                                                 child: Icon(
-                                                  Icons.close,
+                                                  Icons.delete_forever_rounded,
                                                   color: Colors.red,
                                                 ))
                                             : Container(),
@@ -283,10 +295,9 @@ class _VistaGruppiState extends State<VistaGruppi> {
                                           alignment: Alignment.topCenter,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
-                                                top: 30.0),
+                                                top: 15.0),
                                             child: SizedBox(
-                                              width: 100,
-                                              height: 100,
+                                              height: 150,
                                               child: Image.network(
                                                   gruppi[index].logo),
                                             ),
@@ -296,12 +307,21 @@ class _VistaGruppiState extends State<VistaGruppi> {
                                           alignment: Alignment.bottomCenter,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
-                                                bottom: 35.0),
+                                                bottom: 5.0),
                                             child: Text(
                                               '${gruppi[index].nome}',
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5,
+                                                  .headline5
+                                                  ?.copyWith(
+                                                shadows: [
+                                                  Shadow(
+                                                    offset: Offset(0.0, 0.0),
+                                                    blurRadius: 10.0,
+                                                    color: Colors.white,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
