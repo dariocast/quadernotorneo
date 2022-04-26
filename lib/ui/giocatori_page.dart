@@ -92,7 +92,7 @@ class GiocatoriPage extends StatelessWidget {
           ),
           Positioned(
             width: MediaQuery.of(context).size.width,
-            bottom: 100.0,
+            bottom: 5.0,
             child: QuadernoBannerAd(),
           )
         ],
@@ -149,49 +149,6 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                 : null,
             onTap: !deletable &&
                     authState.status == AuthenticationStatus.authenticated
-                // ? () async {
-                // final nome = await showTextInputDialog(
-                //   context: context,
-                //   title: 'Che bel giocatore!',
-                //   message: 'Modifica il nome',
-                //   textFields: [
-                //     DialogTextField(
-                //       hintText: 'nome',
-                //       keyboardType: TextInputType.visiblePassword,
-                //       // * Use a space after text or the above keyboard
-                //       // * type to avoid replication issue
-                //       // initialText: entry.key.nome + ' ',
-                //       initialText: giocatore.nome,
-                //       validator: (input) =>
-                //           input!.isNotEmpty ? null : 'Inserire nome valido',
-                //     ),
-                //   ],
-                // );
-                // if (nome != null && nome.length == 1) {
-                //   final immagine = await showConfirmationDialog(
-                //     context: context,
-                //     title: 'Che bel giocatore!',
-                //     message: 'Modifica il ruolo',
-                //     initialSelectedActionKey: giocatore.image,
-                //     actions: [
-                //       AlertDialogAction(key: 0, label: 'Portiere'),
-                //       AlertDialogAction(key: 1, label: 'Difensore'),
-                //       AlertDialogAction(key: 2, label: 'Terzino'),
-                //       AlertDialogAction(key: 3, label: 'Ala'),
-                //       AlertDialogAction(key: 4, label: 'Centravanti'),
-                //     ],
-                //   );
-                //   if (immagine != null) {
-                //     giocatoriBloc.add(
-                //       GiocatoriAggiorna(
-                //         giocatore.copyWith(
-                //           nome: nome[0],
-                //           image: immagine,
-                //         ),
-                //       ),
-                //     );
-                //   }
-                // }
                 ? () async => await showModalBottomSheet(
                       context: context,
                       builder: (_) {
@@ -217,106 +174,108 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                         }
                       }
                     : null,
-            child: Card(
-              elevation: deletable ? 8 : 1,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 3.0, right: 5.0, top: 5.0, bottom: 4.0),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Positioned(
-                      top: 15.0,
-                      right: 20.0,
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        height: MediaQuery.of(context).size.width * 0.4,
-                        child: giocatore.photo == null
-                            ? playerImages[giocatore.image]
-                            : FadeInImage.memoryNetwork(
-                                fadeInDuration: Duration(milliseconds: 300),
-                                placeholder: kTransparentImage,
-                                image: giocatore.photo!),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0.0,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          giocatore.nome,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(fontWeight: FontWeight.bold),
+            child: LayoutBuilder(builder: (context, constraint) {
+              final heightConstraint = constraint.maxHeight > 200;
+              return Card(
+                elevation: deletable ? 8 : 1,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 3.0, right: 5.0, top: 5.0, bottom: 4.0),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Positioned(
+                        top: heightConstraint ? 15.0 : 8,
+                        right: heightConstraint ? 20.0 : 10,
+                        child: SizedBox(
+                          height: heightConstraint ? 150 : 120,
+                          child: giocatore.photo == null
+                              ? playerImages[giocatore.image]
+                              : FadeInImage.memoryNetwork(
+                                  fadeInDuration: Duration(milliseconds: 300),
+                                  placeholder: kTransparentImage,
+                                  image: giocatore.photo!),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      top: 2,
-                      left: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Text('${giocatore.gol}'),
-                              ),
-                              Image.asset(
-                                'assets/images/golfatto.png',
-                                fit: BoxFit.fill,
-                              ),
-                            ],
+                      Positioned(
+                        bottom: 0.0,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            giocatore.nome,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(fontWeight: FontWeight.bold),
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Text('${giocatore.ammonizioni}'),
-                              ),
-                              Image.asset(
-                                'assets/images/ammonito.png',
-                                fit: BoxFit.fill,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Text('${giocatore.espulsioni}'),
-                              ),
-                              Image.asset(
-                                'assets/images/espulso.png',
-                                fit: BoxFit.fill,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                              height: 150,
-                              width: 35,
-                              child: playerImages[giocatore.image]),
-                        ],
+                        ),
                       ),
-                    ),
-                    deletable &&
-                            authState.status ==
-                                AuthenticationStatus.authenticated
-                        ? Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Icon(
-                              Icons.delete_forever_rounded,
-                              color: Colors.red,
+                      Positioned(
+                        top: 2,
+                        left: 2,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Text('${giocatore.gol}'),
+                                ),
+                                Image.asset(
+                                  'assets/images/golfatto.png',
+                                  fit: BoxFit.fill,
+                                ),
+                              ],
                             ),
-                          )
-                        : Container(),
-                  ],
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Text('${giocatore.ammonizioni}'),
+                                ),
+                                Image.asset(
+                                  'assets/images/ammonito.png',
+                                  fit: BoxFit.fill,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Text('${giocatore.espulsioni}'),
+                                ),
+                                Image.asset(
+                                  'assets/images/espulso.png',
+                                  fit: BoxFit.fill,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                                height: constraint.maxHeight > 200 ? 150 : 80,
+                                width: 35,
+                                child: playerImages[giocatore.image]),
+                          ],
+                        ),
+                      ),
+                      deletable &&
+                              authState.status ==
+                                  AuthenticationStatus.authenticated
+                          ? Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Icon(
+                                Icons.delete_forever_rounded,
+                                color: Colors.red,
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
           ),
         );
       },
