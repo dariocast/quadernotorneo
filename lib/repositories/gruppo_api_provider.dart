@@ -1,13 +1,13 @@
-import 'dart:convert';
-import 'dart:io';
+// ignore_for_file: unused_local_variable
+
 import 'dart:developer' as developer;
+import 'dart:io';
 
 import 'package:http/http.dart' show Client;
-import 'package:quaderno_flutter/models/models.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:path/path.dart' as p;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../models/gruppo.dart';
+import 'package:quaderno_flutter/models/models.dart';
 
 class GruppoApiProvider {
   Client client = Client();
@@ -111,8 +111,18 @@ class GruppoApiProvider {
         .from('giocatore')
         .delete()
         .match({'gruppo': gruppoEliminato.nome}).execute();
-    developer.log('Giocatori rimossi', name: 'repositories.gruppo.delete');
 
+    developer.log('Giocatori rimossi', name: 'repositories.gruppo.delete');
+    for (var giocatoreMap in resDeletedPlayers.data) {
+      final giocatore = Giocatore.fromMap(giocatoreMap);
+      if (giocatore.photo != null) {
+        final deletePhoto = await supabase.storage.from('giocatori').remove([
+          '${giocatore.gruppo}${giocatore.nome}${p.extension(giocatore.photo!)}'
+        ]);
+        developer.log('Foto giocatore rimossa dal bucket',
+            name: 'repositories.gruppo.delete');
+      }
+    }
     return response.status == 200 && resDeletedPlayers.status == 200
         ? true
         : throw Exception('Impossibile eliminare il gruppo');

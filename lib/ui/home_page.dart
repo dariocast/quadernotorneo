@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../helpers/extensions/extensions.dart';
 import 'widgets/banner.dart';
 import '../utils/ad_helper.dart';
 import '../blocs/blocs.dart';
@@ -35,7 +34,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late BannerAd _ad;
-  bool _isAdLoaded = false;
 
   @override
   void initState() {
@@ -47,9 +45,7 @@ class _HomePageState extends State<HomePage> {
       request: AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
-          setState(() {
-            _isAdLoaded = true;
-          });
+          setState(() {});
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
@@ -166,7 +162,7 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.zero,
             children: [
               Container(
-                height: 300,
+                height: 270,
                 child: DrawerHeader(
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
@@ -530,8 +526,10 @@ class GruppoDetailsColumn extends StatelessWidget {
               child: SizedBox(
                 width: 60,
                 height: 60,
-                child: Image.network(
-                  logo,
+                child: FadeInImage.memoryNetwork(
+                  fadeInDuration: Duration(milliseconds: 300),
+                  placeholder: kTransparentImage,
+                  image: logo,
                 ),
               ),
             ),

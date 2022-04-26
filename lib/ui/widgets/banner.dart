@@ -9,7 +9,6 @@ class QuadernoBannerAd extends StatefulWidget {
 
 class _QuadernoBannerAdState extends State<QuadernoBannerAd> {
   late BannerAd _ad;
-  bool _isAdLoaded = false;
 
   @override
   void initState() {
@@ -21,9 +20,7 @@ class _QuadernoBannerAdState extends State<QuadernoBannerAd> {
       request: AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
-          setState(() {
-            _isAdLoaded = true;
-          });
+          setState(() {});
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();

@@ -1,13 +1,14 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:transparent_image/transparent_image.dart';
+
 import '../blocs/blocs.dart';
 import '../models/giocatore.dart';
-import 'widgets/widgets.dart';
 import '../utils/ui_helpers.dart';
+import 'widgets/widgets.dart';
 
 class GiocatoriPage extends StatelessWidget {
   final String gruppo;
@@ -32,38 +33,16 @@ class GiocatoriPage extends StatelessWidget {
         actions: [
           authState.status == AuthenticationStatus.authenticated
               ? IconButton(
-                  onPressed: () async {
-                    final result = await showTextInputDialog(
-                      context: context,
-                      title: 'Che bel giocatore!',
-                      message: 'Inserisci nome del nuovo giocatore',
-                      textFields: [
-                        DialogTextField(
-                          hintText: 'nome',
-                          validator: (input) =>
-                              input!.isNotEmpty ? null : 'Inserire nome valido',
-                        ),
-                      ],
-                    );
-                    if (result != null && result.length == 1) {
-                      final immagine = await showConfirmationDialog(
+                  onPressed: () => showModalBottomSheet(
                         context: context,
-                        title: 'Che bel giocatore!',
-                        message: 'Scegli il ruolo',
-                        actions: [
-                          AlertDialogAction(key: 0, label: 'Portiere'),
-                          AlertDialogAction(key: 1, label: 'Difensore'),
-                          AlertDialogAction(key: 2, label: 'Terzino'),
-                          AlertDialogAction(key: 3, label: 'Ala'),
-                          AlertDialogAction(key: 4, label: 'Centravanti'),
-                        ],
-                      );
-                      if (immagine != null) {
-                        context.read<GiocatoriBloc>().add(
-                            GiocatoriCrea(result[0], this.gruppo, immagine));
-                      }
-                    }
-                  },
+                        builder: (_) {
+                          return BlocProvider.value(
+                            value: BlocProvider.of<GiocatoriBloc>(context),
+                            child:
+                                WidgetParametriGiocatore(gruppo: this.gruppo),
+                          );
+                        },
+                      ),
                   icon: Icon(Icons.person_add_alt_1_rounded))
               : Container(),
           IconButton(
@@ -92,7 +71,10 @@ class GiocatoriPage extends StatelessWidget {
                     .toList();
 
                 return filtered.isNotEmpty
-                    ? GrigliaGiocatori(giocatori: filtered)
+                    ? GrigliaGiocatori(
+                        giocatori: filtered,
+                        key: GlobalKey(),
+                      )
                     : Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -167,50 +149,61 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                 : null,
             onTap: !deletable &&
                     authState.status == AuthenticationStatus.authenticated
-                ? () async {
-                    final nome = await showTextInputDialog(
+                // ? () async {
+                // final nome = await showTextInputDialog(
+                //   context: context,
+                //   title: 'Che bel giocatore!',
+                //   message: 'Modifica il nome',
+                //   textFields: [
+                //     DialogTextField(
+                //       hintText: 'nome',
+                //       keyboardType: TextInputType.visiblePassword,
+                //       // * Use a space after text or the above keyboard
+                //       // * type to avoid replication issue
+                //       // initialText: entry.key.nome + ' ',
+                //       initialText: giocatore.nome,
+                //       validator: (input) =>
+                //           input!.isNotEmpty ? null : 'Inserire nome valido',
+                //     ),
+                //   ],
+                // );
+                // if (nome != null && nome.length == 1) {
+                //   final immagine = await showConfirmationDialog(
+                //     context: context,
+                //     title: 'Che bel giocatore!',
+                //     message: 'Modifica il ruolo',
+                //     initialSelectedActionKey: giocatore.image,
+                //     actions: [
+                //       AlertDialogAction(key: 0, label: 'Portiere'),
+                //       AlertDialogAction(key: 1, label: 'Difensore'),
+                //       AlertDialogAction(key: 2, label: 'Terzino'),
+                //       AlertDialogAction(key: 3, label: 'Ala'),
+                //       AlertDialogAction(key: 4, label: 'Centravanti'),
+                //     ],
+                //   );
+                //   if (immagine != null) {
+                //     giocatoriBloc.add(
+                //       GiocatoriAggiorna(
+                //         giocatore.copyWith(
+                //           nome: nome[0],
+                //           image: immagine,
+                //         ),
+                //       ),
+                //     );
+                //   }
+                // }
+                ? () async => await showModalBottomSheet(
                       context: context,
-                      title: 'Che bel giocatore!',
-                      message: 'Modifica il nome',
-                      textFields: [
-                        DialogTextField(
-                          hintText: 'nome',
-                          keyboardType: TextInputType.visiblePassword,
-                          // * Use a space after text or the above keyboard
-                          // * type to avoid replication issue
-                          // initialText: entry.key.nome + ' ',
-                          initialText: giocatore.nome,
-                          validator: (input) =>
-                              input!.isNotEmpty ? null : 'Inserire nome valido',
-                        ),
-                      ],
-                    );
-                    if (nome != null && nome.length == 1) {
-                      final immagine = await showConfirmationDialog(
-                        context: context,
-                        title: 'Che bel giocatore!',
-                        message: 'Modifica il ruolo',
-                        initialSelectedActionKey: giocatore.image,
-                        actions: [
-                          AlertDialogAction(key: 0, label: 'Portiere'),
-                          AlertDialogAction(key: 1, label: 'Difensore'),
-                          AlertDialogAction(key: 2, label: 'Terzino'),
-                          AlertDialogAction(key: 3, label: 'Ala'),
-                          AlertDialogAction(key: 4, label: 'Centravanti'),
-                        ],
-                      );
-                      if (immagine != null) {
-                        giocatoriBloc.add(
-                          GiocatoriAggiorna(
-                            giocatore.copyWith(
-                              nome: nome[0],
-                              image: immagine,
-                            ),
+                      builder: (_) {
+                        return BlocProvider.value(
+                          value: BlocProvider.of<GiocatoriBloc>(context),
+                          child: WidgetParametriGiocatore(
+                            gruppo: giocatore.gruppo,
+                            giocatore: giocatore,
                           ),
                         );
-                      }
-                    }
-                  }
+                      },
+                    )
                 : authState.status == AuthenticationStatus.authenticated
                     ? () async {
                         final result = await showOkCancelAlertDialog(
@@ -225,31 +218,25 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                       }
                     : null,
             child: Card(
-              margin: EdgeInsets.all(4.0),
               elevation: deletable ? 8 : 1,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(4.0, 10.0, 4.0, 4.0),
+                padding: const EdgeInsets.only(
+                    left: 3.0, right: 5.0, top: 5.0, bottom: 4.0),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    deletable &&
-                            authState.status ==
-                                AuthenticationStatus.authenticated
-                        ? Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.red,
-                            ))
-                        : Container(),
                     Positioned(
-                      top: 0.0,
-                      left: 20,
+                      top: 15.0,
+                      right: 20.0,
                       child: SizedBox(
-                        width: 120,
-                        height: 120,
-                        child: playerImages[giocatore.image],
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        child: giocatore.photo == null
+                            ? playerImages[giocatore.image]
+                            : FadeInImage.memoryNetwork(
+                                fadeInDuration: Duration(milliseconds: 300),
+                                placeholder: kTransparentImage,
+                                image: giocatore.photo!),
                       ),
                     ),
                     Positioned(
@@ -267,8 +254,9 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                     ),
                     Positioned(
                       top: 2,
-                      left: 12,
+                      left: 2,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Row(
                             children: [
@@ -305,10 +293,26 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                                 fit: BoxFit.fill,
                               ),
                             ],
-                          )
+                          ),
+                          SizedBox(
+                              height: 150,
+                              width: 35,
+                              child: playerImages[giocatore.image]),
                         ],
                       ),
-                    )
+                    ),
+                    deletable &&
+                            authState.status ==
+                                AuthenticationStatus.authenticated
+                        ? Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Icon(
+                              Icons.delete_forever_rounded,
+                              color: Colors.red,
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ),

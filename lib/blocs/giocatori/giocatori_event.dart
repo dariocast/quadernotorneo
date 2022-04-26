@@ -13,7 +13,8 @@ class GiocatoriCrea extends GiocatoriEvent {
   final String nome;
   final String gruppo;
   final int immagine;
-  GiocatoriCrea(this.nome, this.gruppo, this.immagine);
+  final String photo;
+  GiocatoriCrea(this.nome, this.gruppo, this.immagine, this.photo);
 }
 
 class GiocatoriElimina extends GiocatoriEvent {
@@ -24,6 +25,7 @@ class GiocatoriElimina extends GiocatoriEvent {
 
 class GiocatoriAggiorna extends GiocatoriEvent {
   final Giocatore aggiornato;
+  final String? nuovaPhoto;
 
-  GiocatoriAggiorna(this.aggiornato);
+  GiocatoriAggiorna(this.aggiornato, this.nuovaPhoto);
 }
