@@ -34,8 +34,8 @@ class Repository {
   Future<Giocatore> creaGiocatore(
           String nome, String gruppo, int immagine, String photo) =>
       giocatoreApiProvider.creaGiocatore(nome, gruppo, immagine, photo);
-  Future<bool> aggiornaGiocatore(Giocatore giocatoreDaAggiornare) =>
-      giocatoreApiProvider.aggiorna(giocatoreDaAggiornare);
+  Future<bool> aggiornaGiocatore(Giocatore giocatoreDaAggiornare, newPhoto) =>
+      giocatoreApiProvider.aggiorna(giocatoreDaAggiornare, newPhoto);
   Future<bool> eliminaGiocatore(int id) => giocatoreApiProvider.elimina(id);
   Future<List<Giocatore>> marcatori() => giocatoreApiProvider.marcatori();
   Future<List<Giocatore>> aggiornaMarcatori() async {

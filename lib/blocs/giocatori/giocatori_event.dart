@@ -25,6 +25,7 @@ class GiocatoriElimina extends GiocatoriEvent {
 
 class GiocatoriAggiorna extends GiocatoriEvent {
   final Giocatore aggiornato;
+  final String? nuovaPhoto;
 
-  GiocatoriAggiorna(this.aggiornato);
+  GiocatoriAggiorna(this.aggiornato, this.nuovaPhoto);
 }

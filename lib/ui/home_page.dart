@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'widgets/banner.dart';
 import '../utils/ad_helper.dart';
@@ -161,7 +162,7 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.zero,
             children: [
               Container(
-                height: 300,
+                height: 270,
                 child: DrawerHeader(
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
@@ -525,8 +526,10 @@ class GruppoDetailsColumn extends StatelessWidget {
               child: SizedBox(
                 width: 60,
                 height: 60,
-                child: Image.network(
-                  logo,
+                child: FadeInImage.memoryNetwork(
+                  fadeInDuration: Duration(milliseconds: 300),
+                  placeholder: kTransparentImage,
+                  image: logo,
                 ),
               ),
             ),

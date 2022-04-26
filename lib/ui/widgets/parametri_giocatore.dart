@@ -5,28 +5,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:quaderno_flutter/models/models.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../blocs/blocs.dart';
 import '../../utils/ui_helpers.dart';
 
-class WidgetCreazioneGiocatore extends StatefulWidget {
+class WidgetParametriGiocatore extends StatefulWidget {
   final String gruppo;
+  final Giocatore? giocatore;
 
-  const WidgetCreazioneGiocatore({
+  const WidgetParametriGiocatore({
     Key? key,
     required this.gruppo,
+    this.giocatore,
   }) : super(key: key);
 
   @override
-  State<WidgetCreazioneGiocatore> createState() =>
-      _WidgetCreazioneGiocatoreState();
+  State<WidgetParametriGiocatore> createState() =>
+      _WidgetParametriGiocatoreState();
 }
 
-class _WidgetCreazioneGiocatoreState extends State<WidgetCreazioneGiocatore> {
+class _WidgetParametriGiocatoreState extends State<WidgetParametriGiocatore> {
   String? nome;
   File? file;
-  int source = 0;
   int? ruolo;
+  String? image;
+
+  @override
+  void initState() {
+    if (widget.giocatore != null) {
+      nome = widget.giocatore!.nome;
+      ruolo = widget.giocatore!.image;
+      image = widget.giocatore!.photo;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -35,7 +50,10 @@ class _WidgetCreazioneGiocatoreState extends State<WidgetCreazioneGiocatore> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15.0),
-              child: Text('Un nuovo giocatore, eh?',
+              child: Text(
+                  widget.giocatore != null
+                      ? 'Modifica il giocatore'
+                      : 'Un nuovo giocatore, eh?',
                   style: Theme.of(context).textTheme.headline5),
             ),
           ),
@@ -44,7 +62,8 @@ class _WidgetCreazioneGiocatoreState extends State<WidgetCreazioneGiocatore> {
               padding: const EdgeInsets.all(3.0),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
-                child: TextField(
+                child: TextFormField(
+                  initialValue: this.nome,
                   onChanged: (value) => setState(() {
                     this.nome = value;
                   }),
@@ -104,7 +123,6 @@ class _WidgetCreazioneGiocatoreState extends State<WidgetCreazioneGiocatore> {
                         if (croppedImage != null) {
                           setState(() {
                             this.file = croppedImage;
-                            this.source = 1;
                           });
                         }
                       }
@@ -128,7 +146,12 @@ class _WidgetCreazioneGiocatoreState extends State<WidgetCreazioneGiocatore> {
                 dimension: 150,
                 child: this.file != null
                     ? Image.file(File(this.file!.path))
-                    : Container(),
+                    : this.image != null
+                        ? FadeInImage.memoryNetwork(
+                            placeholder: kTransparentImage,
+                            image: this.image!,
+                          )
+                        : Container(),
               )
             ],
           )),
@@ -148,20 +171,31 @@ class _WidgetCreazioneGiocatoreState extends State<WidgetCreazioneGiocatore> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if (this.nome != null &&
-                        this.ruolo != null &&
-                        this.file != null) {
-                      context.read<GiocatoriBloc>().add(GiocatoriCrea(
-                            this.nome!.trim(),
-                            widget.gruppo,
-                            this.ruolo!,
-                            this.file!.path,
-                          ));
+                    if (this.nome != null && this.ruolo != null) {
+                      final giocatoreUpdated = widget.giocatore?.copyWith(
+                            nome: this.nome,
+                            gruppo: widget.gruppo,
+                            image: this.ruolo,
+                          ) ??
+                          null;
+                      if (giocatoreUpdated != null) {
+                        context.read<GiocatoriBloc>().add(GiocatoriAggiorna(
+                              giocatoreUpdated,
+                              this.file?.path ?? null,
+                            ));
+                      } else {
+                        context.read<GiocatoriBloc>().add(GiocatoriCrea(
+                              this.nome!.trim(),
+                              widget.gruppo,
+                              this.ruolo!,
+                              this.file!.path,
+                            ));
+                      }
                       Navigator.of(context).pop();
                     }
                   },
                   child: Center(
-                    child: Text('Crea'),
+                    child: Text(widget.giocatore != null ? 'Aggiorna' : 'Crea'),
                   ),
                 ),
               ],

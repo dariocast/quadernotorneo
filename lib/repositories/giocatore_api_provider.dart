@@ -1,6 +1,7 @@
 // ignore_for_file: unused_local_variable
 
 import 'dart:io';
+import 'dart:math';
 import 'package:path/path.dart' as p;
 import 'dart:developer' as developer;
 
@@ -65,8 +66,33 @@ class GiocatoreApiProvider {
     }
   }
 
-  Future<bool> aggiorna(Giocatore giocatore) async {
+  Future<bool> aggiorna(Giocatore giocatore, String? newPhoto) async {
+    int random = Random().nextInt(100);
     final supabase = Supabase.instance.client;
+    if (newPhoto != null) {
+      developer.log('Devo rimuovere la vecchia foto dal bucket',
+          name: 'repositories.giocatore.update');
+      final deletePhoto = await supabase.storage.from('giocatori').remove([
+        '${giocatore.gruppo}${giocatore.nome}${p.extension(giocatore.photo!)}'
+      ]);
+      developer.log('Foto rimossa dal bucket',
+          name: 'repositories.giocatore.update');
+      developer.log('Carico la nuova foto nel bucket',
+          name: 'repositories.giocatore.update');
+      final logoFile = File(newPhoto);
+      final uploadResult = await supabase.storage.from('giocatori').upload(
+          '${giocatore.gruppo}${giocatore.nome}${p.extension(newPhoto)}',
+          logoFile,
+          fileOptions: FileOptions(cacheControl: '3600', upsert: true));
+      final publicURL = supabase.storage
+          .from('giocatori')
+          .getPublicUrl(
+              '${giocatore.gruppo}${giocatore.nome}${p.extension(newPhoto)}')
+          .data;
+      developer.log('Foto caricata nel bucket',
+          name: 'repositories.giocatore.delete');
+      giocatore = giocatore.copyWith(photo: publicURL);
+    }
     final response = await supabase
         .from('giocatore')
         .update({
@@ -76,6 +102,7 @@ class GiocatoreApiProvider {
           'gol': giocatore.gol,
           'ammonizioni': giocatore.ammonizioni,
           'espulsioni': giocatore.espulsioni,
+          'photo': giocatore.photo,
         })
         .eq('id', giocatore.id)
         .execute();

@@ -119,7 +119,7 @@ class GruppoApiProvider {
         final deletePhoto = await supabase.storage.from('giocatori').remove([
           '${giocatore.gruppo}${giocatore.nome}${p.extension(giocatore.photo!)}'
         ]);
-        developer.log('Foto rimossa dal bucket',
+        developer.log('Foto giocatore rimossa dal bucket',
             name: 'repositories.gruppo.delete');
       }
     }

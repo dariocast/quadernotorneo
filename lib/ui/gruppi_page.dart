@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../blocs/blocs.dart';
 import '../utils/ui_helpers.dart';
@@ -279,27 +280,19 @@ class _VistaGruppiState extends State<VistaGruppi> {
                                     elevation: editable ? 8 : 1,
                                     child: Stack(
                                       children: [
-                                        editable &&
-                                                authState.status ==
-                                                    AuthenticationStatus
-                                                        .authenticated
-                                            ? Positioned(
-                                                right: 0,
-                                                top: 0,
-                                                child: Icon(
-                                                  Icons.delete_forever_rounded,
-                                                  color: Colors.red,
-                                                ))
-                                            : Container(),
                                         Align(
                                           alignment: Alignment.topCenter,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 top: 15.0),
                                             child: SizedBox(
-                                              height: 150,
-                                              child: Image.network(
-                                                  gruppi[index].logo),
+                                              height: 130,
+                                              child: FadeInImage.memoryNetwork(
+                                                  fadeInDuration: Duration(
+                                                      milliseconds: 300),
+                                                  placeholder:
+                                                      kTransparentImage,
+                                                  image: gruppi[index].logo),
                                             ),
                                           ),
                                         ),
@@ -325,6 +318,18 @@ class _VistaGruppiState extends State<VistaGruppi> {
                                             ),
                                           ),
                                         ),
+                                        editable &&
+                                                authState.status ==
+                                                    AuthenticationStatus
+                                                        .authenticated
+                                            ? Positioned(
+                                                right: 0,
+                                                top: 0,
+                                                child: Icon(
+                                                  Icons.delete_forever_rounded,
+                                                  color: Colors.red,
+                                                ))
+                                            : Container(),
                                       ],
                                     ),
                                   ),
