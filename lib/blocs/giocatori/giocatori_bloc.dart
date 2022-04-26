@@ -40,7 +40,7 @@ class GiocatoriBloc extends Bloc<GiocatoriEvent, GiocatoriState> {
     emit(GiocatoriLoading());
     try {
       final created = await _repository.creaGiocatore(
-          event.nome, event.gruppo, event.immagine);
+          event.nome, event.gruppo, event.immagine, event.photo);
       final giocatori = await _repository.giocatori();
       emit(GiocatoriLoadSuccess(giocatori));
     } catch (e) {
@@ -53,7 +53,8 @@ class GiocatoriBloc extends Bloc<GiocatoriEvent, GiocatoriState> {
       GiocatoriAggiorna event, Emitter<GiocatoriState> emit) async {
     emit(GiocatoriLoading());
     try {
-      final updated = await _repository.aggiornaGiocatore(event.aggiornato);
+      final updated = await _repository.aggiornaGiocatore(
+          event.aggiornato, event.nuovaPhoto);
       final giocatori = await _repository.giocatori();
       giocatori.sort((a, b) => a.gruppo.compareTo(b.gruppo));
       updated

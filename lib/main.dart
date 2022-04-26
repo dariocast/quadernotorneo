@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -38,8 +37,8 @@ void main() async {
   if (!kIsWeb) {
     channel = const AndroidNotificationChannel(
       'quadernotorneo_channel', // id
-      'Canale Notifiche Quaderno Torneo', // title
-      'Qui arrivano tutte le notifiche dell\'app.', // description
+      'Qui arrivano tutte le notifiche dell\'app.', // title
+      description: 'Canale Notifiche Quaderno Torneo', // description
       importance: Importance.high,
     );
 
@@ -158,7 +157,7 @@ class _AppViewState extends State<AppView> {
               android: AndroidNotificationDetails(
                 channel.id,
                 channel.name,
-                channel.description,
+                channelDescription: channel.description,
                 // TODO add a proper drawable resource to android, for now using
                 //      one that already exists in example app.
                 icon: 'ic_launcher_foreground',
