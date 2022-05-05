@@ -46,16 +46,19 @@ class GiocatoreApiProvider {
   }
 
   Future<Giocatore> creaGiocatore(
-      String nome, String gruppo, int immagine, String photo) async {
+      String nome, String gruppo, int immagine, String? photo) async {
     final supabase = Supabase.instance.client;
-    final logoFile = File(photo);
-    final uploadResult = await supabase.storage.from('giocatori').upload(
-        '$gruppo$nome${p.extension(photo)}', logoFile,
-        fileOptions: FileOptions(cacheControl: '3600', upsert: true));
-    final publicURL = supabase.storage
-        .from('giocatori')
-        .getPublicUrl('$gruppo$nome${p.extension(photo)}')
-        .data;
+    String? publicURL = null;
+    if (photo != null) {
+      final logoFile = File(photo);
+      final uploadResult = await supabase.storage.from('giocatori').upload(
+          '$gruppo$nome${p.extension(photo)}', logoFile,
+          fileOptions: FileOptions(cacheControl: '3600', upsert: true));
+      publicURL = supabase.storage
+          .from('giocatori')
+          .getPublicUrl('$gruppo$nome${p.extension(photo)}')
+          .data;
+    }
     final response = await supabase.from('giocatore').insert([
       {'nome': nome, 'gruppo': gruppo, 'image': immagine, 'photo': publicURL}
     ]).execute();
@@ -70,13 +73,15 @@ class GiocatoreApiProvider {
     int random = Random().nextInt(100);
     final supabase = Supabase.instance.client;
     if (newPhoto != null) {
-      developer.log('Devo rimuovere la vecchia foto dal bucket',
-          name: 'repositories.giocatore.update');
-      final deletePhoto = await supabase.storage.from('giocatori').remove([
-        '${giocatore.gruppo}${giocatore.nome}${p.extension(giocatore.photo!)}'
-      ]);
-      developer.log('Foto rimossa dal bucket',
-          name: 'repositories.giocatore.update');
+      if (giocatore.photo != null) {
+        developer.log('Devo rimuovere la vecchia foto dal bucket',
+            name: 'repositories.giocatore.update');
+        final deletePhoto = await supabase.storage.from('giocatori').remove([
+          '${giocatore.gruppo}${giocatore.nome}${p.extension(giocatore.photo!)}'
+        ]);
+        developer.log('Foto rimossa dal bucket',
+            name: 'repositories.giocatore.update');
+      }
       developer.log('Carico la nuova foto nel bucket',
           name: 'repositories.giocatore.update');
       final logoFile = File(newPhoto);
