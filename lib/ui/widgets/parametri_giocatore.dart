@@ -188,7 +188,7 @@ class _WidgetParametriGiocatoreState extends State<WidgetParametriGiocatore> {
                               this.nome!.trim(),
                               widget.gruppo,
                               this.ruolo!,
-                              this.file!.path,
+                              this.file?.path ?? null,
                             ));
                       }
                       Navigator.of(context).pop();

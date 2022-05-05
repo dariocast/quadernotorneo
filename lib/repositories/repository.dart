@@ -32,7 +32,7 @@ class Repository {
 
   // Future<Giocatore> singoloGiocatore(int id) => giocatoreApiProvider.singolo(id);
   Future<Giocatore> creaGiocatore(
-          String nome, String gruppo, int immagine, String photo) =>
+          String nome, String gruppo, int immagine, String? photo) =>
       giocatoreApiProvider.creaGiocatore(nome, gruppo, immagine, photo);
   Future<bool> aggiornaGiocatore(Giocatore giocatoreDaAggiornare, newPhoto) =>
       giocatoreApiProvider.aggiorna(giocatoreDaAggiornare, newPhoto);
