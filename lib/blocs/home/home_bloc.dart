@@ -17,11 +17,28 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       try {
         final partite = await _repository.listaPartite();
         final gruppi = await _repository.gruppi();
-        emit(HomeSuccess(partite: partite, infoGruppi: gruppi));
+        emit(HomeSuccess(partite: partite, infoGruppi: gruppi, orderBy: 0));
       } catch (e) {
         debugPrint(e.toString());
         emit(HomeFailure());
       }
+    });
+
+    on<HomeOrdinaPerData>((event, emit) {
+      HomeSuccess stateSuccess = state as HomeSuccess;
+      emit(HomeLoading());
+      stateSuccess.partite.sort(((a, b) => b.data.compareTo(b.data)));
+      emit(
+        stateSuccess.copyWith(partite: stateSuccess.partite, orderBy: 0),
+      );
+    });
+    on<HomeOrdinaPerUltimaCreata>((event, emit) {
+      HomeSuccess stateSuccess = state as HomeSuccess;
+      emit(HomeLoading());
+      stateSuccess.partite.sort(((a, b) => b.id.compareTo(a.id)));
+      emit(
+        stateSuccess.copyWith(partite: stateSuccess.partite, orderBy: 1),
+      );
     });
   }
 }

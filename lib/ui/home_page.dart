@@ -34,6 +34,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late BannerAd _ad;
+  int orderBy = 0;
 
   @override
   void initState() {
@@ -75,6 +76,38 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: Text('Quaderno Torneo'),
         actions: [
+          IconButton(
+            onPressed: () async {
+              final sortBy = await showConfirmationDialog(
+                  initialSelectedActionKey: orderBy,
+                  context: context,
+                  title: 'Ordina',
+                  actions: [
+                    AlertDialogAction(
+                      key: 0,
+                      label: 'Per data (dalla più recente)',
+                    ),
+                    AlertDialogAction(
+                      label: 'Per creazione nell\'app',
+                      key: 1,
+                    ),
+                  ]);
+              if (sortBy != null) {
+                if (sortBy == 0) {
+                  setState(() {
+                    orderBy = 0;
+                  });
+                  context.read<HomeBloc>().add(HomeOrdinaPerData());
+                } else {
+                  setState(() {
+                    orderBy = 1;
+                  });
+                  context.read<HomeBloc>().add(HomeOrdinaPerUltimaCreata());
+                }
+              }
+            },
+            icon: Icon(Icons.sort),
+          ),
           IconButton(
             icon: Icon(Icons.autorenew_rounded),
             onPressed: () {

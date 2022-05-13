@@ -17,3 +17,7 @@ class HomeCreaPartita extends HomeEvent {
 
   List<Object> get props => [data, orario, gruppoUno, gruppoDue];
 }
+
+class HomeOrdinaPerData extends HomeEvent {}
+
+class HomeOrdinaPerUltimaCreata extends HomeEvent {}
