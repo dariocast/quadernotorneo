@@ -11,7 +11,11 @@ class PartitaApiProvider {
   Client client = Client();
   Future<List<Partita>> tutte() async {
     final supabase = Supabase.instance.client;
-    final response = await supabase.from('partita').select('*').execute();
+    final response = await supabase
+        .from('partita')
+        .select('*')
+        .order('data', ascending: false)
+        .execute();
     final error = response.error;
 
     if (error != null && response.status != 200) {
