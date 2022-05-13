@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quaderno_flutter/helpers/event_image_helper.dart';
 import '../blocs/blocs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/models.dart';
@@ -367,16 +368,26 @@ class PartitaWidget extends StatelessWidget {
                 itemCount: eventi.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.all(1.5),
-                  child: Align(
-                    alignment: eventi[index].squadra == partita.squadraUno
-                        ? Alignment.centerLeft
-                        : Alignment.centerRight,
-                    child: Text(
-                      '${eventi[index].nome} - ${eventi[index].tipo.toString().split('.').last}',
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(fontSize: 25),
+                  child: Row(
+                    mainAxisAlignment:
+                        eventi[index].squadra == partita.squadraUno
+                            ? MainAxisAlignment.start
+                            : MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      eventi[index].squadra == partita.squadraUno
+                          ? eventImage(eventi[index].tipo)
+                          : Container(),
+                      Text(
+                        '${eventi[index].nome.trim()} ',
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(fontSize: 20),
+                        ),
                       ),
-                    ),
+                      eventi[index].squadra == partita.squadraUno
+                          ? Container()
+                          : eventImage(eventi[index].tipo),
+                    ],
                   ),
                 ),
               ),

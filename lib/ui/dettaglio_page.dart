@@ -81,7 +81,10 @@ class DettaglioPage extends StatelessWidget {
             ? Center(child: CircularProgressIndicator())
             : Stack(
                 children: [
-                  PartitaWidget(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 60.0),
+                    child: PartitaWidget(),
+                  ),
                   Positioned(
                     width: MediaQuery.of(context).size.width,
                     bottom: 5.0,
