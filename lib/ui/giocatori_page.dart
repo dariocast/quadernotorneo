@@ -71,9 +71,12 @@ class GiocatoriPage extends StatelessWidget {
                     .toList();
 
                 return filtered.isNotEmpty
-                    ? GrigliaGiocatori(
-                        giocatori: filtered,
-                        key: GlobalKey(),
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 60.0),
+                        child: GrigliaGiocatori(
+                          giocatori: filtered,
+                          key: GlobalKey(),
+                        ),
                       )
                     : Center(
                         child: Column(

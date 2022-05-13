@@ -35,11 +35,17 @@ class GruppiPage extends StatelessWidget {
             authState.status == AuthenticationStatus.authenticated
                 ? IconButton(
                     onPressed: () => showModalBottomSheet(
+                          isScrollControlled: true,
                           context: context,
                           builder: (_) {
+                            final MediaQueryData mediaQueryData =
+                                MediaQuery.of(context);
                             return BlocProvider.value(
                               value: BlocProvider.of<GruppiBloc>(context),
-                              child: WidgetCreazioneGruppo(),
+                              child: Padding(
+                                padding: mediaQueryData.viewInsets,
+                                child: WidgetCreazioneGruppo(),
+                              ),
                             );
                           },
                         ),
@@ -71,6 +77,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.all(30.0),
