@@ -17,3 +17,10 @@ class HomeCreaPartita extends HomeEvent {
 
   List<Object> get props => [data, orario, gruppoUno, gruppoDue];
 }
+
+class HomeOrderBy extends HomeEvent {
+  final OrderBy orderBy;
+
+  HomeOrderBy(this.orderBy);
+  List<Object> get props => [orderBy];
+}

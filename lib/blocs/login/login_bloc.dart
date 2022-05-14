@@ -2,6 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'dart:developer';
 
 import '../../database.dart';
 import '../../models/models.dart';
@@ -23,6 +24,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         (event, emit) => _handleLoginPersistChanged(event, emit));
     on<LoginLoaded>(
         (event, emit) => _handleLoginPersistenceLoaded(event, emit));
+    on<LoginTogglePasswordVisibility>(
+        (event, emit) => _handleLoginTogglePasswordVisibility(event, emit));
+
+    @override
+    void onChange(Change<LoginState> change) {
+      super.onChange(change);
+      log(change.toString());
+    }
   }
 
   final AuthenticationRepository _authenticationRepository;
@@ -97,5 +106,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } else {
       emit(state.copyWith());
     }
+  }
+
+  _handleLoginTogglePasswordVisibility(
+      LoginTogglePasswordVisibility event, Emitter<LoginState> emit) {
+    log(state.hidePassword.toString());
+    emit(state.copyWith(
+        hidePassword: !(state.hidePassword),
+        status: Formz.validate([state.password, state.username])));
   }
 }

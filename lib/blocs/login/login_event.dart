@@ -38,4 +38,6 @@ class LoginPersistChanged extends LoginEvent {
   List<Object> get props => [persist];
 }
 
+class LoginTogglePasswordVisibility extends LoginEvent {}
+
 class LoginLoaded extends LoginEvent {}

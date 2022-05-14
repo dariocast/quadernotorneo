@@ -34,6 +34,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late BannerAd _ad;
+  int orderBy = 0;
 
   @override
   void initState() {
@@ -75,6 +76,58 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: Text('Quaderno Torneo'),
         actions: [
+          IconButton(
+            onPressed: () async {
+              final sortBy = await showConfirmationDialog(
+                  initialSelectedActionKey: orderBy,
+                  context: context,
+                  title: 'Ordina per',
+                  actions: [
+                    AlertDialogAction(
+                      key: 0,
+                      label: 'Data partita decrescente',
+                    ),
+                    AlertDialogAction(
+                      label: 'Data partita crescente',
+                      key: 1,
+                    ),
+                    AlertDialogAction(
+                      label: 'Data creazione decrescente',
+                      key: 2,
+                    ),
+                    AlertDialogAction(
+                      label: 'Data creazione crescente',
+                      key: 3,
+                    ),
+                  ]);
+              if (sortBy != null) {
+                setState(() {
+                  orderBy = sortBy;
+                });
+                switch (sortBy) {
+                  case 0:
+                    context
+                        .read<HomeBloc>()
+                        .add(HomeOrderBy(OrderBy.DATA_DESC));
+                    break;
+                  case 1:
+                    context.read<HomeBloc>().add(HomeOrderBy(OrderBy.DATA_ASC));
+                    break;
+                  case 2:
+                    context.read<HomeBloc>().add(HomeOrderBy(OrderBy.ID_DESC));
+                    break;
+                  case 3:
+                    context.read<HomeBloc>().add(HomeOrderBy(OrderBy.ID_ASC));
+                    break;
+                  default:
+                    context
+                        .read<HomeBloc>()
+                        .add(HomeOrderBy(OrderBy.DATA_DESC));
+                }
+              }
+            },
+            icon: Icon(Icons.sort),
+          ),
           IconButton(
             icon: Icon(Icons.autorenew_rounded),
             onPressed: () {
