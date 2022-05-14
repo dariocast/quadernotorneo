@@ -18,6 +18,9 @@ class HomeCreaPartita extends HomeEvent {
   List<Object> get props => [data, orario, gruppoUno, gruppoDue];
 }
 
-class HomeOrdinaPerData extends HomeEvent {}
+class HomeOrderBy extends HomeEvent {
+  final OrderBy orderBy;
 
-class HomeOrdinaPerUltimaCreata extends HomeEvent {}
+  HomeOrderBy(this.orderBy);
+  List<Object> get props => [orderBy];
+}

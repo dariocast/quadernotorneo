@@ -81,28 +81,48 @@ class _HomePageState extends State<HomePage> {
               final sortBy = await showConfirmationDialog(
                   initialSelectedActionKey: orderBy,
                   context: context,
-                  title: 'Ordina',
+                  title: 'Ordina per',
                   actions: [
                     AlertDialogAction(
                       key: 0,
-                      label: 'Per data (dalla più recente)',
+                      label: 'Data partita decrescente',
                     ),
                     AlertDialogAction(
-                      label: 'Per creazione nell\'app',
+                      label: 'Data partita crescente',
                       key: 1,
+                    ),
+                    AlertDialogAction(
+                      label: 'Data creazione decrescente',
+                      key: 2,
+                    ),
+                    AlertDialogAction(
+                      label: 'Data creazione crescente',
+                      key: 3,
                     ),
                   ]);
               if (sortBy != null) {
-                if (sortBy == 0) {
-                  setState(() {
-                    orderBy = 0;
-                  });
-                  context.read<HomeBloc>().add(HomeOrdinaPerData());
-                } else {
-                  setState(() {
-                    orderBy = 1;
-                  });
-                  context.read<HomeBloc>().add(HomeOrdinaPerUltimaCreata());
+                setState(() {
+                  orderBy = sortBy;
+                });
+                switch (sortBy) {
+                  case 0:
+                    context
+                        .read<HomeBloc>()
+                        .add(HomeOrderBy(OrderBy.DATA_DESC));
+                    break;
+                  case 1:
+                    context.read<HomeBloc>().add(HomeOrderBy(OrderBy.DATA_ASC));
+                    break;
+                  case 2:
+                    context.read<HomeBloc>().add(HomeOrderBy(OrderBy.ID_DESC));
+                    break;
+                  case 3:
+                    context.read<HomeBloc>().add(HomeOrderBy(OrderBy.ID_ASC));
+                    break;
+                  default:
+                    context
+                        .read<HomeBloc>()
+                        .add(HomeOrderBy(OrderBy.DATA_DESC));
                 }
               }
             },
