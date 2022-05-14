@@ -93,17 +93,27 @@ class _PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) => previous.password != current.password,
+      buildWhen: (previous, current) =>
+          previous.password != current.password ||
+          previous.hidePassword != current.hidePassword,
       builder: (context, state) {
         return TextFormField(
           key: const Key('loginForm_passwordInput_textField'),
           initialValue: state.password.value,
           onChanged: (password) =>
               context.read<LoginBloc>().add(LoginPasswordChanged(password)),
-          obscureText: true,
+          obscureText: state.hidePassword,
           decoration: InputDecoration(
             labelText: 'password',
             errorText: state.password.invalid ? 'Password non valida' : null,
+            suffixIcon: InkWell(
+              onTap: () => context
+                  .read<LoginBloc>()
+                  .add(LoginTogglePasswordVisibility()),
+              child: state.hidePassword
+                  ? Icon(Icons.visibility_off_outlined)
+                  : Icon(Icons.visibility_outlined),
+            ),
           ),
         );
       },
