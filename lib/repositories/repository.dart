@@ -129,24 +129,37 @@ class Repository {
       pg1 = gruppi[gruppo1Index].pg + 1;
       pg2 = gruppi[gruppo2Index].pg + 1;
 
-      gf1 = gs2 = gruppi[gruppo1Index].gf + partita.golSquadraUno;
-      gf2 = gs1 = gruppi[gruppo1Index].gs + partita.golSquadraDue;
+      gf1 = gruppi[gruppo1Index].gf + partita.golSquadraUno;
+      gf2 = gruppi[gruppo2Index].gf + partita.golSquadraDue;
+
+      gs1 = gruppi[gruppo1Index].gs + partita.golSquadraDue;
+      gs2 = gruppi[gruppo2Index].gs + partita.golSquadraUno;
+
+      pt1 = gruppi[gruppo1Index].pt;
+      pt2 = gruppi[gruppo2Index].pt;
+
+      v1 = gruppi[gruppo1Index].v;
+      p1 = gruppi[gruppo1Index].p;
+      s1 = gruppi[gruppo1Index].s;
+      v2 = gruppi[gruppo2Index].v;
+      p2 = gruppi[gruppo2Index].p;
+      s2 = gruppi[gruppo2Index].s;
 
       if (partita.golSquadraUno > partita.golSquadraDue) {
-        v1 = gruppi[gruppo1Index].v + 1;
-        pt1 = gruppi[gruppo1Index].pt + 3;
+        v1 = v1 + 1;
+        pt1 = pt1 + 3;
 
-        s2 = gruppi[gruppo2Index].s + 1;
+        s2 = s2 + 1;
       } else if (partita.golSquadraUno == partita.golSquadraDue) {
-        p1 = gruppi[gruppo1Index].p + 1;
-        p2 = gruppi[gruppo2Index].p + 1;
-        pt1 = gruppi[gruppo1Index].pt + 1;
-        pt2 = gruppi[gruppo2Index].pt + 1;
+        p1 = p1 + 1;
+        p2 = p2 + 1;
+        pt1 = pt1 + 1;
+        pt2 = pt2 + 1;
       } else {
-        v2 = gruppi[gruppo2Index].v + 1;
-        pt2 = gruppi[gruppo2Index].pt + 3;
+        v2 = v2 + 1;
+        pt2 = pt2 + 3;
 
-        s1 = gruppi[gruppo2Index].s + 1;
+        s1 = s1 + 1;
       }
 
       Gruppo aggiornato = gruppi[gruppo1Index].copyWith(
