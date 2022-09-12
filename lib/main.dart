@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:quaderno_flutter/ui/tornei_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'blocs/blocs.dart';
 import 'theme.dart';
@@ -179,28 +180,7 @@ class _AppViewState extends State<AppView> {
       debugShowCheckedModeBanner: false,
       theme: QuadernoTheme.themeData,
       navigatorKey: _navigatorKey,
-      // builder: (context, child) {
-      //   return BlocListener<AuthenticationBloc, AuthenticationState>(
-      //     listener: (context, state) {
-      //       switch (state.status) {
-      //         case AuthenticationStatus.authenticated:
-      //           _navigator.pushAndRemoveUntil<void>(
-      //             HomePage.route(),
-      //             (route) => false,
-      //           );
-      //           break;
-      //         case AuthenticationStatus.unauthenticated:
-      //           _navigator.pushAndRemoveUntil<void>(
-      //               LoginPage.route(), (route) => false);
-      //           break;
-      //         default:
-      //           break;
-      //       }
-      //     },
-      //     child: child,
-      //   );
-      // },
-      onGenerateRoute: (_) => HomePage.route(),
+      onGenerateRoute: (_) => TorneiPage.route(),
     );
   }
 }

@@ -6,29 +6,29 @@ import 'package:quaderno_flutter/helpers/extensions/order_by_comparator.dart';
 import '../../models/models.dart';
 import '../../repositories/repository.dart';
 
-part 'home_event.dart';
-part 'home_state.dart';
+part 'partite_event.dart';
+part 'partite_state.dart';
 
-class HomeBloc extends Bloc<HomeEvent, HomeState> {
+class PartiteBloc extends Bloc<PartiteEvent, PartiteState> {
   final _repository = Repository();
 
-  HomeBloc() : super(HomeInitial()) {
-    on<HomeLoaded>((event, emit) async {
-      emit(HomeLoading());
+  PartiteBloc() : super(PartiteInitial()) {
+    on<PartiteLoaded>((event, emit) async {
+      emit(PartiteLoading());
       try {
         final partite = await _repository.listaPartite();
         final gruppi = await _repository.gruppi();
-        emit(HomeSuccess(
+        emit(PartiteSuccess(
             partite: partite, infoGruppi: gruppi, orderBy: OrderBy.DATA_DESC));
       } catch (e) {
         debugPrint(e.toString());
-        emit(HomeFailure());
+        emit(PartiteFailure());
       }
     });
 
-    on<HomeOrderBy>((event, emit) {
-      HomeSuccess stateSuccess = state as HomeSuccess;
-      emit(HomeLoading());
+    on<PartiteOrderBy>((event, emit) {
+      PartiteSuccess stateSuccess = state as PartiteSuccess;
+      emit(PartiteLoading());
       stateSuccess.partite.sort(event.orderBy.comparator);
       emit(
         stateSuccess.copyWith(
