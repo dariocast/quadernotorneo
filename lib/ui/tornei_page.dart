@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quaderno_flutter/blocs/tornei/tornei_bloc.dart';
-import 'package:quaderno_flutter/ui/ui.dart';
 
 import '../blocs/blocs.dart';
+import '../blocs/tornei/tornei_bloc.dart';
+import 'ui.dart';
 
 class TorneiPage extends StatelessWidget {
   static const String routeName = '/tornei';
@@ -48,7 +48,7 @@ class TorneiPage extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: FaIcon(FontAwesomeIcons.exclamationTriangle,
+                    child: FaIcon(FontAwesomeIcons.triangleExclamation,
                         size: 30.0),
                   ),
                   Text('Nessun torneo'),

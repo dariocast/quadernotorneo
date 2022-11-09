@@ -95,8 +95,8 @@ class HomeDrawer extends StatelessWidget {
                         ),
                         title: Text('FantaTorneo'),
                         onTap: () {
-                          launch(
-                              "https://dariocast.altervista.org/fantatorneo");
+                          launchUrl(Uri.parse(
+                              "https://dariocast.altervista.org/fantatorneo"));
                         },
                       ),
                       authState2.status == AuthenticationStatus.authenticated

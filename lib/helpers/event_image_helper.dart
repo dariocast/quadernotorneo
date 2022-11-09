@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quaderno_flutter/models/evento.dart';
+import '../models/evento.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 Image eventImage(TipoEvento event) {

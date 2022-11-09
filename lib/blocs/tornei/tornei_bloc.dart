@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 import '../../repositories/repository.dart';
+import '../../utils/log_helper.dart';
 
 part 'tornei_event.dart';
 part 'tornei_state.dart';
@@ -22,7 +22,7 @@ class TorneiBloc extends Bloc<TorneiEvent, TorneiState> {
         final tornei = torneiDuplicati.toSet().toList();
         emit(TorneiLoadSuccess(tornei));
       } catch (e) {
-        debugPrint(e.toString());
+        QTLog.log(e.toString(), name: 'blocs.tornei');
         emit(TorneiLoadFailure());
       }
     });

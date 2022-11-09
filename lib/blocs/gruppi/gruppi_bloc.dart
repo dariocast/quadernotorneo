@@ -6,6 +6,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../models/models.dart';
 import '../../repositories/repository.dart';
+import '../../utils/log_helper.dart';
 
 part 'gruppi_event.dart';
 part 'gruppi_state.dart';
@@ -26,7 +27,7 @@ class GruppiBloc extends Bloc<GruppiEvent, GruppiState> {
       final gruppi = await _repository.gruppi();
       emit(GruppiLoadSuccess(gruppi));
     } catch (e) {
-      developer.log(e.toString(), name: 'blocs.GruppiBloc');
+      QTLog.log(e.toString(), name: 'blocs.gruppi');
       emit(GruppiLoadFailure('Impossibile caricare i gruppi al momento'));
     }
   }
@@ -39,7 +40,7 @@ class GruppiBloc extends Bloc<GruppiEvent, GruppiState> {
       final gruppi = await _repository.gruppi();
       emit(GruppiLoadSuccess(gruppi));
     } catch (e) {
-      developer.log(e.toString(), name: 'blocs.GruppiBloc');
+      QTLog.log(e.toString(), name: 'blocs.gruppi');
       emit(GruppiLoadFailure('Impossibile creare gruppi al momento'));
     }
   }
@@ -52,7 +53,7 @@ class GruppiBloc extends Bloc<GruppiEvent, GruppiState> {
       final gruppi = await _repository.gruppi();
       emit(GruppiLoadSuccess(gruppi));
     } catch (e) {
-      developer.log(e.toString(), name: 'blocs.GruppiBloc');
+      QTLog.log(e.toString(), name: 'blocs.gruppi');
       emit(GruppiLoadFailure('Impossibile aggiornare gruppi al momento'));
     }
   }
@@ -64,7 +65,7 @@ class GruppiBloc extends Bloc<GruppiEvent, GruppiState> {
       final gruppi = await _repository.gruppi();
       emit(GruppiLoadSuccess(gruppi));
     } catch (e) {
-      developer.log(e.toString(), name: 'blocs.GruppiBloc');
+      QTLog.log(e.toString(), name: 'blocs.gruppi');
       emit(GruppiLoadFailure('Impossibile caricare i gruppi al momento'));
     }
   }
@@ -72,6 +73,6 @@ class GruppiBloc extends Bloc<GruppiEvent, GruppiState> {
   @override
   void onTransition(Transition<GruppiEvent, GruppiState> transition) {
     super.onTransition(transition);
-    developer.log('$transition', name: 'blocs.GruppiBloc');
+    QTLog.log('$transition', name: 'blocs.gruppi');
   }
 }

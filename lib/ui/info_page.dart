@@ -1,8 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'widgets/widgets.dart';
 
 class InfoPage extends StatefulWidget {
   static Route route() {
@@ -70,7 +71,8 @@ class _InfoPageState extends State<InfoPage> {
                             color: Theme.of(context).colorScheme.primary,
                           ),
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () => launch('https://dariocast.github.io'),
+                        ..onTap = () =>
+                            launchUrl(Uri.parse('https://dariocast.github.io')),
                     )
                   ],
                 ),

@@ -42,7 +42,8 @@ class MarcatoriPage extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: FaIcon(FontAwesomeIcons.sadTear, size: 30.0),
+                            child: FaIcon(FontAwesomeIcons.faceSadTear,
+                                size: 30.0),
                           ),
                           Text('Nessuno ha fatto gol'),
                         ],

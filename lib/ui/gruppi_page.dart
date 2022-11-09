@@ -210,7 +210,6 @@ class _VistaGruppiState extends State<VistaGruppi> {
       children: [
         BlocBuilder<GruppiBloc, GruppiState>(
           builder: (context, state) {
-            // debugPrint(state.toString());
             if (state is GruppiLoadSuccess) {
               final gruppi = state.gruppi;
               gruppi.sort((a, b) => a.nome.compareTo(b.nome));

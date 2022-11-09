@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import '../../utils/ad_helper.dart';
+import '../../utils/log_helper.dart';
 
 class QuadernoBannerAd extends StatefulWidget {
   @override
@@ -24,7 +26,9 @@ class _QuadernoBannerAdState extends State<QuadernoBannerAd> {
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
-          print('Ad load failed (code=${error.code} message=${error.message})');
+          QTLog.log(
+              'Ad load failed (code=${error.code} message=${error.message})',
+              name: 'widgets.banner');
         },
       ),
     );

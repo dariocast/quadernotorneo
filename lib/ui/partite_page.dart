@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:quaderno_flutter/ui/ui.dart';
-import 'widgets/banner.dart';
+import 'package:logging/logging.dart';
+import '../utils/log_helper.dart';
+import 'ui.dart';
+import 'dart:developer' as developer;
 import '../utils/ad_helper.dart';
 import '../blocs/blocs.dart';
 import 'crea_page.dart';
@@ -45,7 +47,9 @@ class _PartitePageState extends State<PartitePage> {
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
-          print('Ad load failed (code=${error.code} message=${error.message})');
+          QTLog.log(
+              'Ad load failed (code=${error.code} message=${error.message})',
+              name: 'ui.partitaPage');
         },
       ),
     );
@@ -142,7 +146,7 @@ class _PartitePageState extends State<PartitePage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: FaIcon(FontAwesomeIcons.exclamationTriangle,
+                    child: FaIcon(FontAwesomeIcons.triangleExclamation,
                         size: 30.0),
                   ),
                   Text('Nessuna partita'),

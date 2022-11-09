@@ -2,7 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:quaderno_flutter/helpers/event_image_helper.dart';
+import '../helpers/event_image_helper.dart';
 import '../blocs/blocs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/models.dart';

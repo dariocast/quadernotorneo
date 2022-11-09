@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 import '../../models/models.dart';
 import '../../repositories/repository.dart';
+import '../../utils/log_helper.dart';
 
 part 'giocatori_event.dart';
 part 'giocatori_state.dart';
@@ -22,16 +22,13 @@ class GiocatoriBloc extends Bloc<GiocatoriEvent, GiocatoriState> {
   _handleGiocatoriLoaded(
       GiocatoriLoaded event, Emitter<GiocatoriState> emit) async {
     emit(GiocatoriLoading());
-    if (event is GiocatoriLoaded) {
-      try {
-        final giocatori = await _repository.giocatori();
-        giocatori.sort((a, b) => a.gruppo.compareTo(b.gruppo));
-        emit(GiocatoriLoadSuccess(giocatori));
-      } catch (e) {
-        debugPrint(e.toString());
-        emit(GiocatoriLoadFailure(
-            'Impossibile caricare i giocatori al momento'));
-      }
+    try {
+      final giocatori = await _repository.giocatori();
+      giocatori.sort((a, b) => a.gruppo.compareTo(b.gruppo));
+      emit(GiocatoriLoadSuccess(giocatori));
+    } catch (e) {
+      QTLog.log(e.toString(), name: 'blocs.giocatori');
+      emit(GiocatoriLoadFailure('Impossibile caricare i giocatori al momento'));
     }
   }
 
@@ -44,7 +41,7 @@ class GiocatoriBloc extends Bloc<GiocatoriEvent, GiocatoriState> {
       final giocatori = await _repository.giocatori();
       emit(GiocatoriLoadSuccess(giocatori));
     } catch (e) {
-      debugPrint(e.toString());
+      QTLog.log(e.toString(), name: 'blocs.giocatori');
       emit(GiocatoriLoadFailure('Impossibile creare i giocatori al momento'));
     }
   }
@@ -61,7 +58,7 @@ class GiocatoriBloc extends Bloc<GiocatoriEvent, GiocatoriState> {
           ? emit(GiocatoriLoadSuccess(giocatori))
           : emit(GiocatoriLoadFailure('Il giocatore non è stato aggiornato'));
     } catch (e) {
-      debugPrint(e.toString());
+      QTLog.log(e.toString(), name: 'blocs.giocatori');
       emit(GiocatoriLoadFailure(
           'Impossibile aggiornare i giocatori al momento'));
     }
@@ -78,7 +75,7 @@ class GiocatoriBloc extends Bloc<GiocatoriEvent, GiocatoriState> {
           ? emit(GiocatoriLoadSuccess(giocatori))
           : emit(GiocatoriLoadFailure('Il giocatore non è stato eliminato'));
     } catch (e) {
-      debugPrint(e.toString());
+      QTLog.log(e.toString(), name: 'blocs.giocatori');
       emit(
           GiocatoriLoadFailure('Impossibile eliminare i giocatori al momento'));
     }
