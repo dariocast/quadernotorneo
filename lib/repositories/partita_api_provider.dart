@@ -9,13 +9,21 @@ import '../utils/log_helper.dart';
 
 class PartitaApiProvider {
   Client client = Client();
-  Future<List<Partita>> tutte() async {
+  Future<List<Partita>> tutte(String? torneo) async {
     final supabase = Supabase.instance.client;
     try {
-      final listaPartite = await supabase
-          .from('partita')
-          .select()
-          .order('data', ascending: false);
+      final listaPartite;
+      if (torneo != null) {
+        listaPartite = await supabase
+            .from('partita')
+            .select()
+            .match({'torneo': torneo}).order('data', ascending: false);
+      } else {
+        listaPartite = await supabase
+            .from('partita')
+            .select()
+            .order('data', ascending: false);
+      }
       final mapDone =
           listaPartite.map<Partita>((json) => Partita.fromMap(json));
       final lista = mapDone.toList();

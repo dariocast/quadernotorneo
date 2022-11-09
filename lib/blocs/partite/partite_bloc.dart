@@ -17,10 +17,13 @@ class PartiteBloc extends Bloc<PartiteEvent, PartiteState> {
     on<PartiteLoaded>((event, emit) async {
       emit(PartiteLoading());
       try {
-        final partite = await _repository.listaPartite();
+        final partite = await _repository.listaPartite(torneo: event.torneo);
         final gruppi = await _repository.gruppi();
         emit(PartiteSuccess(
-            partite: partite, infoGruppi: gruppi, orderBy: OrderBy.DATA_DESC));
+            torneo: event.torneo,
+            partite: partite,
+            infoGruppi: gruppi,
+            orderBy: OrderBy.DATA_DESC));
       } catch (e) {
         QTLog.log(e.toString(), name: 'blocs.partite');
         emit(PartiteFailure());

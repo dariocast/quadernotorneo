@@ -10,7 +10,8 @@ class Repository {
   final giocatoreApiProvider = GiocatoreApiProvider();
   final gruppoApiProvider = GruppoApiProvider();
 
-  Future<List<Partita>> listaPartite() => partitaApiProvider.tutte();
+  Future<List<Partita>> listaPartite({String? torneo}) =>
+      partitaApiProvider.tutte(torneo);
   Future<Partita> creaPartita(String nomeSquadra1, String nomeSquadra2,
           DateTime dateTime, String descrizione) =>
       partitaApiProvider.crea(
@@ -39,7 +40,7 @@ class Repository {
   Future<bool> eliminaGiocatore(int id) => giocatoreApiProvider.elimina(id);
   Future<List<Giocatore>> marcatori() => giocatoreApiProvider.marcatori();
   Future<List<Giocatore>> aggiornaMarcatori() async {
-    List<Partita> partite = await partitaApiProvider.tutte();
+    List<Partita> partite = await partitaApiProvider.tutte(null);
     List<Giocatore> giocatori = await giocatoreApiProvider.tutti();
 
     giocatori = giocatori
@@ -96,7 +97,7 @@ class Repository {
       gruppoApiProvider.aggiorna(gruppo);
   Future<bool> eliminaGruppo(int id) => gruppoApiProvider.elimina(id);
   Future<List<Gruppo>> aggiornaStatistiche({bool reset = false}) async {
-    List<Partita> partite = await partitaApiProvider.tutte();
+    List<Partita> partite = await partitaApiProvider.tutte(null);
     List<Gruppo> gruppi = await gruppoApiProvider.gruppi();
 
     gruppi = gruppi

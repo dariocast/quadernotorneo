@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logging/logging.dart';
+import 'package:quaderno_flutter/blocs/tornei/tornei_bloc.dart';
 import '../utils/log_helper.dart';
 import 'ui.dart';
 import 'dart:developer' as developer;
@@ -16,11 +17,14 @@ import 'widgets/widgets.dart';
 class PartitePage extends StatefulWidget {
   static const String routeName = '/partite';
 
-  static Route route() {
+  final String torneo;
+
+  PartitePage({required this.torneo});
+
+  static Route route(String torneo) {
     return MaterialPageRoute<void>(
-      builder: (_) => BlocProvider(
-        create: (context) => PartiteBloc()..add(PartiteLoaded()),
-        child: PartitePage(),
+      builder: (_) => PartitePage(
+        torneo: torneo,
       ),
     );
   }
@@ -64,7 +68,7 @@ class _PartitePageState extends State<PartitePage> {
       drawer: HomeDrawer(),
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Quaderno Torneo'),
+        title: Text(widget.torneo),
         actions: [
           IconButton(
             onPressed: () async {
@@ -127,7 +131,7 @@ class _PartitePageState extends State<PartitePage> {
           IconButton(
             icon: Icon(Icons.autorenew_rounded),
             onPressed: () {
-              context.read<PartiteBloc>().add(PartiteLoaded());
+              context.read<PartiteBloc>().add(PartiteLoaded(widget.torneo));
             },
           ),
         ],
@@ -186,18 +190,19 @@ class _PartitePageState extends State<PartitePage> {
           child: CircularProgressIndicator(),
         );
       }),
-      floatingActionButton: authState.status ==
-              AuthenticationStatus.authenticated
-          ? FloatingActionButton(
-              onPressed: () => Navigator.of(context)
-                  .push(CreaPage.route())
-                  .whenComplete(
-                      () => context.read<PartiteBloc>().add(PartiteLoaded())),
-              child: Center(
-                child: Icon(Icons.add),
-              ),
-            )
-          : null,
+      floatingActionButton:
+          authState.status == AuthenticationStatus.authenticated
+              ? FloatingActionButton(
+                  onPressed: () => Navigator.of(context)
+                      .push(CreaPage.route())
+                      .whenComplete(() => context
+                          .read<PartiteBloc>()
+                          .add(PartiteLoaded(widget.torneo))),
+                  child: Center(
+                    child: Icon(Icons.add),
+                  ),
+                )
+              : null,
     );
   }
 }

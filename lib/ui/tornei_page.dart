@@ -23,7 +23,7 @@ class TorneiPage extends StatelessWidget {
     final authState = context.watch<AuthenticationBloc>().state;
 
     return Scaffold(
-      drawer: HomeDrawer(),
+      drawer: HomeDrawer(onlyLogin: true),
       appBar: AppBar(
         title: Text('Tornei'),
         actions: <Widget>[
@@ -62,8 +62,19 @@ class TorneiPage extends StatelessWidget {
               final torneo = state.tornei[index];
               return ListTile(
                 title: Text(torneo),
-                trailing: Icon(Icons.chevron_right),
-                onTap: () {},
+                trailing: FaIcon(FontAwesomeIcons.doorOpen),
+                onTap: () => Navigator.of(context)
+                    .push(
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (_) =>
+                              PartiteBloc()..add(PartiteLoaded(torneo)),
+                          child: PartitePage(torneo: torneo),
+                        ),
+                      ),
+                    )
+                    .whenComplete(
+                        () => context.read<TorneiBloc>().add(TorneiLoaded())),
               );
             },
           );

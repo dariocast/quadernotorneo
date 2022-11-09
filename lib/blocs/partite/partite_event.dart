@@ -5,7 +5,11 @@ abstract class PartiteEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class PartiteLoaded extends PartiteEvent {}
+class PartiteLoaded extends PartiteEvent {
+  final String torneo;
+
+  PartiteLoaded(this.torneo);
+}
 
 class PartiteCreaPartita extends PartiteEvent {
   final DateTime data;

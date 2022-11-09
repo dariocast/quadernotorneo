@@ -19,9 +19,14 @@ class PartiteSuccess extends PartiteState {
   final List<Partita> partite;
   final List<Gruppo> infoGruppi;
   final OrderBy orderBy;
+  final String torneo;
 
-  const PartiteSuccess(
-      {required this.partite, required this.infoGruppi, required this.orderBy});
+  const PartiteSuccess({
+    required this.torneo,
+    required this.partite,
+    required this.infoGruppi,
+    required this.orderBy,
+  });
 
   @override
   List<Object> get props => [partite, infoGruppi];
@@ -31,11 +36,15 @@ class PartiteSuccess extends PartiteState {
       'PartiteSuccess(partite: $partite, infoGruppi: $infoGruppi)';
 
   PartiteSuccess copyWith(
-      {List<Partita>? partite, List<Gruppo>? infoGruppi, OrderBy? orderBy}) {
+      {String? torneo,
+      List<Partita>? partite,
+      List<Gruppo>? infoGruppi,
+      OrderBy? orderBy}) {
     return PartiteSuccess(
       partite: partite ?? this.partite,
       infoGruppi: infoGruppi ?? this.infoGruppi,
       orderBy: orderBy ?? this.orderBy,
+      torneo: torneo ?? this.torneo,
     );
   }
 }

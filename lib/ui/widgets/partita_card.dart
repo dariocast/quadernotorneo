@@ -23,6 +23,7 @@ class PartitaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final partiteState = context.watch<PartiteBloc>().state;
     return InkWell(
       onTap: () => Navigator.of(context)
           .push(
@@ -33,7 +34,8 @@ class PartitaCard extends StatelessWidget {
               ),
             ),
           )
-          .whenComplete(() => context.read<PartiteBloc>().add(PartiteLoaded())),
+          .whenComplete(() =>
+              context.read<PartiteBloc>().add(PartiteLoaded(partita.torneo))),
       child: Card(
         margin: EdgeInsets.all(8.0),
         elevation: 3,

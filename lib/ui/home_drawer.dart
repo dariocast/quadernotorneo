@@ -13,8 +13,11 @@ import '../models/models.dart';
 import 'ui.dart';
 
 class HomeDrawer extends StatelessWidget {
+  final onlyLogin;
+
   const HomeDrawer({
     Key? key,
+    this.onlyLogin = false,
   }) : super(key: key);
 
   @override
@@ -56,53 +59,65 @@ class HomeDrawer extends StatelessWidget {
                           ),
                         ),
                       ),
-                      ListTile(
-                          trailing: Icon(
-                            Icons.sports_soccer_rounded,
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                          title: Text('Marcatori'),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(MarcatoriPage.route());
-                          }),
-                      ListTile(
-                        trailing: Icon(
-                          Icons.leaderboard_rounded,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                        title: Text('Classifiche'),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).push(ClassificaPage.route());
-                        },
-                      ),
-                      ListTile(
-                        trailing: Icon(
-                          Icons.people_alt_rounded,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                        title: Text('Gruppi'),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).push(GruppiPage.route());
-                        },
-                      ),
-                      ListTile(
-                        trailing: Icon(
-                          Icons.extension_rounded,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                        title: Text('FantaTorneo'),
-                        onTap: () {
-                          launchUrl(Uri.parse(
-                              "https://dariocast.altervista.org/fantatorneo"));
-                        },
-                      ),
-                      authState2.status == AuthenticationStatus.authenticated
+                      !onlyLogin
+                          ? ListTile(
+                              trailing: Icon(
+                                Icons.sports_soccer_rounded,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              title: Text('Marcatori'),
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context)
+                                    .push(MarcatoriPage.route());
+                              })
+                          : Container(),
+                      !onlyLogin
+                          ? ListTile(
+                              trailing: Icon(
+                                Icons.leaderboard_rounded,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              title: Text('Classifiche'),
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context)
+                                    .push(ClassificaPage.route());
+                              },
+                            )
+                          : Container(),
+                      !onlyLogin
+                          ? ListTile(
+                              trailing: Icon(
+                                Icons.people_alt_rounded,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              title: Text('Gruppi'),
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).push(GruppiPage.route());
+                              },
+                            )
+                          : Container(),
+                      !onlyLogin
+                          ? ListTile(
+                              trailing: Icon(
+                                Icons.extension_rounded,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              title: Text('FantaTorneo'),
+                              onTap: () {
+                                launchUrl(Uri.parse(
+                                    "https://dariocast.altervista.org/fantatorneo"));
+                              },
+                            )
+                          : Container(),
+                      authState2.status == AuthenticationStatus.authenticated &&
+                              !onlyLogin
                           ? Divider()
                           : Container(),
-                      authState2.status == AuthenticationStatus.authenticated
+                      authState2.status == AuthenticationStatus.authenticated &&
+                              !onlyLogin
                           ? Center(
                               child: Text(
                                 'Gestione',
@@ -110,7 +125,8 @@ class HomeDrawer extends StatelessWidget {
                               ),
                             )
                           : Container(),
-                      authState2.status == AuthenticationStatus.authenticated
+                      authState2.status == AuthenticationStatus.authenticated &&
+                              !onlyLogin
                           ? ListTile(
                               trailing: Icon(
                                 Icons.update,
@@ -130,7 +146,8 @@ class HomeDrawer extends StatelessWidget {
                               },
                             )
                           : Container(),
-                      authState2.status == AuthenticationStatus.authenticated
+                      authState2.status == AuthenticationStatus.authenticated &&
+                              !onlyLogin
                           ? ListTile(
                               trailing: Icon(
                                 Icons.calculate,
@@ -150,7 +167,8 @@ class HomeDrawer extends StatelessWidget {
                               },
                             )
                           : Container(),
-                      authState2.status == AuthenticationStatus.authenticated
+                      authState2.status == AuthenticationStatus.authenticated &&
+                              !onlyLogin
                           ? ListTile(
                               trailing: Icon(
                                 Icons.restart_alt,
@@ -169,7 +187,7 @@ class HomeDrawer extends StatelessWidget {
                               },
                             )
                           : Container(),
-                      Divider(),
+                      !onlyLogin ? Divider() : Container(),
                       ListTile(
                         trailing: Icon(
                           Icons.info_outline_rounded,
