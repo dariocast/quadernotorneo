@@ -23,7 +23,6 @@ class PartitaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final partiteState = context.watch<PartiteBloc>().state;
     return InkWell(
       onTap: () => Navigator.of(context)
           .push(

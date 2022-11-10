@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -52,7 +53,7 @@ class _InfoPageState extends State<InfoPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                  '${DateTime.now().year} © Versione $version, build $buildNumber'),
+                  '${DateTime.now().year} © Versione $version${kDebugMode ? '-debug' : ''}, build $buildNumber'),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

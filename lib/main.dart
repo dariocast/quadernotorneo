@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -86,6 +87,8 @@ void main() async {
       QTLog.log('User declined or has not accepted permission', name: 'main');
     }
   }
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   runApp(QuadernoTorneoApp(
     authenticationRepository: AuthenticationRepository(),
@@ -183,7 +186,7 @@ class _AppViewState extends State<AppView> {
       debugShowCheckedModeBanner: false,
       theme: QuadernoTheme.themeData,
       navigatorKey: _navigatorKey,
-      onGenerateRoute: (_) => TorneiPage.route(),
+      onGenerateRoute: (_) => HomePage.route(),
     );
   }
 }
