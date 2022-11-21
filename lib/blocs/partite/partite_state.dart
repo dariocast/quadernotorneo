@@ -19,10 +19,10 @@ class PartiteSuccess extends PartiteState {
   final List<Partita> partite;
   final List<Gruppo> infoGruppi;
   final OrderBy orderBy;
-  final String torneo;
+  final String? torneo;
 
   const PartiteSuccess({
-    required this.torneo,
+    this.torneo,
     required this.partite,
     required this.infoGruppi,
     required this.orderBy,

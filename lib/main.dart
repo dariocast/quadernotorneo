@@ -186,7 +186,7 @@ class _AppViewState extends State<AppView> {
       debugShowCheckedModeBanner: false,
       theme: QuadernoTheme.themeData,
       navigatorKey: _navigatorKey,
-      onGenerateRoute: (_) => HomePage.route(),
+      onGenerateRoute: (_) => PartitePage.route(null),
     );
   }
 }

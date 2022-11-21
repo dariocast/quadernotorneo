@@ -8,6 +8,8 @@
 			<true/>
 			<key>NSAllowsLocalNetworking</key>
 			<true/>
+			<key>NSAllowsArbitraryLoadsInWebContent</key>
+    		<true/>
 		</dict>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
@@ -61,5 +63,7 @@
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Caricamento loghi personalizzati</string>
 
-	</dict>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+</dict>
 </plist>

@@ -3,6 +3,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -107,8 +108,16 @@ class HomeDrawer extends StatelessWidget {
                               ),
                               title: Text('FantaTorneo'),
                               onTap: () {
-                                launchUrl(Uri.parse(
-                                    "https://dariocast.altervista.org/fantatorneo"));
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute<void>(
+                                  builder: (_) => WebviewScaffold(
+                                    url:
+                                        "https://dariocast.altervista.org/fantatorneo",
+                                    appBar: AppBar(
+                                      title: Text("FantaTorneo"),
+                                    ),
+                                  ),
+                                ));
                               },
                             )
                           : Container(),

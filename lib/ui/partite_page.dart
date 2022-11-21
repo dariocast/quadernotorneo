@@ -17,16 +17,24 @@ import 'widgets/widgets.dart';
 class PartitePage extends StatefulWidget {
   static const String routeName = '/partite';
 
-  final String torneo;
+  final String? torneo;
 
-  PartitePage({required this.torneo});
+  PartitePage({this.torneo});
 
-  static Route route(String torneo) {
-    return MaterialPageRoute<void>(
-      builder: (_) => PartitePage(
-        torneo: torneo,
-      ),
-    );
+  static Route route(String? torneo) {
+    if (torneo != null) {
+      return MaterialPageRoute<void>(
+        builder: (_) => PartitePage(
+          torneo: torneo,
+        ),
+      );
+    } else {
+      return MaterialPageRoute<void>(
+          builder: (_) => BlocProvider(
+                create: (context) => PartiteBloc()..add(PartiteLoaded(torneo)),
+                child: PartitePage(),
+              ));
+    }
   }
 
   @override
@@ -68,7 +76,7 @@ class _PartitePageState extends State<PartitePage> {
       drawer: HomeDrawer(),
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.torneo),
+        title: Text(widget.torneo ?? 'Quaderno Torneo'),
         actions: [
           IconButton(
             onPressed: () async {
@@ -131,7 +139,9 @@ class _PartitePageState extends State<PartitePage> {
           IconButton(
             icon: Icon(Icons.autorenew_rounded),
             onPressed: () {
-              context.read<PartiteBloc>().add(PartiteLoaded(widget.torneo));
+              context
+                  .read<PartiteBloc>()
+                  .add(PartiteLoaded(widget.torneo ?? ''));
             },
           ),
         ],
@@ -197,7 +207,7 @@ class _PartitePageState extends State<PartitePage> {
                       .push(CreaPage.route())
                       .whenComplete(() => context
                           .read<PartiteBloc>()
-                          .add(PartiteLoaded(widget.torneo))),
+                          .add(PartiteLoaded(widget.torneo ?? ''))),
                   child: Center(
                     child: Icon(Icons.add),
                   ),

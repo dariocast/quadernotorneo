@@ -6,7 +6,7 @@ abstract class PartiteEvent extends Equatable {
 }
 
 class PartiteLoaded extends PartiteEvent {
-  final String torneo;
+  final String? torneo;
 
   PartiteLoaded(this.torneo);
 }

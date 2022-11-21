@@ -23,6 +23,7 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.1.1
   flutter_local_notifications: ^12.0.3
+  flutter_webview_plugin: ^0.4.0
   font_awesome_flutter: ^10.2.1
   formz: ^0.4.1
   google_fonts: ^3.0.1
