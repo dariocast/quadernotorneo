@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'widgets/widgets.dart';
 
@@ -34,7 +35,7 @@ class _InfoPageState extends State<InfoPage> {
     });
     return Scaffold(
       appBar: AppBar(
-        title: Text('Informazioni'),
+        title: Text(AppLocalizations.of(context)!.infoPageTitle),
         centerTitle: true,
       ),
       body: Center(
@@ -53,7 +54,7 @@ class _InfoPageState extends State<InfoPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                  '${DateTime.now().year} © Versione $version${kDebugMode ? '-debug' : ''}, build $buildNumber'),
+                  '${DateTime.now().year} © ${AppLocalizations.of(context)!.infoPageVersionLabel} $version${kDebugMode ? '-debug' : ''}, build $buildNumber'),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

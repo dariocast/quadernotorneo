@@ -3,13 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:quaderno_flutter/blocs/tornei/tornei_bloc.dart';
-import 'package:quaderno_flutter/ui/tornei_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:user_repository/user_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'blocs/blocs.dart';
 import 'theme.dart';
@@ -88,10 +88,11 @@ void main() async {
     }
   }
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   runApp(QuadernoTorneoApp(
     authenticationRepository: AuthenticationRepository(),
+    userRepository: UserRepository(),
   ));
 }
 
@@ -99,9 +100,11 @@ class QuadernoTorneoApp extends StatelessWidget {
   const QuadernoTorneoApp({
     Key? key,
     required this.authenticationRepository,
+    required this.userRepository,
   }) : super(key: key);
 
   final AuthenticationRepository authenticationRepository;
+  final UserRepository userRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +115,8 @@ class QuadernoTorneoApp extends StatelessWidget {
           BlocProvider(
             lazy: false,
             create: (_) => AuthenticationBloc(
-                authenticationRepository: authenticationRepository),
+                authenticationRepository: authenticationRepository,
+                userRepository: userRepository),
           ),
           BlocProvider(
             lazy: false,
@@ -182,10 +186,12 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Quaderno Torneo',
+      title: AppLocalizations.of(context)!.appTitle,
       debugShowCheckedModeBanner: false,
       theme: QuadernoTheme.themeData,
       navigatorKey: _navigatorKey,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       onGenerateRoute: (_) => PartitePage.route(null),
     );
   }

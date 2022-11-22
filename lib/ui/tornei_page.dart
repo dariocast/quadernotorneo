@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../blocs/blocs.dart';
 import '../blocs/tornei/tornei_bloc.dart';
@@ -25,7 +26,7 @@ class TorneiPage extends StatelessWidget {
     return Scaffold(
       drawer: HomeDrawer(onlyLogin: true),
       appBar: AppBar(
-        title: Text('Tornei'),
+        title: Text(AppLocalizations.of(context)!.tournamentPageTitle),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -51,7 +52,7 @@ class TorneiPage extends StatelessWidget {
                     child: FaIcon(FontAwesomeIcons.triangleExclamation,
                         size: 30.0),
                   ),
-                  Text('Nessun torneo'),
+                  Text(AppLocalizations.of(context)!.tournamentPageEmpty),
                 ],
               ),
             );
@@ -80,7 +81,8 @@ class TorneiPage extends StatelessWidget {
           );
         } else if (state is TorneiLoadFailure) {
           return Center(
-            child: Text('Impossibile caricare i tornei'),
+            child:
+                Text(AppLocalizations.of(context)!.tournamentPageLoadFailure),
           );
         } else {
           return Center(

@@ -8,6 +8,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../blocs/blocs.dart';
 import '../models/models.dart';
@@ -28,7 +29,7 @@ class HomeDrawer extends StatelessWidget {
         create: (context) => DrawerCubit(),
         child: Builder(
           builder: (context) {
-            final authState2 = context.watch<AuthenticationBloc>().state;
+            final authState = context.watch<AuthenticationBloc>().state;
             final drawerState = context.watch<DrawerCubit>().state;
             return Column(
               children: [
@@ -50,7 +51,8 @@ class HomeDrawer extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: Text(
-                                'Benvenuto!',
+                                AppLocalizations.of(context)!
+                                    .drawerWelcomeLabel,
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline4!
@@ -66,7 +68,8 @@ class HomeDrawer extends StatelessWidget {
                                 Icons.sports_soccer_rounded,
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
-                              title: Text('Marcatori'),
+                              title: Text(AppLocalizations.of(context)!
+                                  .drawerScorersLabel),
                               onTap: () {
                                 Navigator.of(context).pop();
                                 Navigator.of(context)
@@ -79,7 +82,8 @@ class HomeDrawer extends StatelessWidget {
                                 Icons.leaderboard_rounded,
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
-                              title: Text('Classifiche'),
+                              title: Text(AppLocalizations.of(context)!
+                                  .drawerLeaderboardsLabel),
                               onTap: () {
                                 Navigator.of(context).pop();
                                 Navigator.of(context)
@@ -93,7 +97,8 @@ class HomeDrawer extends StatelessWidget {
                                 Icons.people_alt_rounded,
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
-                              title: Text('Gruppi'),
+                              title: Text(AppLocalizations.of(context)!
+                                  .drawerTeamsLabel),
                               onTap: () {
                                 Navigator.of(context).pop();
                                 Navigator.of(context).push(GruppiPage.route());
@@ -106,7 +111,8 @@ class HomeDrawer extends StatelessWidget {
                                 Icons.extension_rounded,
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
-                              title: Text('FantaTorneo'),
+                              title: Text(AppLocalizations.of(context)!
+                                  .drawerFantasyGameLabel),
                               onTap: () {
                                 Navigator.of(context)
                                     .push(MaterialPageRoute<void>(
@@ -114,39 +120,47 @@ class HomeDrawer extends StatelessWidget {
                                     url:
                                         "https://dariocast.altervista.org/fantatorneo",
                                     appBar: AppBar(
-                                      title: Text("FantaTorneo"),
+                                      title: Text(AppLocalizations.of(context)!
+                                          .drawerFantasyGameLabel),
                                     ),
                                   ),
                                 ));
                               },
                             )
                           : Container(),
-                      authState2.status == AuthenticationStatus.authenticated &&
-                              !onlyLogin
+                      authState.status == AuthenticationStatus.authenticated &&
+                              !onlyLogin &&
+                              authState.user.isAdmin
                           ? Divider()
                           : Container(),
-                      authState2.status == AuthenticationStatus.authenticated &&
-                              !onlyLogin
+                      authState.status == AuthenticationStatus.authenticated &&
+                              !onlyLogin &&
+                              authState.user.isAdmin
                           ? Center(
                               child: Text(
-                                'Gestione',
+                                AppLocalizations.of(context)!
+                                    .drawerManagementLabel,
                                 style: Theme.of(context).textTheme.subtitle1,
                               ),
                             )
                           : Container(),
-                      authState2.status == AuthenticationStatus.authenticated &&
-                              !onlyLogin
+                      authState.status == AuthenticationStatus.authenticated &&
+                              !onlyLogin &&
+                              authState.user.isAdmin
                           ? ListTile(
                               trailing: Icon(
                                 Icons.update,
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
-                              title: Text('Aggiorna marcatori'),
+                              title: Text(AppLocalizations.of(context)!
+                                  .drawerManagementUpdateScorers),
                               onTap: () async {
                                 final result = await showOkCancelAlertDialog(
                                     context: context,
-                                    title: 'Aggiorna Marcatori',
-                                    message: 'Vuoi aggiornare i marcatori?');
+                                    title: AppLocalizations.of(context)!
+                                        .drawerManagementUpdateScorersDialogTitle,
+                                    message: AppLocalizations.of(context)!
+                                        .drawerManagementUpdateScorersDialogMessage);
                                 if (result == OkCancelResult.ok) {
                                   context
                                       .read<DrawerCubit>()
@@ -155,19 +169,23 @@ class HomeDrawer extends StatelessWidget {
                               },
                             )
                           : Container(),
-                      authState2.status == AuthenticationStatus.authenticated &&
-                              !onlyLogin
+                      authState.status == AuthenticationStatus.authenticated &&
+                              !onlyLogin &&
+                              authState.user.isAdmin
                           ? ListTile(
                               trailing: Icon(
                                 Icons.calculate,
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
-                              title: Text('Calcola classifica'),
+                              title: Text(AppLocalizations.of(context)!
+                                  .drawerManagementUpdateLeaderboard),
                               onTap: () async {
                                 final result = await showOkCancelAlertDialog(
                                     context: context,
-                                    title: 'Aggiorna Classifica',
-                                    message: 'Vuoi aggiornare la classifica?');
+                                    title: AppLocalizations.of(context)!
+                                        .drawerManagementUpdateLeaderboardDialogTitle,
+                                    message: AppLocalizations.of(context)!
+                                        .drawerManagementUpdateLeaderboardDialogMessage);
                                 if (result == OkCancelResult.ok) {
                                   context
                                       .read<DrawerCubit>()
@@ -176,20 +194,23 @@ class HomeDrawer extends StatelessWidget {
                               },
                             )
                           : Container(),
-                      authState2.status == AuthenticationStatus.authenticated &&
-                              !onlyLogin
+                      authState.status == AuthenticationStatus.authenticated &&
+                              !onlyLogin &&
+                              authState.user.isAdmin
                           ? ListTile(
                               trailing: Icon(
                                 Icons.restart_alt,
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
-                              title: Text('Reset classifica'),
+                              title: Text(AppLocalizations.of(context)!
+                                  .drawerManagementResetLeaderboard),
                               onTap: () async {
                                 final result = await showOkCancelAlertDialog(
                                     context: context,
-                                    title: 'Reset Classifica',
-                                    message:
-                                        'La classifica verrà azzerata, continuare?');
+                                    title: AppLocalizations.of(context)!
+                                        .drawerManagementResetLeaderboardDialogTitle,
+                                    message: AppLocalizations.of(context)!
+                                        .drawerManagementResetLeaderboardDialogMessage);
                                 if (result == OkCancelResult.ok) {
                                   context.read<DrawerCubit>().resetClassifica();
                                 }
@@ -202,7 +223,8 @@ class HomeDrawer extends StatelessWidget {
                           Icons.info_outline_rounded,
                           color: Theme.of(context).colorScheme.secondary,
                         ),
-                        title: Text('Informazioni'),
+                        title:
+                            Text(AppLocalizations.of(context)!.drawerInfoLabel),
                         onTap: () {
                           Navigator.of(context).pop();
                           Navigator.of(context).push(InfoPage.route());
@@ -228,12 +250,14 @@ class HomeDrawer extends StatelessWidget {
                   ),
                   child: InkWell(
                     onTap: () async {
-                      if (authState2.status ==
+                      if (authState.status ==
                           AuthenticationStatus.authenticated) {
                         final result = await showOkCancelAlertDialog(
                           context: context,
-                          title: 'Logout',
-                          message: 'Sicuro di volerti disconnettere?',
+                          title: AppLocalizations.of(context)!
+                              .drawerLogoutDialogTitle,
+                          message: AppLocalizations.of(context)!
+                              .drawerLogoutDialogMessage,
                         );
                         if (result == OkCancelResult.ok) {
                           context
@@ -249,9 +273,11 @@ class HomeDrawer extends StatelessWidget {
                     },
                     child: Center(
                       child: Text(
-                        authState2.status == AuthenticationStatus.authenticated
-                            ? 'Logout'
-                            : 'Login',
+                        authState.status == AuthenticationStatus.authenticated
+                            ? AppLocalizations.of(context)!
+                                .drawerLogoutButtonLabel
+                            : AppLocalizations.of(context)!
+                                .drawerLoginButtonLabel,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

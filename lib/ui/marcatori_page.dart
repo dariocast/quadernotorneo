@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../blocs/blocs.dart';
 import 'widgets/widgets.dart';
@@ -18,7 +19,7 @@ class MarcatoriPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Marcatori'),
+        title: Text(AppLocalizations.of(context)!.scorersPageTitle),
         centerTitle: true,
         actions: [
           IconButton(
@@ -32,7 +33,8 @@ class MarcatoriPage extends StatelessWidget {
           BlocBuilder<MarcatoriBloc, MarcatoriState>(builder: (context, state) {
             if (state is MarcatoriLoadFailure) {
               return Center(
-                child: Text('Impossibile caricare i marcatori'),
+                child:
+                    Text(AppLocalizations.of(context)!.scorersPageLoadFailure),
               );
             } else if (state is MarcatoriLoadSuccess) {
               return state.marcatori.isEmpty
@@ -45,7 +47,7 @@ class MarcatoriPage extends StatelessWidget {
                             child: FaIcon(FontAwesomeIcons.faceSadTear,
                                 size: 30.0),
                           ),
-                          Text('Nessuno ha fatto gol'),
+                          Text(AppLocalizations.of(context)!.scorersPageEmpty),
                         ],
                       ),
                     )

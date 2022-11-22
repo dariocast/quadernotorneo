@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../blocs/blocs.dart';
 import '../../models/models.dart';
@@ -115,7 +116,7 @@ class PartitaCard extends StatelessWidget {
                           ? Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: Text(
-                                'Terminata',
+                                AppLocalizations.of(context)!.fullTime,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 10),
                               ),

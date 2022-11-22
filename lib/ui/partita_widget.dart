@@ -7,6 +7,7 @@ import '../blocs/blocs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/models.dart';
 import 'style_helpers.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PartitaWidget extends StatelessWidget {
   PartitaWidget();
@@ -43,8 +44,10 @@ class PartitaWidget extends StatelessWidget {
                               onPressed: () async {
                                 final choice = await showConfirmationDialog(
                                   context: context,
-                                  title: 'Gol',
-                                  message: 'Chi ha segnato?',
+                                  title: AppLocalizations.of(context)!
+                                      .matchWidgetGolDialogTitle,
+                                  message: AppLocalizations.of(context)!
+                                      .matchWidgetGolDialogMessage,
                                   actions: giocatoriSquadraUno
                                       .map((e) =>
                                           AlertDialogAction(key: e, label: e))
@@ -56,7 +59,8 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraUno)));
                                 }
                               },
-                              child: Text('Gol'),
+                              child: Text(AppLocalizations.of(context)!
+                                  .matchWidgetGolButtonLabel),
                               style: elevatedButtonStyle,
                             ),
                           ),
@@ -66,8 +70,10 @@ class PartitaWidget extends StatelessWidget {
                               onPressed: () async {
                                 final choice = await showConfirmationDialog(
                                   context: context,
-                                  title: 'Autogol',
-                                  message: 'Chi l\'ha fatto?',
+                                  title: AppLocalizations.of(context)!
+                                      .matchWidgetAutogolDialogTitle,
+                                  message: AppLocalizations.of(context)!
+                                      .matchWidgetAutogolDialogMessage,
                                   actions: giocatoriSquadraUno
                                       .map((e) =>
                                           AlertDialogAction(key: e, label: e))
@@ -79,7 +85,8 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraUno)));
                                 }
                               },
-                              child: Text('Autogol'),
+                              child: Text(AppLocalizations.of(context)!
+                                  .matchWidgetAutogolButtonLabel),
                               style: elevatedButtonStyle,
                             ),
                           ),
@@ -89,8 +96,10 @@ class PartitaWidget extends StatelessWidget {
                               onPressed: () async {
                                 final choice = await showConfirmationDialog(
                                   context: context,
-                                  title: 'Ammonito',
-                                  message: 'Chi è stato ammonito?',
+                                  title: AppLocalizations.of(context)!
+                                      .matchWidgetYellowCardDialogTitle,
+                                  message: AppLocalizations.of(context)!
+                                      .matchWidgetYellowCardDialogMessage,
                                   actions: giocatoriSquadraUno
                                       .map((e) =>
                                           AlertDialogAction(key: e, label: e))
@@ -112,8 +121,10 @@ class PartitaWidget extends StatelessWidget {
                               onPressed: () async {
                                 final choice = await showConfirmationDialog(
                                   context: context,
-                                  title: 'Espulso',
-                                  message: 'Chi è stato espulso?',
+                                  title: AppLocalizations.of(context)!
+                                      .matchWidgetRedCardDialogTitle,
+                                  message: AppLocalizations.of(context)!
+                                      .matchWidgetRedCardDialogMessage,
                                   actions: giocatoriSquadraUno
                                       .map((e) =>
                                           AlertDialogAction(key: e, label: e))
@@ -248,8 +259,10 @@ class PartitaWidget extends StatelessWidget {
                               onPressed: () async {
                                 final choice = await showConfirmationDialog(
                                   context: context,
-                                  title: 'Ammonito',
-                                  message: 'Chi è stato ammonito?',
+                                  title: AppLocalizations.of(context)!
+                                      .matchWidgetYellowCardDialogTitle,
+                                  message: AppLocalizations.of(context)!
+                                      .matchWidgetYellowCardDialogMessage,
                                   actions: giocatoriSquadraDue
                                       .map((e) =>
                                           AlertDialogAction(key: e, label: e))
@@ -261,7 +274,8 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraDue)));
                                 }
                               },
-                              child: Text('Ammonisci'),
+                              child: Text(AppLocalizations.of(context)!
+                                  .matchWidgetYellowCardButtonLabel),
                               style: elevatedButtonStyle,
                             ),
                           ),
@@ -271,8 +285,10 @@ class PartitaWidget extends StatelessWidget {
                               onPressed: () async {
                                 final choice = await showConfirmationDialog(
                                   context: context,
-                                  title: 'Espulso',
-                                  message: 'Chi è stato espulso?',
+                                  title: AppLocalizations.of(context)!
+                                      .matchWidgetRedCardDialogTitle,
+                                  message: AppLocalizations.of(context)!
+                                      .matchWidgetRedCardDialogMessage,
                                   actions: giocatoriSquadraDue
                                       .map((e) =>
                                           AlertDialogAction(key: e, label: e))
@@ -284,13 +300,15 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraDue)));
                                 }
                               },
-                              child: Text('Espelli'),
+                              child: Text(AppLocalizations.of(context)!
+                                  .matchWidgetRedCardButtonLabel),
                               style: elevatedButtonStyle,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
-                            child: Text('Falli'),
+                            child: Text(AppLocalizations.of(context)!
+                                .matchWidgetFoulsLabel),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,

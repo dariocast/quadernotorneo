@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:logging/logging.dart';
-import 'package:quaderno_flutter/blocs/tornei/tornei_bloc.dart';
 import '../utils/log_helper.dart';
 import 'ui.dart';
-import 'dart:developer' as developer;
 import '../utils/ad_helper.dart';
 import '../blocs/blocs.dart';
 import 'crea_page.dart';
 import 'widgets/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PartitePage extends StatefulWidget {
   static const String routeName = '/partite';
@@ -76,29 +74,29 @@ class _PartitePageState extends State<PartitePage> {
       drawer: HomeDrawer(),
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.torneo ?? 'Quaderno Torneo'),
+        title: Text(widget.torneo ?? AppLocalizations.of(context)!.appTitle),
         actions: [
           IconButton(
             onPressed: () async {
               final sortBy = await showConfirmationDialog(
                   initialSelectedActionKey: orderBy,
                   context: context,
-                  title: 'Ordina per',
+                  title: AppLocalizations.of(context)!.orderBy,
                   actions: [
                     AlertDialogAction(
                       key: 0,
-                      label: 'Data partita decrescente',
+                      label: AppLocalizations.of(context)!.matchDateDesc,
                     ),
                     AlertDialogAction(
-                      label: 'Data partita crescente',
+                      label: AppLocalizations.of(context)!.matchDateAsc,
                       key: 1,
                     ),
                     AlertDialogAction(
-                      label: 'Data creazione decrescente',
+                      label: AppLocalizations.of(context)!.matchCreatedDesc,
                       key: 2,
                     ),
                     AlertDialogAction(
-                      label: 'Data creazione crescente',
+                      label: AppLocalizations.of(context)!.matchCreatedAsc,
                       key: 3,
                     ),
                   ]);
@@ -149,7 +147,7 @@ class _PartitePageState extends State<PartitePage> {
       body: BlocBuilder<PartiteBloc, PartiteState>(builder: (context, state) {
         if (state is PartiteFailure) {
           return Center(
-            child: Text('Impossibile caricare le partite'),
+            child: Text(AppLocalizations.of(context)!.matchLoadFailure),
           );
         }
         if (state is PartiteSuccess) {
@@ -163,7 +161,7 @@ class _PartitePageState extends State<PartitePage> {
                     child: FaIcon(FontAwesomeIcons.triangleExclamation,
                         size: 30.0),
                   ),
-                  Text('Nessuna partita'),
+                  Text(AppLocalizations.of(context)!.noMatch),
                 ],
               ),
             );
@@ -201,7 +199,8 @@ class _PartitePageState extends State<PartitePage> {
         );
       }),
       floatingActionButton:
-          authState.status == AuthenticationStatus.authenticated
+          authState.status == AuthenticationStatus.authenticated &&
+                  authState.user.isAdmin
               ? FloatingActionButton(
                   onPressed: () => Navigator.of(context)
                       .push(CreaPage.route())

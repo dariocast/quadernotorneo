@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../blocs/blocs.dart';
 import 'ui.dart';
@@ -23,8 +24,9 @@ class DettaglioPage extends StatelessWidget {
         if (state.isEdit) {
           final res = await showOkCancelAlertDialog(
               context: context,
-              title: 'Sei sicuro?',
-              message: 'Tutte le modifiche non salvate andranno perse');
+              title: AppLocalizations.of(context)!.editNotSavedWarningTitle,
+              message:
+                  AppLocalizations.of(context)!.editNotSavedWarningMessage);
           if (res == OkCancelResult.ok) {
             return true;
           }
@@ -36,16 +38,19 @@ class DettaglioPage extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: state.loading
-              ? Text('Dettaglio incontro')
+              ? Text(AppLocalizations.of(context)!.detailPageTitle)
               : Text(
                   '${state.partita!.squadraUno} vs ${state.partita!.squadraDue}'),
-          actions: authState.status == AuthenticationStatus.authenticated
+          actions: authState.status == AuthenticationStatus.authenticated &&
+                  authState.user.isAdmin
               ? [
                   IconButton(
                       onPressed: () async {
                         if (state.isEdit) {
                           final result = await showOkCancelAlertDialog(
-                              context: context, title: 'Salvare la partita?');
+                              context: context,
+                              title: AppLocalizations.of(context)!
+                                  .saveDetailsAlertTitle);
                           if (result == OkCancelResult.ok && !state.loading)
                             context
                                 .read<DettaglioBloc>()
@@ -54,7 +59,8 @@ class DettaglioPage extends StatelessWidget {
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()
                             ..showSnackBar(SnackBar(
-                                content: Text('Nessuna modifica da salvare')));
+                                content: Text(AppLocalizations.of(context)!
+                                    .noEditToSaveMessage)));
                         }
                       },
                       icon: Icon(Icons.save_outlined)),
@@ -62,8 +68,10 @@ class DettaglioPage extends StatelessWidget {
                       onPressed: () async {
                         final result = await showOkCancelAlertDialog(
                           context: context,
-                          title: 'Attenzione!',
-                          message: 'Sei sicuro di voler rimuovere la partita?',
+                          title:
+                              AppLocalizations.of(context)!.deleteWarningTitle,
+                          message: AppLocalizations.of(context)!
+                              .deleteWarningMessage,
                         );
 
                         if (result == OkCancelResult.ok && !state.loading) {
@@ -93,7 +101,8 @@ class DettaglioPage extends StatelessWidget {
                 ],
               ),
         floatingActionButton:
-            authState.status == AuthenticationStatus.authenticated
+            authState.status == AuthenticationStatus.authenticated &&
+                    authState.user.isAdmin
                 ? FloatingActionButton(
                     onPressed: () =>
                         context.read<DettaglioBloc>().add(DettaglioUndo()),
