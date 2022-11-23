@@ -29,15 +29,15 @@ class LoginPage extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: ListView(children: [
             LoginForm(),
-            // TextButton(
-            //   child: Text(
-            //     AppLocalizations.of(context)!.loginPageSignUpTexButtonLabel,
-            //     style: TextStyle(fontWeight: FontWeight.bold),
-            //   ),
-            //   onPressed: () {
-            //     Navigator.push(context, SignUpPage.route());
-            //   },
-            // ),
+            TextButton(
+              child: Text(
+                AppLocalizations.of(context)!.loginPageSignUpTexButtonLabel,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                Navigator.push(context, SignUpPage.route());
+              },
+            ),
           ]),
         ),
       ),
