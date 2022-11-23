@@ -37,7 +37,13 @@ class LoginForm extends StatelessWidget {
                 const Padding(padding: EdgeInsets.all(12)),
                 _PasswordInput(state.password.value),
                 const Padding(padding: EdgeInsets.all(12)),
-                _LoginButton(),
+                BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+                  if (state.status.isSubmissionInProgress) {
+                    return CircularProgressIndicator();
+                  } else {
+                    return _LoginButton();
+                  }
+                }),
                 const Padding(padding: EdgeInsets.all(12)),
                 _SaveCredentialCheckbox(),
               ],

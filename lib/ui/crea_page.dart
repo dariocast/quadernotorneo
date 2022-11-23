@@ -216,11 +216,14 @@ class CreaPage extends StatelessWidget {
                           ),
                         ],
                       )
-                    : Text(
-                        AppLocalizations.of(context)!
-                            .matchCreateNoGroupsWarning,
-                        style: Theme.of(context).textTheme.headline4,
-                        textAlign: TextAlign.center,
+                    : Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Text(
+                          AppLocalizations.of(context)!
+                              .matchCreateNoGroupsWarning,
+                          style: Theme.of(context).textTheme.headline5,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
           ),
         );
