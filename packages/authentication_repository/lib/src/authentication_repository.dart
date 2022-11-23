@@ -20,14 +20,13 @@ class AuthenticationRepository {
     required String username,
     required String password,
   }) async {
-    final res = await supabase.auth.signIn(email: username, password: password);
-
-    final error = res.error;
-    if (error != null) {
-      _controller.add(AuthenticationStatus.unauthenticated);
-      throw Exception(error.message);
-    } else {
+    try {
+      final AuthResponse res = await supabase.auth
+          .signInWithPassword(email: username, password: password);
       _controller.add(AuthenticationStatus.authenticated);
+    } catch (e) {
+      _controller.add(AuthenticationStatus.unauthenticated);
+      throw e;
     }
   }
 

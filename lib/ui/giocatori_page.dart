@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../blocs/blocs.dart';
 import '../models/giocatore.dart';
@@ -31,7 +32,8 @@ class GiocatoriPage extends StatelessWidget {
         title: Text('${this.gruppo}'),
         centerTitle: true,
         actions: [
-          authState.status == AuthenticationStatus.authenticated
+          authState.status == AuthenticationStatus.authenticated &&
+                  authState.user.isAdmin
               ? IconButton(
                   onPressed: () => showModalBottomSheet(
                         context: context,
@@ -86,7 +88,8 @@ class GiocatoriPage extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: FaIcon(FontAwesomeIcons.users, size: 30.0),
                             ),
-                            Text('Questo gruppo non ha giocatori'),
+                            Text(
+                                AppLocalizations.of(context)!.playerEmptyGroup),
                           ],
                         ),
                       );
@@ -145,13 +148,16 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
             return false;
           },
           child: InkWell(
-            onLongPress: authState.status == AuthenticationStatus.authenticated
-                ? () => setState(() {
-                      deletable = !deletable;
-                    })
-                : null,
+            onLongPress:
+                authState.status == AuthenticationStatus.authenticated &&
+                        authState.user.isAdmin
+                    ? () => setState(() {
+                          deletable = !deletable;
+                        })
+                    : null,
             onTap: !deletable &&
-                    authState.status == AuthenticationStatus.authenticated
+                    authState.status == AuthenticationStatus.authenticated &&
+                    authState.user.isAdmin
                 ? () async => await showModalBottomSheet(
                       context: context,
                       builder: (_) {
@@ -164,13 +170,15 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                         );
                       },
                     )
-                : authState.status == AuthenticationStatus.authenticated
+                : authState.status == AuthenticationStatus.authenticated &&
+                        authState.user.isAdmin
                     ? () async {
                         final result = await showOkCancelAlertDialog(
                           context: context,
-                          title: 'Attenzione',
+                          title:
+                              AppLocalizations.of(context)!.deleteWarningTitle,
                           message:
-                              'Eliminare ${giocatore.nome} (${giocatore.gruppo})?',
+                              '${AppLocalizations.of(context)!.playerDeleteLabel} ${giocatore.nome} (${giocatore.gruppo})?',
                         );
                         if (result == OkCancelResult.ok) {
                           giocatoriBloc.add(GiocatoriElimina(giocatore.id));
@@ -264,7 +272,8 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                       ),
                       deletable &&
                               authState.status ==
-                                  AuthenticationStatus.authenticated
+                                  AuthenticationStatus.authenticated &&
+                              authState.user.isAdmin
                           ? Positioned(
                               right: 0,
                               top: 0,

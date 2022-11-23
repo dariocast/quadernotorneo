@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../blocs/blocs.dart';
 import 'style_helpers.dart';
@@ -16,9 +17,11 @@ class LoginForm extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(
-                  content: Text(
-                      'Autenticazione non riuscita, controlla username e password')),
+              SnackBar(
+                content: Text(
+                  AppLocalizations.of(context)!.loginAuthFailureMessage,
+                ),
+              ),
             );
         }
       },
@@ -53,7 +56,8 @@ class _SaveCredentialCheckbox extends StatelessWidget {
       builder: (context, state) {
         return SwitchListTile(
           key: const Key('loginForm_saveCredential_switch'),
-          title: Text("Ricordami"),
+          title:
+              Text(AppLocalizations.of(context)!.loginRememberMeCheckboxLabel),
           onChanged: (bool value) {
             context.read<LoginBloc>().add(LoginPersistChanged(persist: value));
           },
@@ -78,8 +82,10 @@ class _UsernameInput extends StatelessWidget {
           onChanged: (username) =>
               context.read<LoginBloc>().add(LoginUsernameChanged(username)),
           decoration: InputDecoration(
-            labelText: 'username',
-            errorText: state.username.invalid ? 'Username non valida' : null,
+            labelText: AppLocalizations.of(context)!.loginFormEmailLabel,
+            errorText: state.username.invalid
+                ? AppLocalizations.of(context)!.loginFormEmailErrorLabel
+                : null,
           ),
         );
       },
@@ -104,8 +110,10 @@ class _PasswordInput extends StatelessWidget {
               context.read<LoginBloc>().add(LoginPasswordChanged(password)),
           obscureText: state.hidePassword,
           decoration: InputDecoration(
-            labelText: 'password',
-            errorText: state.password.invalid ? 'Password non valida' : null,
+            labelText: AppLocalizations.of(context)!.loginFormPasswordLabel,
+            errorText: state.password.invalid
+                ? AppLocalizations.of(context)!.loginFormPasswordErrorLabel
+                : null,
             suffixIcon: InkWell(
               onTap: () => context
                   .read<LoginBloc>()
@@ -132,7 +140,7 @@ class _LoginButton extends StatelessWidget {
             : ElevatedButton(
                 style: elevatedButtonStyle,
                 key: const Key('loginForm_continue_raisedButton'),
-                child: const Text('Login'),
+                child: Text(AppLocalizations.of(context)!.loginFormSubmitLabel),
                 onPressed: state.status.isValidated
                     ? () {
                         context.read<LoginBloc>().add(const LoginSubmitted());

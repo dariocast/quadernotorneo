@@ -13,10 +13,9 @@ final playerImages = [
 
 Future<File?> cropImage(BuildContext context, String activityTitle,
     File imageFile, CropAspectRatio ratio) async {
-  File? croppedFile = await ImageCropper().cropImage(
-    sourcePath: imageFile.path,
-    aspectRatio: ratio,
-    androidUiSettings: AndroidUiSettings(
+  CroppedFile? croppedFile = await ImageCropper()
+      .cropImage(sourcePath: imageFile.path, aspectRatio: ratio, uiSettings: [
+    AndroidUiSettings(
       toolbarTitle: activityTitle,
       toolbarColor: Theme.of(context).primaryColor,
       toolbarWidgetColor: Colors.white,
@@ -24,10 +23,14 @@ Future<File?> cropImage(BuildContext context, String activityTitle,
       initAspectRatio: CropAspectRatioPreset.original,
       lockAspectRatio: true,
     ),
-    iosUiSettings: IOSUiSettings(
+    IOSUiSettings(
       title: activityTitle,
       aspectRatioLockEnabled: true,
     ),
-  );
-  return croppedFile;
+  ]);
+  if (croppedFile != null) {
+    return File(croppedFile.path);
+  } else {
+    return null;
+  }
 }

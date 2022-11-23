@@ -1,7 +1,5 @@
 part of 'home_bloc.dart';
 
-enum OrderBy { DATA_DESC, DATA_ASC, ID_DESC, ID_ASC }
-
 abstract class HomeState extends Equatable {
   const HomeState();
 
@@ -11,31 +9,15 @@ abstract class HomeState extends Equatable {
 
 class HomeInitial extends HomeState {}
 
-class HomeFailure extends HomeState {}
+class HomeLoadInProgress extends HomeState {}
 
-class HomeLoading extends HomeState {}
-
-class HomeSuccess extends HomeState {
+class HomeLoadSuccess extends HomeState {
+  final List<String> tornei;
   final List<Partita> partite;
-  final List<Gruppo> infoGruppi;
-  final OrderBy orderBy;
+  final List<Gruppo> gruppi;
 
-  const HomeSuccess(
-      {required this.partite, required this.infoGruppi, required this.orderBy});
-
-  @override
-  List<Object> get props => [partite, infoGruppi];
-
-  @override
-  String toString() =>
-      'HomeSuccess(partite: $partite, infoGruppi: $infoGruppi)';
-
-  HomeSuccess copyWith(
-      {List<Partita>? partite, List<Gruppo>? infoGruppi, OrderBy? orderBy}) {
-    return HomeSuccess(
-      partite: partite ?? this.partite,
-      infoGruppi: infoGruppi ?? this.infoGruppi,
-      orderBy: orderBy ?? this.orderBy,
-    );
-  }
+  HomeLoadSuccess(
+      {required this.tornei, required this.partite, required this.gruppi});
 }
+
+class HomeLoadFailure extends HomeState {}

@@ -1,7 +1,10 @@
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../blocs/blocs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quaderno_flutter/ui/sign_up_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../blocs/blocs.dart';
 import 'ui.dart';
 
 class LoginPage extends StatelessWidget {
@@ -19,12 +22,23 @@ class LoginPage extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Login'),
+          title: Text(AppLocalizations.of(context)!.loginPageTitle),
           centerTitle: true,
         ),
         body: Padding(
           padding: const EdgeInsets.all(12),
-          child: LoginForm(),
+          child: ListView(children: [
+            LoginForm(),
+            // TextButton(
+            //   child: Text(
+            //     AppLocalizations.of(context)!.loginPageSignUpTexButtonLabel,
+            //     style: TextStyle(fontWeight: FontWeight.bold),
+            //   ),
+            //   onPressed: () {
+            //     Navigator.push(context, SignUpPage.route());
+            //   },
+            // ),
+          ]),
         ),
       ),
     );

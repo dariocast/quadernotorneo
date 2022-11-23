@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../blocs/blocs.dart';
 import '../utils/ui_helpers.dart';
@@ -32,7 +32,8 @@ class GruppiPage extends StatelessWidget {
           title: Text('Gruppi'),
           centerTitle: true,
           actions: [
-            authState.status == AuthenticationStatus.authenticated
+            authState.status == AuthenticationStatus.authenticated &&
+                    authState.user.isAdmin
                 ? IconButton(
                     onPressed: () => showModalBottomSheet(
                           isScrollControlled: true,
@@ -81,7 +82,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
         children: [
           Padding(
             padding: const EdgeInsets.all(30.0),
-            child: Text('Un nuovo gruppo, eh?',
+            child: Text(AppLocalizations.of(context)!.teamCreateTitle,
                 style: Theme.of(context).textTheme.headline5),
           ),
           Padding(
@@ -94,7 +95,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
                 }),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Nome',
+                  labelText: AppLocalizations.of(context)!.teamCreateNameLabel,
                 ),
               ),
             ),
@@ -109,7 +110,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
                 }),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Girone',
+                  labelText: AppLocalizations.of(context)!.teamCreateGroupLabel,
                 ),
               ),
             ),
@@ -123,15 +124,18 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
                 children: [
                   OutlinedButton(
                     child: this.file == null
-                        ? Text('Carica un logo')
-                        : Text('Cambia logo'),
+                        ? Text(
+                            AppLocalizations.of(context)!.teamCreateUploadLogo)
+                        : Text(
+                            AppLocalizations.of(context)!.teamCreateEditLogo),
                     onPressed: () async {
                       XFile? result = await ImagePicker()
                           .pickImage(source: ImageSource.gallery);
                       if (result != null) {
                         final croppedImage = await cropImage(
                           this.context,
-                          'Ritaglia l\'immagine',
+                          AppLocalizations.of(context)!
+                              .teamCreateCropUploadedImage,
                           File(result.path),
                           CropAspectRatio(ratioX: 1, ratioY: 1),
                         );
@@ -159,7 +163,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
               OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Center(
-                  child: Text('Annulla'),
+                  child: Text(AppLocalizations.of(context)!.cancelButtonLabel),
                 ),
               ),
               SizedBox(
@@ -179,7 +183,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
                   }
                 },
                 child: Center(
-                  child: Text('Crea'),
+                  child: Text(AppLocalizations.of(context)!.teamCreateButton),
                 ),
               ),
             ],
@@ -211,7 +215,6 @@ class _VistaGruppiState extends State<VistaGruppi> {
       children: [
         BlocBuilder<GruppiBloc, GruppiState>(
           builder: (context, state) {
-            // debugPrint(state.toString());
             if (state is GruppiLoadSuccess) {
               final gruppi = state.gruppi;
               gruppi.sort((a, b) => a.nome.compareTo(b.nome));
@@ -223,7 +226,7 @@ class _VistaGruppiState extends State<VistaGruppi> {
                           Icon(Icons.info_outline, size: 30.0),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text('Non ci sono gruppi nel quaderno'),
+                            child: Text(AppLocalizations.of(context)!.noTeams),
                           ),
                         ],
                       ),
@@ -254,28 +257,36 @@ class _VistaGruppiState extends State<VistaGruppi> {
                                 padding: const EdgeInsets.all(0.0),
                                 child: InkWell(
                                   onLongPress: authState.status ==
-                                          AuthenticationStatus.authenticated
+                                              AuthenticationStatus
+                                                  .authenticated &&
+                                          authState.user.isAdmin
                                       ? () => setState(() {
                                             editable = !editable;
                                           })
                                       : null,
                                   onTap: !editable &&
                                           authState.status ==
-                                              AuthenticationStatus.authenticated
+                                              AuthenticationStatus
+                                                  .authenticated &&
+                                          authState.user.isAdmin
                                       ? () {
                                           Navigator.of(context).push(
                                               GiocatoriPage.route(
                                                   gruppi[index].nome));
                                         }
                                       : authState.status ==
-                                              AuthenticationStatus.authenticated
+                                                  AuthenticationStatus
+                                                      .authenticated &&
+                                              authState.user.isAdmin
                                           ? () async {
                                               final result =
                                                   await showOkCancelAlertDialog(
                                                 context: context,
-                                                title: 'Attenzione',
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .deleteWarningTitle,
                                                 message:
-                                                    'Eliminare ${gruppi[index].nome} e tutti i componenti?',
+                                                    '${AppLocalizations.of(context)!.teamDeleteLabel} ${gruppi[index].nome} ${AppLocalizations.of(context)!.teamDeleteWithPlayersLabel}',
                                               );
                                               if (result == OkCancelResult.ok) {
                                                 gruppiBloc.add(GruppiElimina(
@@ -328,7 +339,8 @@ class _VistaGruppiState extends State<VistaGruppi> {
                                         editable &&
                                                 authState.status ==
                                                     AuthenticationStatus
-                                                        .authenticated
+                                                        .authenticated &&
+                                                authState.user.isAdmin
                                             ? Positioned(
                                                 right: 0,
                                                 top: 0,
@@ -347,7 +359,7 @@ class _VistaGruppiState extends State<VistaGruppi> {
                     );
             } else if (state is GruppiLoadFailure) {
               return Center(
-                child: Text('C\'è qualche problema a caricare i gruppi'),
+                child: Text(AppLocalizations.of(context)!.teamLoadFailure),
               );
             } else {
               return Center(

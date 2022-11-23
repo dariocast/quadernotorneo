@@ -5,16 +5,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:user_repository/user_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'blocs/blocs.dart';
 import 'theme.dart';
 import 'ui/ui.dart';
+import 'utils/log_helper.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  print("Handling a background message: ${message.data}");
+  QTLog.log("Handling a background message: ${message.data}", name: 'main');
 }
 
 late AndroidNotificationChannel channel;
@@ -74,17 +79,20 @@ void main() async {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
+      QTLog.log('User granted permission', name: 'main');
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
+      QTLog.log('User granted provisional permission', name: 'main');
     } else {
-      print('User declined or has not accepted permission');
+      QTLog.log('User declined or has not accepted permission', name: 'main');
     }
   }
 
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   runApp(QuadernoTorneoApp(
     authenticationRepository: AuthenticationRepository(),
+    userRepository: UserRepository(),
   ));
 }
 
@@ -92,9 +100,11 @@ class QuadernoTorneoApp extends StatelessWidget {
   const QuadernoTorneoApp({
     Key? key,
     required this.authenticationRepository,
+    required this.userRepository,
   }) : super(key: key);
 
   final AuthenticationRepository authenticationRepository;
+  final UserRepository userRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +115,8 @@ class QuadernoTorneoApp extends StatelessWidget {
           BlocProvider(
             lazy: false,
             create: (_) => AuthenticationBloc(
-                authenticationRepository: authenticationRepository),
+                authenticationRepository: authenticationRepository,
+                userRepository: userRepository),
           ),
           BlocProvider(
             lazy: false,
@@ -134,7 +145,7 @@ class _AppViewState extends State<AppView> {
   late Stream<String> _tokenStream;
 
   void setToken(String token) {
-    print('FCM Token: $token');
+    QTLog.log('FCM Token: $token', name: 'main');
     setState(() {});
   }
 
@@ -175,32 +186,13 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Quaderno Torneo',
+      title: "Quaderno Torneo",
       debugShowCheckedModeBanner: false,
       theme: QuadernoTheme.themeData,
       navigatorKey: _navigatorKey,
-      // builder: (context, child) {
-      //   return BlocListener<AuthenticationBloc, AuthenticationState>(
-      //     listener: (context, state) {
-      //       switch (state.status) {
-      //         case AuthenticationStatus.authenticated:
-      //           _navigator.pushAndRemoveUntil<void>(
-      //             HomePage.route(),
-      //             (route) => false,
-      //           );
-      //           break;
-      //         case AuthenticationStatus.unauthenticated:
-      //           _navigator.pushAndRemoveUntil<void>(
-      //               LoginPage.route(), (route) => false);
-      //           break;
-      //         default:
-      //           break;
-      //       }
-      //     },
-      //     child: child,
-      //   );
-      // },
-      onGenerateRoute: (_) => HomePage.route(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      onGenerateRoute: (_) => PartitePage.route(null),
     );
   }
 }
