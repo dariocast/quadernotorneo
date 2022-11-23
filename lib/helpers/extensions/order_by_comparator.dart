@@ -1,4 +1,4 @@
-import 'package:quaderno_flutter/blocs/blocs.dart';
+import '../../blocs/blocs.dart';
 
 import '../../models/models.dart';
 

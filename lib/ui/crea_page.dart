@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../blocs/blocs.dart';
 
 class CreaPage extends StatelessWidget {
@@ -20,7 +21,7 @@ class CreaPage extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
-                content: Text('Partita inserita con successo'),
+                content: Text(AppLocalizations.of(context)!.matchCreateSuccess),
                 duration: Duration(
                   seconds: 3,
                 )));
@@ -31,7 +32,7 @@ class CreaPage extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: Text('Inserisci partita'),
+            title: Text(AppLocalizations.of(context)!.matchCreateTitle),
           ),
           body: Center(
             child: state.isLoading
@@ -47,7 +48,8 @@ class CreaPage extends StatelessWidget {
                               left: 50,
                             ),
                             child: DropdownButtonFormField(
-                              hint: Text('Scegli il gruppo'),
+                              hint: Text(AppLocalizations.of(context)!
+                                  .matchCreateGroupSelectionHint),
                               key: const Key(
                                   'creationDialog_gruppoUnoInput_dropdownField'),
                               onChanged: (String? gruppo) {
@@ -75,7 +77,8 @@ class CreaPage extends StatelessWidget {
                               left: 50,
                             ),
                             child: DropdownButtonFormField(
-                              hint: Text('Scegli il gruppo'),
+                              hint: Text(AppLocalizations.of(context)!
+                                  .matchCreateGroupSelectionHint),
                               key: const Key(
                                   'creationDialog_gruppoDueInput_dropdownField'),
                               onChanged: (String? gruppo) {
@@ -114,7 +117,8 @@ class CreaPage extends StatelessWidget {
                                         initialDate: DateTime.now(),
                                         firstDate: DateTime(2020),
                                         lastDate: DateTime(2025),
-                                        helpText: 'Seleziona la data',
+                                        helpText: AppLocalizations.of(context)!
+                                            .matchCreateDateSelectionHint,
                                       );
                                       if (picked != null) {
                                         context
@@ -123,7 +127,8 @@ class CreaPage extends StatelessWidget {
                                       }
                                     },
                                     child: Text(
-                                      'Che giorno?',
+                                      AppLocalizations.of(context)!
+                                          .matchCreateDateSelectionButton,
                                     ),
                                   ),
                                 ),
@@ -151,7 +156,8 @@ class CreaPage extends StatelessWidget {
                                     onPressed: () async {
                                       TimeOfDay? picked = await showTimePicker(
                                         context: context,
-                                        helpText: 'Seleziona l\'orario',
+                                        helpText: AppLocalizations.of(context)!
+                                            .matchCreateTimeSelectionHint,
                                         initialTime: TimeOfDay.now(),
                                       );
                                       if (picked != null) {
@@ -161,7 +167,8 @@ class CreaPage extends StatelessWidget {
                                       }
                                     },
                                     child: Text(
-                                      'A che ora?',
+                                      AppLocalizations.of(context)!
+                                          .matchCreateTimeSelectionButton,
                                     ),
                                   ),
                                 ),
@@ -182,7 +189,8 @@ class CreaPage extends StatelessWidget {
                             ),
                             child: TextFormField(
                               decoration: InputDecoration(
-                                  hintText: 'Descrizione (opzionale)'),
+                                  hintText: AppLocalizations.of(context)!
+                                      .matchCreateDescriptionHint),
                               key: const Key(
                                   'creationDialog_descrizioneInput_textField'),
                               onChanged: (String? descrizione) {
@@ -202,13 +210,15 @@ class CreaPage extends StatelessWidget {
                                   ? () =>
                                       context.read<CreaBloc>().add(CreaSubmit())
                                   : null,
-                              child: Text('Crea'),
+                              child: Text(AppLocalizations.of(context)!
+                                  .matchCreateButton),
                             ),
                           ),
                         ],
                       )
                     : Text(
-                        'Non ci sono gruppi!\nPer poter creare una partita è necessario che almeno un gruppo esista nel sistema',
+                        AppLocalizations.of(context)!
+                            .matchCreateNoGroupsWarning,
                         style: Theme.of(context).textTheme.headline4,
                         textAlign: TextAlign.center,
                       ),

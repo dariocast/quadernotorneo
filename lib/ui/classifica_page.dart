@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../blocs/blocs.dart';
 import 'widgets/widgets.dart';
 
@@ -31,7 +33,7 @@ class _ClassificaPageState extends State<ClassificaPage> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Classifiche'),
+        title: Text(AppLocalizations.of(context)!.leaderboardTitle),
         centerTitle: true,
       ),
       bottomNavigationBar: gironi.length >= 2
@@ -40,7 +42,8 @@ class _ClassificaPageState extends State<ClassificaPage> {
               items: gironi
                   .map((e) => BottomNavigationBarItem(
                       icon: Icon(Icons.flag_rounded),
-                      label: "Girone ${e.toUpperCase()}"))
+                      label:
+                          "${AppLocalizations.of(context)!.groupLabel} ${e.toUpperCase()}"))
                   .toList(),
               currentIndex: _currentIndex,
               onTap: (index) {
@@ -56,7 +59,8 @@ class _ClassificaPageState extends State<ClassificaPage> {
               builder: (context, state) {
             if (state is ClassificaLoadFailure) {
               return Center(
-                child: Text('Impossibile caricare le classifiche'),
+                child:
+                    Text(AppLocalizations.of(context)!.leaderboardLoadFailure),
               );
             } else if (state is ClassificaLoadSuccess) {
               final gruppiPerGirone = state.gruppi

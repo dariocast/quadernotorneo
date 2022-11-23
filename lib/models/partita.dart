@@ -17,6 +17,7 @@ class Partita extends Equatable {
   final List<GiocatoreBase> espulsi;
   final DateTime data;
   final String descrizione;
+  final String torneo;
 
   const Partita({
     required this.id,
@@ -31,6 +32,7 @@ class Partita extends Equatable {
     required this.espulsi,
     required this.data,
     required this.descrizione,
+    required this.torneo,
   });
   Partita.empty()
       : this(
@@ -46,6 +48,7 @@ class Partita extends Equatable {
           espulsi: List.empty(),
           data: DateTime.now(),
           descrizione: '',
+          torneo: '',
         );
 
   @override
@@ -62,6 +65,7 @@ class Partita extends Equatable {
         espulsi,
         data,
         descrizione,
+        torneo,
       ];
 
   Partita copyWith({
@@ -77,6 +81,7 @@ class Partita extends Equatable {
     List<GiocatoreBase>? espulsi,
     DateTime? data,
     String? descrizione,
+    String? torneo,
   }) {
     return Partita(
       id: id ?? this.id,
@@ -91,6 +96,7 @@ class Partita extends Equatable {
       espulsi: espulsi ?? this.espulsi,
       data: data ?? this.data,
       descrizione: descrizione ?? this.descrizione,
+      torneo: torneo ?? this.torneo,
     );
   }
 
@@ -108,6 +114,7 @@ class Partita extends Equatable {
       'espulsi': espulsi.map((x) => x.toMap()).toList(),
       'data': data.toIso8601String(),
       'descrizione': descrizione,
+      'torneo': torneo,
     };
   }
 
@@ -128,6 +135,7 @@ class Partita extends Equatable {
           map['espulsi']?.map((x) => GiocatoreBase.fromJson(x))),
       data: DateTime.parse((map['data'])),
       descrizione: map['descrizione'] ?? '',
+      torneo: map['torneo'] ?? '',
     );
   }
 
@@ -138,6 +146,6 @@ class Partita extends Equatable {
 
   @override
   String toString() {
-    return 'Partita(id: $id, squadraUno: $squadraUno, squadraDue: $squadraDue, golSquadraUno: $golSquadraUno, falliSquadraUno: $falliSquadraUno, golSquadraDue: $golSquadraDue, falliSquadraDue: $falliSquadraDue, marcatori: $marcatori, ammoniti: $ammoniti, espulsi: $espulsi, data: $data, descrizione: $descrizione)';
+    return 'Partita(id: $id, squadraUno: $squadraUno, squadraDue: $squadraDue, golSquadraUno: $golSquadraUno, falliSquadraUno: $falliSquadraUno, golSquadraDue: $golSquadraDue, falliSquadraDue: $falliSquadraDue, marcatori: $marcatori, ammoniti: $ammoniti, espulsi: $espulsi, data: $data, descrizione: $descrizione, torneo: $torneo)';
   }
 }
