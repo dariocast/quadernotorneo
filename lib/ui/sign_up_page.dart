@@ -26,8 +26,9 @@ class SignUpPage extends StatelessWidget {
               Navigator.of(context).pushReplacement(LoginPage.route());
             },
             onError: (error) {
+              final auth_error = error as AuthException;
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(AppLocalizations.of(context)!.signupFailure),
+                content: Text(auth_error.message),
                 duration: const Duration(seconds: 1),
               ));
             },
