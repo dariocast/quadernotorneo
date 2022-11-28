@@ -39,6 +39,7 @@
     "cancelButtonLabel": "Annulla",
     "teamCreateButton": "Crea",
     "noTeams": "Non ci sono gruppi nel quaderno",
+    "teamPageTitle": "Gruppi",
     "teamDeleteLabel": "Eliminare",
     "teamDeleteWithPlayersLabel": "e tutti i componenti?",
     "teamLoadFailure": "C'è qualche problema a caricare i gruppi",
@@ -96,5 +97,10 @@
     "signupFormSigninTextButtonLabel": "Hai già un account? Effettua il login",
     "tournamentPageTitle": "Tornei",
     "tournamentPageEmpty": "Nessun torneo",
-    "tournamentPageLoadFailure": "Impossibile caricare i tornei"
+    "tournamentPageLoadFailure": "Impossibile caricare i tornei",
+    "leaderboardsPlayedColumnHeader":"G",
+    "leaderboardsWinsColumnHeader":"V",
+    "leaderboardsDrawsColumnHeader":"P",
+    "leaderboardsLossesColumnHeader":"S",
+    "leaderboardsPointsColumnHeader":"Pt"
 }

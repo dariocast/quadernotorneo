@@ -29,7 +29,7 @@ class GruppiPage extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Gruppi'),
+          title: Text(AppLocalizations.of(context)!.teamPageTitle),
           centerTitle: true,
           actions: [
             authState.status == AuthenticationStatus.authenticated &&

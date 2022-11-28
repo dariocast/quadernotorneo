@@ -39,6 +39,7 @@
     "cancelButtonLabel": "Cancel",
     "teamCreateButton": "Create",
     "noTeams": "There are no teams in the journal",
+    "teamPageTitle": "Teams",
     "teamDeleteLabel": "Delete",
     "teamDeleteWithPlayersLabel": "with all players?",
     "teamLoadFailure": "Unable to load teams at the moment",
@@ -96,5 +97,10 @@
     "signupFormSigninTextButtonLabel": "Already have an account? Login",
     "tournamentPageTitle": "Tournaments",
     "tournamentPageEmpty": "No tournaments",
-    "tournamentPageLoadFailure": "Unable to load tournaments at the moment"
+    "tournamentPageLoadFailure": "Unable to load tournaments at the moment",
+    "leaderboardsPlayedColumnHeader":"P",
+    "leaderboardsWinsColumnHeader":"W",
+    "leaderboardsDrawsColumnHeader":"D",
+    "leaderboardsLossesColumnHeader":"L",
+    "leaderboardsPointsColumnHeader":"Pt"
 }
