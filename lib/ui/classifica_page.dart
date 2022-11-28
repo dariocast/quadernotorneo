@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:quaderno_flutter/ui/widgets/classifica_girone_card.dart';
 
 import '../blocs/blocs.dart';
 import 'widgets/widgets.dart';
@@ -67,7 +68,9 @@ class _ClassificaPageState extends State<ClassificaPage> {
                   .where((element) => element.girone == gironi[_currentIndex])
                   .toList();
               gruppiPerGirone.sort((a, b) => b.ordinaClassifica(a));
-              return ClassificaWidget(gruppiPerGirone);
+              // return ClassificaWidget(gruppiPerGirone);
+              return ClassificaGironeCard(
+                  gironi[_currentIndex], gruppiPerGirone);
             }
             return Center(child: CircularProgressIndicator());
           }),
