@@ -208,7 +208,7 @@ class _PartitePageState extends State<PartitePage> {
                           .read<PartiteBloc>()
                           .add(PartiteLoaded(widget.torneo ?? ''))),
                   child: Center(
-                    child: Icon(Icons.add),
+                    child: FaIcon(FontAwesomeIcons.plus),
                   ),
                 )
               : null,

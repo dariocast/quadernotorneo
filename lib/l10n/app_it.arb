@@ -102,5 +102,6 @@
     "leaderboardsWinsColumnHeader":"V",
     "leaderboardsDrawsColumnHeader":"P",
     "leaderboardsLossesColumnHeader":"S",
-    "leaderboardsPointsColumnHeader":"Pt"
+    "leaderboardsPointsColumnHeader":"Pt",
+    "liveLabel": "LIVE"
 }

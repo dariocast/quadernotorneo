@@ -1,6 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../helpers/event_image_helper.dart';
 import '../blocs/blocs.dart';
@@ -111,7 +112,8 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraUno)));
                                 }
                               },
-                              child: Text('Ammonisci'),
+                              child: Text(AppLocalizations.of(context)!
+                                  .matchWidgetYellowCardButtonLabel),
                               style: elevatedButtonStyle,
                             ),
                           ),
@@ -136,13 +138,15 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraUno)));
                                 }
                               },
-                              child: Text('Espelli'),
+                              child: Text(AppLocalizations.of(context)!
+                                  .matchWidgetRedCardButtonLabel),
                               style: elevatedButtonStyle,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
-                            child: Text('Falli'),
+                            child: Text(AppLocalizations.of(context)!
+                                .matchWidgetFoulsLabel),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -156,7 +160,7 @@ class PartitaWidget extends StatelessWidget {
                                         .read<DettaglioBloc>()
                                         .add(DettaglioAggiungiFallo(
                                             partita.squadraUno)),
-                                    child: Text('+'),
+                                    child: FaIcon(FontAwesomeIcons.plus),
                                     style: elevatedButtonStyle,
                                   ),
                                 ),
@@ -170,7 +174,7 @@ class PartitaWidget extends StatelessWidget {
                                         .read<DettaglioBloc>()
                                         .add(DettaglioRimuoviFallo(
                                             partita.squadraUno)),
-                                    child: Text('-'),
+                                    child: FaIcon(FontAwesomeIcons.minus),
                                     style: elevatedButtonStyle,
                                   ),
                                 ),
@@ -213,8 +217,10 @@ class PartitaWidget extends StatelessWidget {
                               onPressed: () async {
                                 final choice = await showConfirmationDialog(
                                   context: context,
-                                  title: 'Gol',
-                                  message: 'Chi ha segnato?',
+                                  title: AppLocalizations.of(context)!
+                                      .matchWidgetGolDialogTitle,
+                                  message: AppLocalizations.of(context)!
+                                      .matchWidgetGolDialogMessage,
                                   actions: giocatoriSquadraDue
                                       .map((e) =>
                                           AlertDialogAction(key: e, label: e))
@@ -226,7 +232,8 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraDue)));
                                 }
                               },
-                              child: Text('Gol'),
+                              child: Text(AppLocalizations.of(context)!
+                                  .matchWidgetGolButtonLabel),
                               style: elevatedButtonStyle,
                             ),
                           ),
@@ -236,8 +243,10 @@ class PartitaWidget extends StatelessWidget {
                               onPressed: () async {
                                 final choice = await showConfirmationDialog(
                                   context: context,
-                                  title: 'Autogol',
-                                  message: 'Chi l\'ha fatto?',
+                                  title: AppLocalizations.of(context)!
+                                      .matchWidgetAutogolDialogTitle,
+                                  message: AppLocalizations.of(context)!
+                                      .matchWidgetAutogolDialogMessage,
                                   actions: giocatoriSquadraDue
                                       .map((e) =>
                                           AlertDialogAction(key: e, label: e))
@@ -249,7 +258,8 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraDue)));
                                 }
                               },
-                              child: Text('Autogol'),
+                              child: Text(AppLocalizations.of(context)!
+                                  .matchWidgetAutogolButtonLabel),
                               style: elevatedButtonStyle,
                             ),
                           ),
@@ -322,7 +332,7 @@ class PartitaWidget extends StatelessWidget {
                                         .read<DettaglioBloc>()
                                         .add(DettaglioAggiungiFallo(
                                             partita.squadraDue)),
-                                    child: Text('+'),
+                                    child: FaIcon(FontAwesomeIcons.plus),
                                     style: elevatedButtonStyle,
                                   ),
                                 ),
@@ -336,7 +346,7 @@ class PartitaWidget extends StatelessWidget {
                                         .read<DettaglioBloc>()
                                         .add(DettaglioRimuoviFallo(
                                             partita.squadraDue)),
-                                    child: Text('-'),
+                                    child: FaIcon(FontAwesomeIcons.minus),
                                     style: elevatedButtonStyle,
                                   ),
                                 ),
