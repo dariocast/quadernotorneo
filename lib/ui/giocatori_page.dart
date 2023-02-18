@@ -11,6 +11,8 @@ import '../models/giocatore.dart';
 import '../utils/ui_helpers.dart';
 import 'widgets/widgets.dart';
 
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 class GiocatoriPage extends StatelessWidget {
   final String gruppo;
   GiocatoriPage(this.gruppo);
@@ -28,6 +30,7 @@ class GiocatoriPage extends StatelessWidget {
     final authState = context.watch<AuthenticationBloc>().state;
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('${this.gruppo}'),
         centerTitle: true,

@@ -56,9 +56,10 @@ class PartitaCard extends StatelessWidget {
             Align(
               alignment: Alignment.center,
               child: Builder(builder: (context) {
-                initializeDateFormatting('it_IT');
-                final String dataAsString =
-                    DateFormat.yMMMMd('it_IT').format(partita.data);
+                // initializeDateFormatting('it_IT');
+                final String dataAsString = DateFormat.yMMMMd(
+                        Localizations.localeOf(context).toLanguageTag())
+                    .format(partita.data);
                 final String orarioAsString =
                     DateFormat.Hm().format(partita.data);
                 final timeDiff =
@@ -103,7 +104,7 @@ class PartitaCard extends StatelessWidget {
                           ? Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: BlinkText(
-                                'LIVE',
+                                AppLocalizations.of(context)!.liveLabel,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
