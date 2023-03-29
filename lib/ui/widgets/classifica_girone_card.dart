@@ -15,14 +15,23 @@ class ClassificaGironeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(8.0),
-      elevation: 3,
-      child: ListView(
-        children: [
-          _headerRow(context),
-          _rows(context),
-        ],
+    return SizedBox(
+      height: 250,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        margin: EdgeInsets.all(8.0),
+        elevation: 5,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              _headerRow(context),
+              _rows(context),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -59,10 +68,51 @@ class ClassificaGironeCard extends StatelessWidget {
       ],
     );
   }
-}
 
-Widget _rows(BuildContext context) {
-  return Row(
-    children: [],
-  );
+  Column _rows(BuildContext context) {
+    List<Row> rows = [];
+    for (var i = 0; i < gruppi.length; i++) {
+      rows.add(_row(gruppi[i]));
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: rows,
+    );
+  }
+
+  Row _row(Gruppo gruppi) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            gruppi.nome,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 20,
+          child: Text(gruppi.pg.toString()),
+        ),
+        SizedBox(
+          width: 20,
+          child: Text(gruppi.v.toString()),
+        ),
+        SizedBox(
+          width: 20,
+          child: Text(gruppi.p.toString()),
+        ),
+        SizedBox(
+          width: 20,
+          child: Text(gruppi.s.toString()),
+        ),
+        SizedBox(
+          width: 20,
+          child: Text(gruppi.pt.toString()),
+        ),
+      ],
+    );
+  }
 }
