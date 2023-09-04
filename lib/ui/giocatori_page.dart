@@ -162,10 +162,11 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                     authState.status == AuthenticationStatus.authenticated &&
                     authState.user.isAdmin
                 ? () async => await showModalBottomSheet(
-                      context: context,
-                      builder: (_) {
+                      context: _scaffoldKey.currentContext!,
+                      builder: (context) {
                         return BlocProvider.value(
-                          value: BlocProvider.of<GiocatoriBloc>(context),
+                          value: BlocProvider.of<GiocatoriBloc>(
+                              _scaffoldKey.currentContext!),
                           child: WidgetParametriGiocatore(
                             gruppo: giocatore.gruppo,
                             giocatore: giocatore,
