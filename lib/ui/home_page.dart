@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quaderno_flutter/blocs/home/home_bloc.dart';
@@ -85,7 +84,7 @@ class HomePage extends StatelessWidget {
                                   homeState.tornei[index],
                                   style: Theme.of(context)
                                       .textTheme
-                                      .caption
+                                      .bodySmall
                                       ?.copyWith(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,

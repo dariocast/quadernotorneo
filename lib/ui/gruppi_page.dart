@@ -83,7 +83,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
           Padding(
             padding: const EdgeInsets.all(30.0),
             child: Text(AppLocalizations.of(context)!.teamCreateTitle,
-                style: Theme.of(context).textTheme.headline5),
+                style: Theme.of(context).textTheme.headlineSmall),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -323,7 +323,7 @@ class _VistaGruppiState extends State<VistaGruppi> {
                                               '${gruppi[index].nome}',
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5
+                                                  .headlineSmall
                                                   ?.copyWith(
                                                 shadows: [
                                                   Shadow(

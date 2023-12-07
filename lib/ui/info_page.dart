@@ -48,7 +48,7 @@ class _InfoPageState extends State<InfoPage> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 appName,
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
             Padding(
@@ -63,13 +63,13 @@ class _InfoPageState extends State<InfoPage> {
                   children: [
                     TextSpan(
                       text: 'by ',
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                     ),
                     TextSpan(
                       text: 'dariocast',
-                      style: Theme.of(context).textTheme.headline5!.copyWith(
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                           ),
                       recognizer: TapGestureRecognizer()

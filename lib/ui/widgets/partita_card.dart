@@ -1,7 +1,6 @@
 import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -90,14 +89,14 @@ class PartitaCard extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 5.0),
                         child: Text(
                           dataAsString,
-                          style: Theme.of(context).textTheme.caption,
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5.0),
                         child: Text(
                           orarioAsString,
-                          style: Theme.of(context).textTheme.caption,
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
                       isLive
@@ -164,7 +163,7 @@ class GruppoDetailsColumn extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme
-                    .subtitle1
+                    .titleMedium
                     ?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),

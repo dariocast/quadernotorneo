@@ -1,17 +1,11 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
-import 'package:transparent_image/transparent_image.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../blocs/blocs.dart';
-import '../models/models.dart';
 import 'ui.dart';
 
 class HomeDrawer extends StatelessWidget {
@@ -55,7 +49,7 @@ class HomeDrawer extends StatelessWidget {
                                     .drawerWelcomeLabel,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline4!
+                                    .headlineMedium!
                                     .copyWith(color: Colors.white),
                               ),
                             ),
@@ -116,13 +110,12 @@ class HomeDrawer extends StatelessWidget {
                               onTap: () {
                                 Navigator.of(context)
                                     .push(MaterialPageRoute<void>(
-                                  builder: (_) => WebviewScaffold(
-                                    url:
-                                        "https://dariocast.altervista.org/fantatorneo",
-                                    appBar: AppBar(
-                                      title: Text(AppLocalizations.of(context)!
-                                          .drawerFantasyGameLabel),
-                                    ),
+                                  builder: (_) => WebViewWidget(
+                                    controller: WebViewController()
+                                      ..loadRequest(
+                                        Uri.parse(
+                                            "https://dariocast.altervista.org/fantatorneo"),
+                                      ),
                                   ),
                                 ));
                               },
@@ -140,7 +133,7 @@ class HomeDrawer extends StatelessWidget {
                               child: Text(
                                 AppLocalizations.of(context)!
                                     .drawerManagementLabel,
-                                style: Theme.of(context).textTheme.subtitle1,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                             )
                           : Container(),

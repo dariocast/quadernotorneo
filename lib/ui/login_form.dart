@@ -13,7 +13,7 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        if (state.status.isFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -38,7 +38,7 @@ class LoginForm extends StatelessWidget {
                 _PasswordInput(state.password.value),
                 const Padding(padding: EdgeInsets.all(12)),
                 BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-                  if (state.status.isSubmissionInProgress) {
+                  if (state.status.isInProgress) {
                     return CircularProgressIndicator();
                   } else {
                     return _LoginButton();
@@ -89,7 +89,7 @@ class _UsernameInput extends StatelessWidget {
               context.read<LoginBloc>().add(LoginUsernameChanged(username)),
           decoration: InputDecoration(
             labelText: AppLocalizations.of(context)!.loginFormEmailLabel,
-            errorText: state.username.invalid
+            errorText: state.username.isNotValid
                 ? AppLocalizations.of(context)!.loginFormEmailErrorLabel
                 : null,
           ),
@@ -117,7 +117,7 @@ class _PasswordInput extends StatelessWidget {
           obscureText: state.hidePassword,
           decoration: InputDecoration(
             labelText: AppLocalizations.of(context)!.loginFormPasswordLabel,
-            errorText: state.password.invalid
+            errorText: state.password.isNotValid
                 ? AppLocalizations.of(context)!.loginFormPasswordErrorLabel
                 : null,
             suffixIcon: InkWell(
@@ -141,13 +141,13 @@ class _LoginButton extends StatelessWidget {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return state.status.isSubmissionInProgress
+        return state.status.isInProgress
             ? const CircularProgressIndicator()
             : ElevatedButton(
                 style: elevatedButtonStyle,
                 key: const Key('loginForm_continue_raisedButton'),
                 child: Text(AppLocalizations.of(context)!.loginFormSubmitLabel),
-                onPressed: state.status.isValidated
+                onPressed: state.isValid
                     ? () {
                         context.read<LoginBloc>().add(const LoginSubmitted());
                       }

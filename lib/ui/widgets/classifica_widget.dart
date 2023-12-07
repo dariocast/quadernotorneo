@@ -32,7 +32,7 @@ class _ClassificaWidgetState extends State<ClassificaWidget> {
               columnSpacing: 5.0,
               headingTextStyle: Theme.of(context)
                   .textTheme
-                  .bodyText1!
+                  .bodyLarge!
                   .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
               dataRowHeight: 60.0,
               columns: [

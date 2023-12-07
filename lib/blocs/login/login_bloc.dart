@@ -41,7 +41,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final username = Username.dirty(event.username);
     emit(state.copyWith(
       username: username,
-      status: Formz.validate([state.password, username]),
+      isValid: Formz.validate([state.password, username]),
     ));
   }
 
@@ -49,13 +49,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final password = Password.dirty(event.password);
     emit(state.copyWith(
       password: password,
-      status: Formz.validate([password, state.username]),
+      isValid: Formz.validate([password, state.username]),
     ));
   }
 
   _handleLoginSubmitted(LoginSubmitted event, Emitter<LoginState> emit) async {
-    if (state.status.isValidated) {
-      emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    if (state.isValid) {
+      emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
         await _authenticationRepository.logIn(
           username: state.username.value,
@@ -67,9 +67,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             'password': state.password.value
           });
         }
-        emit(state.copyWith(status: FormzStatus.submissionSuccess));
+        emit(state.copyWith(status: FormzSubmissionStatus.success));
       } on Exception catch (_) {
-        emit(state.copyWith(status: FormzStatus.submissionFailure));
+        emit(state.copyWith(status: FormzSubmissionStatus.failure));
       }
     }
   }
@@ -79,7 +79,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final persist = event.persist;
     emit(state.copyWith(
         persist: persist,
-        status: Formz.validate([state.password, state.username])));
+        isValid: Formz.validate([state.password, state.username])));
   }
 
   _handleLoginPersistenceLoaded(
@@ -91,7 +91,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final username = Username.dirty(persistence.username);
       final password = Password.dirty(persistence.password);
       emit(state.copyWith(
-        status: Formz.validate([username, password]),
+        isValid: Formz.validate([username, password]),
         username: username,
         password: password,
       ));
@@ -100,9 +100,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           username: persistence.username,
           password: persistence.password,
         );
-        emit(state.copyWith(status: FormzStatus.submissionSuccess));
+        emit(state.copyWith(status: FormzSubmissionStatus.success));
       } on Exception catch (_) {
-        emit(state.copyWith(status: FormzStatus.submissionFailure));
+        emit(state.copyWith(status: FormzSubmissionStatus.failure));
       }
     } else {
       emit(state.copyWith());
@@ -114,6 +114,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     log(state.hidePassword.toString());
     emit(state.copyWith(
         hidePassword: !(state.hidePassword),
-        status: Formz.validate([state.password, state.username])));
+        isValid: Formz.validate([state.password, state.username])));
   }
 }

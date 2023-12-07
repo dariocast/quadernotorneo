@@ -20,11 +20,11 @@ class SignUpPage extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         children: [
           SupaEmailAuth(
-            authAction: SupaAuthAction.signUp,
-            redirectUrl: '/login',
-            onSuccess: (_) {
+            redirectTo: '/login',
+            onSignUpComplete: (_) {
               Navigator.of(context).pushReplacement(LoginPage.route());
             },
+            onSignInComplete: (_) {},
             onError: (error) {
               final auth_error = error as AuthException;
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
