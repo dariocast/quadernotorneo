@@ -15,22 +15,19 @@ class ClassificaGironeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 250,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        margin: EdgeInsets.all(8.0),
-        elevation: 5,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              _headerRow(context),
-              _rows(context),
-            ],
-          ),
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: EdgeInsets.all(8.0),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            _headerRow(context),
+            _rows(context),
+          ],
         ),
       ),
     );
@@ -39,41 +36,38 @@ class ClassificaGironeCard extends StatelessWidget {
   Widget _headerRow(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: Text(title)),
-        SizedBox(
-          width: 20,
+        Expanded(
           child: Text(
-              AppLocalizations.of(context)!.leaderboardsPlayedColumnHeader),
+            "${AppLocalizations.of(context)!.groupLabel} ${title.toUpperCase()}",
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
         ),
-        SizedBox(
-          width: 20,
-          child:
-              Text(AppLocalizations.of(context)!.leaderboardsWinsColumnHeader),
-        ),
-        SizedBox(
-          width: 20,
-          child:
-              Text(AppLocalizations.of(context)!.leaderboardsDrawsColumnHeader),
-        ),
-        SizedBox(
-          width: 20,
-          child: Text(
-              AppLocalizations.of(context)!.leaderboardsLossesColumnHeader),
-        ),
-        SizedBox(
-          width: 20,
-          child: Text(
-              AppLocalizations.of(context)!.leaderboardsPointsColumnHeader),
-        ),
+        _headerItem(context,
+            AppLocalizations.of(context)!.leaderboardsPlayedColumnHeader),
+        _headerItem(context,
+            AppLocalizations.of(context)!.leaderboardsWinsColumnHeader),
+        _headerItem(context,
+            AppLocalizations.of(context)!.leaderboardsDrawsColumnHeader),
+        _headerItem(context,
+            AppLocalizations.of(context)!.leaderboardsLossesColumnHeader),
+        _headerItem(context,
+            AppLocalizations.of(context)!.leaderboardsPointsColumnHeader),
       ],
     );
   }
 
+  Widget _headerItem(BuildContext context, String text) {
+    return SizedBox(
+      width: 20,
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.bodySmall,
+      ),
+    );
+  }
+
   Column _rows(BuildContext context) {
-    List<Row> rows = [];
-    for (var i = 0; i < gruppi.length; i++) {
-      rows.add(_row(gruppi[i]));
-    }
+    List<Widget> rows = gruppi.map((gruppo) => _row(context, gruppo)).toList();
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -81,38 +75,41 @@ class ClassificaGironeCard extends StatelessWidget {
     );
   }
 
-  Row _row(Gruppo gruppi) {
+  Widget _row(BuildContext context, Gruppo gruppo) {
     return Row(
       children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+              width: 50.0, height: 50.0, child: Image.network(gruppo.logo)),
+        ),
         Expanded(
-          child: Text(
-            gruppi.nome,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+              gruppo.nome,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
-        SizedBox(
-          width: 20,
-          child: Text(gruppi.pg.toString()),
-        ),
-        SizedBox(
-          width: 20,
-          child: Text(gruppi.v.toString()),
-        ),
-        SizedBox(
-          width: 20,
-          child: Text(gruppi.p.toString()),
-        ),
-        SizedBox(
-          width: 20,
-          child: Text(gruppi.s.toString()),
-        ),
-        SizedBox(
-          width: 20,
-          child: Text(gruppi.pt.toString()),
-        ),
+        _rowData(context, gruppo.pg.toString()),
+        _rowData(context, gruppo.v.toString()),
+        _rowData(context, gruppo.p.toString()),
+        _rowData(context, gruppo.s.toString()),
+        _rowData(context, gruppo.pt.toString()),
       ],
+    );
+  }
+
+  Widget _rowData(BuildContext context, String text) {
+    return SizedBox(
+      width: 20,
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
     );
   }
 }
