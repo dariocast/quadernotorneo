@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:quaderno_flutter/ui/widgets/classifica_girone_card.dart';
 
 import '../blocs/blocs.dart';
 import 'widgets/widgets.dart';
@@ -53,31 +54,36 @@ class _ClassificaPageState extends State<ClassificaPage> {
               },
             )
           : null,
-      body: Stack(
-        children: [
-          BlocBuilder<ClassificaBloc, ClassificaState>(
-              builder: (context, state) {
-            if (state is ClassificaLoadFailure) {
-              return Center(
-                child:
-                    Text(AppLocalizations.of(context)!.leaderboardLoadFailure),
-              );
-            } else if (state is ClassificaLoadSuccess) {
-              final gruppiPerGirone = state.gruppi
-                  .where((element) => element.girone == gironi[_currentIndex])
-                  .toList();
-              gruppiPerGirone.sort((a, b) => b.ordinaClassifica(a));
-              return ClassificaWidget(gruppiPerGirone);
-            }
-            return Center(child: CircularProgressIndicator());
-          }),
-          Positioned(
-            width: MediaQuery.of(context).size.width,
-            bottom: 5.0,
-            child: QuadernoBannerAd(),
-          )
-        ],
-      ),
+      body: BlocBuilder<ClassificaBloc, ClassificaState>(
+          builder: (context, state) {
+        if (state is ClassificaLoadFailure) {
+          return Center(
+            child: Text(AppLocalizations.of(context)!.leaderboardLoadFailure),
+          );
+        } else if (state is ClassificaLoadSuccess) {
+          final gruppiPerGirone = state.gruppi
+              .where((element) => element.girone == gironi[_currentIndex])
+              .toList();
+          gruppiPerGirone.sort((a, b) => b.ordinaClassifica(a));
+          // return ClassificaWidget(gruppiPerGirone);
+          return Stack(
+            children: [
+              Positioned(
+                child: ClassificaGironeCard(
+                    gironi[_currentIndex], gruppiPerGirone),
+                width: MediaQuery.of(context).size.width,
+                top: 0.0,
+              ),
+              Positioned(
+                width: MediaQuery.of(context).size.width,
+                bottom: 5.0,
+                child: QuadernoBannerAd(),
+              )
+            ],
+          );
+        }
+        return Center(child: CircularProgressIndicator());
+      }),
     );
   }
 }
