@@ -220,7 +220,7 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                             giocatore.nome,
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyText1!
+                                .bodyLarge!
                                 .copyWith(fontWeight: FontWeight.bold),
                           ),
                         ),

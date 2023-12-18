@@ -1,6 +1,5 @@
 // ignore_for_file: unused_local_variable
 
-import 'dart:developer' as developer;
 import 'dart:io';
 import 'dart:math';
 
