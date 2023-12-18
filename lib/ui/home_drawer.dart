@@ -3,6 +3,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:quaderno_flutter/ui/tornei_page.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../blocs/blocs.dart';
@@ -10,17 +11,16 @@ import 'ui.dart';
 
 class HomeDrawer extends StatelessWidget {
   final onlyLogin;
+  final String? torneo;
 
-  const HomeDrawer({
-    Key? key,
-    this.onlyLogin = false,
-  }) : super(key: key);
+  const HomeDrawer({Key? key, this.onlyLogin = false, this.torneo})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: BlocProvider<DrawerCubit>(
-        create: (context) => DrawerCubit(),
+        create: (context) => DrawerCubit(torneo),
         child: Builder(
           builder: (context) {
             final authState = context.watch<AuthenticationBloc>().state;
@@ -56,6 +56,27 @@ class HomeDrawer extends StatelessWidget {
                           ),
                         ),
                       ),
+                      torneo != null
+                          ? Column(
+                              children: [
+                                ListTile(
+                                  trailing: Icon(
+                                    Icons.change_circle_outlined,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                  ),
+                                  title: Text(AppLocalizations.of(context)!
+                                      .drawerTournamentLabel),
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context)
+                                        .push(TorneiPage.route());
+                                  },
+                                ),
+                                Divider()
+                              ],
+                            )
+                          : Container(),
                       !onlyLogin
                           ? ListTile(
                               trailing: Icon(

@@ -63,6 +63,7 @@
     "drawerLoginButtonLabel": "Login",
     "drawerLogoutDialogTitle": "Logout",
     "drawerLogoutDialogMessage": "You will be disconnected",
+    "drawerTournamentLabel": "Change tournament",
     "infoPageTitle": "Info",
     "infoPageVersionLabel": "Version",
     "loginAuthFailureMessage": "Authentication failed, check email and password",

@@ -7,7 +7,8 @@ part 'drawer_state.dart';
 
 class DrawerCubit extends Cubit<DrawerState> {
   final Repository _repository = Repository();
-  DrawerCubit() : super(DrawerState());
+  final String? torneo;
+  DrawerCubit(this.torneo) : super(DrawerState());
 
   aggiornaClassifica() async {
     emit(state.copyWith(loading: true));

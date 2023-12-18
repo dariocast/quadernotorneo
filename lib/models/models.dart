@@ -6,3 +6,4 @@ export './partita.dart';
 export './password.dart';
 export './persistence.dart';
 export './username.dart';
+export './torneo.dart';

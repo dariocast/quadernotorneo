@@ -9,7 +9,7 @@ part 'crea_state.dart';
 
 class CreaBloc extends Bloc<CreaEvent, CreaState> {
   final Repository _repository = Repository();
-  CreaBloc() : super(CreaState()) {
+  CreaBloc({required torneo}) : super(CreaState(torneo: torneo)) {
     // This section set the handlers for each kind of event
     on<CreaLoaded>((event, emit) => _handleCreaLoadedEvent(event, emit));
     on<CreaGruppoUnoChanged>(
@@ -53,6 +53,7 @@ class CreaBloc extends Bloc<CreaEvent, CreaState> {
           state.orario!.minute,
         ),
         state.descrizione!,
+        state.torneo,
       );
       emit(state.copyWith(isLoading: false, creationSuccess: true));
     }

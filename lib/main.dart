@@ -12,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'blocs/blocs.dart';
 import 'theme.dart';
+import 'ui/tornei_page.dart';
 import 'ui/ui.dart';
 import 'utils/log_helper.dart';
 
@@ -191,7 +192,7 @@ class _AppViewState extends State<AppView> {
       navigatorKey: _navigatorKey,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      onGenerateRoute: (_) => PartitePage.route(null),
+      onGenerateRoute: (_) => TorneiPage.route(),
     );
   }
 }

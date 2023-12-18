@@ -63,6 +63,7 @@
     "drawerLoginButtonLabel": "Login",
     "drawerLogoutDialogTitle": "Logout",
     "drawerLogoutDialogMessage": "Sicuro di volerti disconnettere?",
+    "drawerTournamentLabel": "Cambia torneo",
     "infoPageTitle": "Informazioni",
     "infoPageVersionLabel": "Versione",
     "loginAuthFailureMessage": "Autenticazione non riuscita, controlla username e password",

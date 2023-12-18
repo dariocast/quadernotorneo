@@ -4,14 +4,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../blocs/blocs.dart';
 
 class CreaPage extends StatelessWidget {
-  static Route route() {
+  static Route route(torneo) {
     return MaterialPageRoute<void>(
       builder: (_) => BlocProvider(
-        create: (context) => CreaBloc()..add(CreaLoaded()),
+        create: (context) => CreaBloc(torneo: torneo)..add(CreaLoaded()),
         child: CreaPage(),
       ),
     );
   }
+
+  final String? torneo;
+
+  CreaPage({this.torneo});
 
   @override
   Widget build(BuildContext context) {

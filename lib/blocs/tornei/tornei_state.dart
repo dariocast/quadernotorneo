@@ -14,7 +14,7 @@ class TorneiLoading extends TorneiState {}
 class TorneiLoadFailure extends TorneiState {}
 
 class TorneiLoadSuccess extends TorneiState {
-  final List<String> tornei;
+  final List<Torneo> tornei;
 
   TorneiLoadSuccess(this.tornei);
 }

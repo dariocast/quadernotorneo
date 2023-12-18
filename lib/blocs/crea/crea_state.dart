@@ -7,6 +7,7 @@ class CreaState extends Equatable {
   final DateTime? data;
   final TimeOfDay? orario;
   final String? descrizione;
+  final String torneo;
   final bool hasGruppi;
   final bool isLoading;
   final bool isValid;
@@ -22,6 +23,7 @@ class CreaState extends Equatable {
     this.isValid = false,
     this.creationSuccess = false,
     this.descrizione = '',
+    this.torneo = '',
   });
 
   @override
@@ -37,6 +39,7 @@ class CreaState extends Equatable {
       isValid,
       creationSuccess,
       descrizione,
+      torneo,
     ];
   }
 
@@ -51,6 +54,7 @@ class CreaState extends Equatable {
     bool? isValid,
     bool? creationSuccess,
     String? descrizione,
+    String? torneo,
   }) {
     return CreaState(
       gruppi: gruppi ?? this.gruppi,
@@ -63,6 +67,7 @@ class CreaState extends Equatable {
       isValid: isValid ?? this.isValid,
       creationSuccess: creationSuccess ?? this.creationSuccess,
       descrizione: descrizione ?? this.descrizione,
+      torneo: torneo ?? this.torneo,
     );
   }
 }

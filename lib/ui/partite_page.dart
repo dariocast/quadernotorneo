@@ -71,7 +71,9 @@ class _PartitePageState extends State<PartitePage> {
   Widget build(BuildContext context) {
     final authState = context.watch<AuthenticationBloc>().state;
     return Scaffold(
-      drawer: HomeDrawer(),
+      drawer: HomeDrawer(
+        torneo: widget.torneo,
+      ),
       appBar: AppBar(
         centerTitle: true,
         title: Text(widget.torneo ?? AppLocalizations.of(context)!.appTitle),
@@ -203,7 +205,7 @@ class _PartitePageState extends State<PartitePage> {
                   authState.user.isAdmin
               ? FloatingActionButton(
                   onPressed: () => Navigator.of(context)
-                      .push(CreaPage.route())
+                      .push(CreaPage.route(widget.torneo))
                       .whenComplete(() => context
                           .read<PartiteBloc>()
                           .add(PartiteLoaded(widget.torneo ?? ''))),

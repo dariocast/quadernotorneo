@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../models/models.dart';
 import '../../repositories/repository.dart';
 import '../../utils/log_helper.dart';
 
@@ -14,12 +15,7 @@ class TorneiBloc extends Bloc<TorneiEvent, TorneiState> {
     on<TorneiLoaded>((event, emit) async {
       emit(TorneiLoading());
       try {
-        List<String> torneiDuplicati = [];
-        final partite = await _repository.listaPartite();
-        for (var partita in partite) {
-          torneiDuplicati.add(partita.torneo);
-        }
-        final tornei = torneiDuplicati.toSet().toList();
+        final tornei = await _repository.tornei();
         emit(TorneiLoadSuccess(tornei));
       } catch (e) {
         QTLog.log(e.toString(), name: 'blocs.tornei');

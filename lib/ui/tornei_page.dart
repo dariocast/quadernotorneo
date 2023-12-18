@@ -26,6 +26,7 @@ class TorneiPage extends StatelessWidget {
     return Scaffold(
       drawer: HomeDrawer(onlyLogin: true),
       appBar: AppBar(
+        centerTitle: true,
         title: Text(AppLocalizations.of(context)!.tournamentPageTitle),
         actions: <Widget>[
           IconButton(
@@ -57,28 +58,32 @@ class TorneiPage extends StatelessWidget {
               ),
             );
           }
-          return ListView.builder(
-            itemCount: state.tornei.length,
-            itemBuilder: (context, index) {
-              final torneo = state.tornei[index];
-              return ListTile(
-                title: Text(torneo),
-                trailing: FaIcon(FontAwesomeIcons.doorOpen),
-                onTap: () => Navigator.of(context)
-                    .push(
-                      MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (_) =>
-                              PartiteBloc()..add(PartiteLoaded(torneo)),
-                          child: PartitePage(torneo: torneo),
-                        ),
-                      ),
-                    )
-                    .whenComplete(
-                        () => context.read<TorneiBloc>().add(TorneiLoaded())),
-              );
-            },
-          );
+          return Stack(children: [
+            ListView.builder(
+              itemCount: state.tornei.length,
+              itemBuilder: (context, index) {
+                final torneo = state.tornei[index];
+                return Card(
+                  child: ListTile(
+                    title: Text(torneo.name),
+                    trailing: FaIcon(FontAwesomeIcons.folderOpen),
+                    onTap: () => Navigator.of(context)
+                        .push(
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (_) => PartiteBloc()
+                                ..add(PartiteLoaded(torneo.name)),
+                              child: PartitePage(torneo: torneo.name),
+                            ),
+                          ),
+                        )
+                        .whenComplete(() =>
+                            context.read<TorneiBloc>().add(TorneiLoaded())),
+                  ),
+                );
+              },
+            ),
+          ]);
         } else if (state is TorneiLoadFailure) {
           return Center(
             child:
