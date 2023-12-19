@@ -17,3 +17,12 @@ class TorneiCrea extends TorneiEvent {
 
   List<Object> get props => [nome];
 }
+
+class TorneiAggiorna extends TorneiEvent {
+  final Torneo torneo;
+  TorneiAggiorna({
+    required this.torneo,
+  });
+
+  List<Object> get props => [torneo];
+}

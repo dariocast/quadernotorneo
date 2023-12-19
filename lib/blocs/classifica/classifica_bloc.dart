@@ -9,13 +9,14 @@ part 'classifica_event.dart';
 part 'classifica_state.dart';
 
 class ClassificaBloc extends Bloc<ClassificaEvent, ClassificaState> {
+  final String? torneo;
   final Repository _repo = Repository();
 
-  ClassificaBloc() : super(ClassificaInitial()) {
+  ClassificaBloc(this.torneo) : super(ClassificaInitial()) {
     on<ClassificaLoaded>((event, emit) async {
       emit(ClassificaLoading());
       try {
-        final gruppi = await _repo.gruppi();
+        final gruppi = await _repo.gruppi(torneo);
         emit(ClassificaLoadSuccess(gruppi));
       } catch (e) {
         QTLog.log(e.toString(), name: 'blocs.classifica');

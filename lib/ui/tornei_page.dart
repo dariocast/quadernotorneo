@@ -1,7 +1,9 @@
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'widgets/widgets.dart';
 
 import '../blocs/blocs.dart';
 import '../blocs/tornei/tornei_bloc.dart';
@@ -29,10 +31,21 @@ class TorneiPage extends StatelessWidget {
         centerTitle: true,
         title: Text(AppLocalizations.of(context)!.tournamentPageTitle),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {},
-          ),
+          authState.status == AuthenticationStatus.authenticated &&
+                  authState.user.isAdmin
+              ? IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () => showModalBottomSheet(
+                    context: context,
+                    builder: (_) {
+                      return BlocProvider.value(
+                        value: BlocProvider.of<TorneiBloc>(context),
+                        child: WidgetCreazioneTorneo(),
+                      );
+                    },
+                  ),
+                )
+              : Container(),
           IconButton(
             icon: Icon(Icons.autorenew_rounded),
             onPressed: () {
@@ -58,32 +71,31 @@ class TorneiPage extends StatelessWidget {
               ),
             );
           }
-          return Stack(children: [
-            ListView.builder(
-              itemCount: state.tornei.length,
-              itemBuilder: (context, index) {
-                final torneo = state.tornei[index];
-                return Card(
-                  child: ListTile(
-                    title: Text(torneo.name),
-                    trailing: FaIcon(FontAwesomeIcons.folderOpen),
-                    onTap: () => Navigator.of(context)
-                        .push(
-                          MaterialPageRoute(
-                            builder: (context) => BlocProvider(
-                              create: (_) => PartiteBloc()
-                                ..add(PartiteLoaded(torneo.name)),
-                              child: PartitePage(torneo: torneo.name),
-                            ),
-                          ),
-                        )
-                        .whenComplete(() =>
-                            context.read<TorneiBloc>().add(TorneiLoaded())),
-                  ),
-                );
-              },
-            ),
-          ]);
+          return Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Stack(children: [
+              ListView.builder(
+                itemCount: state.tornei.length,
+                itemBuilder: (context, index) {
+                  final torneo = state.tornei[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                        top: 2.0, left: 10.0, right: 10.0),
+                    child: Card(
+                      child: ListTile(
+                        title: Text(torneo.name),
+                        trailing: FaIcon(FontAwesomeIcons.folderOpen),
+                        onTap: () => Navigator.of(context)
+                            .push(PartitePage.route(torneo.name))
+                            .whenComplete(() =>
+                                context.read<TorneiBloc>().add(TorneiLoaded())),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ]),
+          );
         } else if (state is TorneiLoadFailure) {
           return Center(
             child:

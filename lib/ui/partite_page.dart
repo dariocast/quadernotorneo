@@ -20,19 +20,14 @@ class PartitePage extends StatefulWidget {
   PartitePage({this.torneo});
 
   static Route route(String? torneo) {
-    if (torneo != null) {
-      return MaterialPageRoute<void>(
-        builder: (_) => PartitePage(
+    return MaterialPageRoute<void>(
+      builder: (_) => BlocProvider(
+        create: (context) => PartiteBloc(torneo)..add(PartiteLoaded(torneo)),
+        child: PartitePage(
           torneo: torneo,
         ),
-      );
-    } else {
-      return MaterialPageRoute<void>(
-          builder: (_) => BlocProvider(
-                create: (context) => PartiteBloc()..add(PartiteLoaded(torneo)),
-                child: PartitePage(),
-              ));
-    }
+      ),
+    );
   }
 
   @override
@@ -70,6 +65,7 @@ class _PartitePageState extends State<PartitePage> {
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthenticationBloc>().state;
+
     return Scaffold(
       drawer: HomeDrawer(
         torneo: widget.torneo,

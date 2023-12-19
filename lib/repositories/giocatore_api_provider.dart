@@ -27,12 +27,13 @@ class GiocatoreApiProvider {
     }
   }
 
-  Future<List<Giocatore>> marcatori() async {
+  Future<List<Giocatore>> marcatori(String? gruppo) async {
     final supabase = Supabase.instance.client;
     try {
       final listaGiocatoriDB = await supabase
           .from('giocatore')
           .select('*')
+          .eq('gruppo', gruppo)
           .gt('gol', 0)
           .order('gol', ascending: false);
       final mapDone =

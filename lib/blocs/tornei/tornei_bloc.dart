@@ -23,7 +23,14 @@ class TorneiBloc extends Bloc<TorneiEvent, TorneiState> {
       }
     });
     on<TorneiCrea>((event, emit) {
-      // TODO: implement event handler
+      emit(TorneiLoading());
+      try {
+        _repository.creaTorneo(event.nome);
+        add(TorneiLoaded());
+      } catch (e) {
+        QTLog.log(e.toString(), name: 'blocs.tornei');
+        emit(TorneiLoadFailure());
+      }
     });
   }
 }

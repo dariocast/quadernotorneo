@@ -88,7 +88,7 @@ class HomeDrawer extends StatelessWidget {
                               onTap: () {
                                 Navigator.of(context).pop();
                                 Navigator.of(context)
-                                    .push(MarcatoriPage.route());
+                                    .push(MarcatoriPage.route(torneo));
                               })
                           : Container(),
                       !onlyLogin
@@ -102,7 +102,7 @@ class HomeDrawer extends StatelessWidget {
                               onTap: () {
                                 Navigator.of(context).pop();
                                 Navigator.of(context)
-                                    .push(ClassificaPage.route());
+                                    .push(ClassificaPage.route(torneo));
                               },
                             )
                           : Container(),
@@ -116,7 +116,8 @@ class HomeDrawer extends StatelessWidget {
                                   .drawerTeamsLabel),
                               onTap: () {
                                 Navigator.of(context).pop();
-                                Navigator.of(context).push(GruppiPage.route());
+                                Navigator.of(context)
+                                    .push(GruppiPage.route(torneo));
                               },
                             )
                           : Container(),

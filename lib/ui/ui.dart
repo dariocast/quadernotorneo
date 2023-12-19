@@ -10,4 +10,3 @@ export './marcatori_page.dart';
 export './partita_widget.dart';
 export './partite_page.dart';
 export './splash_page.dart';
-export './home_page.dart';

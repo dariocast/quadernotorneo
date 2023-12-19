@@ -12,7 +12,7 @@ class DrawerCubit extends Cubit<DrawerState> {
 
   aggiornaClassifica() async {
     emit(state.copyWith(loading: true));
-    final updated = await _repository.aggiornaStatistiche();
+    final updated = await _repository.aggiornaStatistiche(torneo);
     emit(state.copyWith(
         updateClassificaSuccess: updated.isNotEmpty ? true : false,
         loading: false));
@@ -20,7 +20,7 @@ class DrawerCubit extends Cubit<DrawerState> {
 
   resetClassifica() async {
     emit(state.copyWith(loading: true));
-    final updated = await _repository.aggiornaStatistiche(reset: true);
+    final updated = await _repository.aggiornaStatistiche(torneo, reset: true);
     emit(state.copyWith(
         updateClassificaSuccess: updated.isNotEmpty ? true : false,
         loading: false));
@@ -28,7 +28,7 @@ class DrawerCubit extends Cubit<DrawerState> {
 
   aggiornaMarcatori() async {
     emit(state.copyWith(loading: true));
-    final updated = await _repository.aggiornaMarcatori();
+    final updated = await _repository.aggiornaMarcatori(torneo);
     emit(state.copyWith(
         updateMarcatoriSuccess: updated.isNotEmpty ? true : false,
         loading: false));

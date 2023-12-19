@@ -15,10 +15,10 @@ import 'ui.dart';
 import 'widgets/widgets.dart';
 
 class GruppiPage extends StatelessWidget {
-  static Route route() {
+  static Route route(String? torneo) {
     return MaterialPageRoute<void>(
         builder: (_) => BlocProvider(
-              create: (context) => GruppiBloc()..add(GruppiLoaded()),
+              create: (context) => GruppiBloc(torneo)..add(GruppiLoaded()),
               child: GruppiPage(),
             ));
   }

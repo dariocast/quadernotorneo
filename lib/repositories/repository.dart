@@ -41,9 +41,10 @@ class Repository {
   Future<bool> aggiornaGiocatore(Giocatore giocatoreDaAggiornare, newPhoto) =>
       giocatoreApiProvider.aggiorna(giocatoreDaAggiornare, newPhoto);
   Future<bool> eliminaGiocatore(int id) => giocatoreApiProvider.elimina(id);
-  Future<List<Giocatore>> marcatori() => giocatoreApiProvider.marcatori();
-  Future<List<Giocatore>> aggiornaMarcatori() async {
-    List<Partita> partite = await partitaApiProvider.tutte(null);
+  Future<List<Giocatore>> marcatori(gruppo) =>
+      giocatoreApiProvider.marcatori(gruppo);
+  Future<List<Giocatore>> aggiornaMarcatori(torneo) async {
+    List<Partita> partite = await partitaApiProvider.tutte(torneo);
     List<Giocatore> giocatori = await giocatoreApiProvider.tutti();
 
     giocatori = giocatori
@@ -93,15 +94,17 @@ class Repository {
     // return giocatoreApiProvider.marcatori();
   }
 
-  Future<List<Gruppo>> gruppi() => gruppoApiProvider.gruppi();
-  Future<Gruppo> creaGruppo(String nome, String girone, String logo) =>
-      gruppoApiProvider.crea(nome, girone, logo);
+  Future<List<Gruppo>> gruppi(torneo) => gruppoApiProvider.gruppi(torneo);
+  Future<Gruppo> creaGruppo(
+          String nome, String girone, String logo, String torneo) =>
+      gruppoApiProvider.crea(nome, girone, logo, torneo);
   Future<bool> aggiornaGruppo(Gruppo gruppo) =>
       gruppoApiProvider.aggiorna(gruppo);
   Future<bool> eliminaGruppo(int id) => gruppoApiProvider.elimina(id);
-  Future<List<Gruppo>> aggiornaStatistiche({bool reset = false}) async {
+  Future<List<Gruppo>> aggiornaStatistiche(String? torneo,
+      {bool reset = false}) async {
     List<Partita> partite = await partitaApiProvider.tutte(null);
-    List<Gruppo> gruppi = await gruppoApiProvider.gruppi();
+    List<Gruppo> gruppi = await gruppoApiProvider.gruppi(torneo);
 
     gruppi = gruppi
         .map((e) => e.copyWith(

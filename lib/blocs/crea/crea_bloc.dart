@@ -26,7 +26,7 @@ class CreaBloc extends Bloc<CreaEvent, CreaState> {
   }
 
   _handleCreaLoadedEvent(event, emit) async {
-    final gruppi = await _repository.gruppi();
+    final gruppi = await _repository.gruppi(state.torneo);
     final nomiGruppi = gruppi.map((e) => e.nome).toList();
     final isValid = state.gruppoUno != null &&
         state.gruppoDue != null &&
