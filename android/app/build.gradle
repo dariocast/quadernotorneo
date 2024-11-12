@@ -33,14 +33,14 @@ def keystoreProperties = new Properties()
    }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     compileOptions {
         // Flag to enable support for the new language APIs
         coreLibraryDesugaringEnabled true
         // Sets Java compatibility to Java 8
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     sourceSets {
@@ -53,8 +53,8 @@ android {
 
     defaultConfig {
         applicationId "it.dariocast.quadernotorneo"
-        minSdkVersion 19
-        targetSdkVersion 33
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true

@@ -98,6 +98,7 @@
     "tournamentPageTitle": "Tornei",
     "tournamentPageEmpty": "Nessun torneo",
     "tournamentPageLoadFailure": "Impossibile caricare i tornei",
+    "leaderboardsEmpty": "Nessuna classifica",
     "leaderboardsPlayedColumnHeader":"G",
     "leaderboardsWinsColumnHeader":"V",
     "leaderboardsDrawsColumnHeader":"P",

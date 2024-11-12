@@ -4,7 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:user_repository/user_repository.dart';
@@ -21,9 +21,9 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   QTLog.log("Handling a background message: ${message.data}", name: 'main');
 }
 
-late AndroidNotificationChannel channel;
+// late AndroidNotificationChannel channel;
 
-late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+// late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,23 +39,23 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   if (!kIsWeb) {
-    channel = const AndroidNotificationChannel(
-      'quadernotorneo_channel', // id
-      'Qui arrivano tutte le notifiche dell\'app.', // title
-      description: 'Canale Notifiche Quaderno Torneo', // description
-      importance: Importance.high,
-    );
+    // channel = const AndroidNotificationChannel(
+    //   'quadernotorneo_channel', // id
+    //   'Qui arrivano tutte le notifiche dell\'app.', // title
+    //   description: 'Canale Notifiche Quaderno Torneo', // description
+    //   importance: Importance.high,
+    // );
 
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    // flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    /// Create an Android Notification Channel.
-    ///
-    /// We use this channel in the `AndroidManifest.xml` file to override the
-    /// default FCM channel to enable heads up notifications.
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+    // /// Create an Android Notification Channel.
+    // ///
+    // /// We use this channel in the `AndroidManifest.xml` file to override the
+    // /// default FCM channel to enable heads up notifications.
+    // await flutterLocalNotificationsPlugin
+    //     .resolvePlatformSpecificImplementation<
+    //         AndroidFlutterLocalNotificationsPlugin>()
+    //     ?.createNotificationChannel(channel);
 
     /// Update the iOS foreground notification presentation options to allow
     /// heads up notifications.
@@ -159,20 +159,20 @@ class _AppViewState extends State<AppView> {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null && !kIsWeb) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                // TODO add a proper drawable resource to android, for now using
-                //      one that already exists in example app.
-                icon: 'ic_launcher_foreground',
-              ),
-            ));
+        // flutterLocalNotificationsPlugin.show(
+        //     notification.hashCode,
+        //     notification.title,
+        //     notification.body,
+        //     NotificationDetails(
+        //       android: AndroidNotificationDetails(
+        //         channel.id,
+        //         channel.name,
+        //         channelDescription: channel.description,
+        //         // TODO add a proper drawable resource to android, for now using
+        //         //      one that already exists in example app.
+        //         icon: 'ic_launcher_foreground',
+        //       ),
+        //     ));
       }
     });
 

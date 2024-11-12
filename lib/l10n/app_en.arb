@@ -98,6 +98,7 @@
     "tournamentPageTitle": "Tournaments",
     "tournamentPageEmpty": "No tournaments",
     "tournamentPageLoadFailure": "Unable to load tournaments at the moment",
+    "leaderboardsEmpty": "No leaderboards",
     "leaderboardsPlayedColumnHeader":"P",
     "leaderboardsWinsColumnHeader":"W",
     "leaderboardsDrawsColumnHeader":"D",
