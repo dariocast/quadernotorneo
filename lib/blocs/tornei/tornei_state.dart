@@ -15,6 +15,7 @@ class TorneiLoadFailure extends TorneiState {}
 
 class TorneiLoadSuccess extends TorneiState {
   final List<Torneo> tornei;
+  final String? torneoSelezionato;
 
-  TorneiLoadSuccess(this.tornei);
+  const TorneiLoadSuccess(this.tornei, this.torneoSelezionato);
 }

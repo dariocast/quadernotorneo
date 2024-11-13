@@ -14,11 +14,10 @@ class WidgetCreazioneTorneo extends StatefulWidget {
   });
 
   @override
-  State<WidgetCreazioneTorneo> createState() =>
-      _WidgetParametriGiocatoreState();
+  State<WidgetCreazioneTorneo> createState() => _WidgetCreazioneTorneoState();
 }
 
-class _WidgetParametriGiocatoreState extends State<WidgetCreazioneTorneo> {
+class _WidgetCreazioneTorneoState extends State<WidgetCreazioneTorneo> {
   String? name;
 
   @override

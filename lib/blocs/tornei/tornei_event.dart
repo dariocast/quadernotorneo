@@ -11,18 +11,40 @@ class TorneiLoaded extends TorneiEvent {}
 
 class TorneiCrea extends TorneiEvent {
   final String nome;
-  TorneiCrea({
+  const TorneiCrea({
     required this.nome,
   });
 
+  @override
   List<Object> get props => [nome];
 }
 
 class TorneiAggiorna extends TorneiEvent {
   final Torneo torneo;
-  TorneiAggiorna({
+  const TorneiAggiorna({
     required this.torneo,
   });
 
+  @override
+  List<Object> get props => [torneo];
+}
+
+class TorneiElimina extends TorneiEvent {
+  final Torneo torneo;
+  const TorneiElimina({
+    required this.torneo,
+  });
+
+  @override
+  List<Object> get props => [torneo];
+}
+
+class TorneoSelezionato extends TorneiEvent {
+  final Torneo torneo;
+  const TorneoSelezionato({
+    required this.torneo,
+  });
+
+  @override
   List<Object> get props => [torneo];
 }
