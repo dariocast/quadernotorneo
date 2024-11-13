@@ -11,11 +11,11 @@ import '../ui.dart';
 
 class PartitaCard extends StatelessWidget {
   const PartitaCard({
-    Key? key,
+    super.key,
     required this.partita,
     required this.logoUno,
     required this.logoDue,
-  }) : super(key: key);
+  });
 
   final Partita partita;
   final String logoUno;
@@ -73,7 +73,7 @@ class PartitaCard extends StatelessWidget {
                           ? Padding(
                               padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
                               child: Text(
-                                '${partita.descrizione}',
+                                partita.descrizione,
                                 maxLines: 2,
                               ),
                             )
@@ -136,12 +136,12 @@ class PartitaCard extends StatelessWidget {
 
 class GruppoDetailsColumn extends StatelessWidget {
   const GruppoDetailsColumn({
-    Key? key,
+    super.key,
     required this.partita,
     required this.logo,
     required this.alignment,
     required this.squadra,
-  }) : super(key: key);
+  });
 
   final Partita partita;
   final String logo;

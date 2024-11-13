@@ -4,7 +4,7 @@ import '../../models/gruppo.dart';
 
 class ClassificaWidget extends StatefulWidget {
   final List<Gruppo> gruppiPerGirone;
-  ClassificaWidget(this.gruppiPerGirone, {Key? key}) : super(key: key);
+  const ClassificaWidget(this.gruppiPerGirone, {super.key});
 
   @override
   _ClassificaWidgetState createState() => _ClassificaWidgetState();

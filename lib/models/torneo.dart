@@ -6,7 +6,7 @@ class Torneo extends Equatable {
   final int id;
   final String name;
 
-  Torneo({
+  const Torneo({
     required this.id,
     required this.name,
   });

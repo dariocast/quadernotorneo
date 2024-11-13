@@ -15,7 +15,7 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class GiocatoriPage extends StatelessWidget {
   final String gruppo;
-  GiocatoriPage(this.gruppo);
+  const GiocatoriPage(this.gruppo, {super.key});
 
   static Route route(String gruppo) {
     return MaterialPageRoute<void>(
@@ -32,7 +32,7 @@ class GiocatoriPage extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('${this.gruppo}'),
+        title: Text(gruppo),
         centerTitle: true,
         actions: [
           authState.status == AuthenticationStatus.authenticated &&
@@ -43,8 +43,7 @@ class GiocatoriPage extends StatelessWidget {
                         builder: (_) {
                           return BlocProvider.value(
                             value: BlocProvider.of<GiocatoriBloc>(context),
-                            child:
-                                WidgetParametriGiocatore(gruppo: this.gruppo),
+                            child: WidgetParametriGiocatore(gruppo: gruppo),
                           );
                         },
                       ),
@@ -112,9 +111,9 @@ class GiocatoriPage extends StatelessWidget {
 
 class GrigliaGiocatori extends StatefulWidget {
   const GrigliaGiocatori({
-    Key? key,
+    super.key,
     required this.giocatori,
-  }) : super(key: key);
+  });
 
   final List<Giocatore> giocatori;
 
@@ -141,9 +140,9 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
         final giocatore = widget.giocatori.elementAt(index);
         return WillPopScope(
           onWillPop: () async {
-            if (!deletable)
+            if (!deletable) {
               return true;
-            else {
+            } else {
               setState(() {
                 deletable = !deletable;
               });

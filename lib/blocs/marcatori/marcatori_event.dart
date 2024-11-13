@@ -10,5 +10,5 @@ abstract class MarcatoriEvent extends Equatable {
 class MarcatoriLoaded extends MarcatoriEvent {
   final String? torneo;
 
-  MarcatoriLoaded(this.torneo);
+  const MarcatoriLoaded(this.torneo);
 }

@@ -72,7 +72,7 @@ class PartitaApiProvider {
     } catch (e) {
       QTLog.log(e.toString(),
           name: 'repositories.partita.create', level: Level.SEVERE.value);
-      throw Exception('Impossibile creare la partita: error: ${e}');
+      throw Exception('Impossibile creare la partita: error: $e');
     }
   }
 

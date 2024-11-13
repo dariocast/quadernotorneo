@@ -36,7 +36,7 @@ class GiocatoriBloc extends Bloc<GiocatoriEvent, GiocatoriState> {
       GiocatoriCrea event, Emitter<GiocatoriState> emit) async {
     emit(GiocatoriLoading());
     try {
-      final created = await _repository.creaGiocatore(
+      await _repository.creaGiocatore(
           event.nome, event.gruppo, event.immagine, event.photo);
       final giocatori = await _repository.giocatori();
       emit(GiocatoriLoadSuccess(giocatori));

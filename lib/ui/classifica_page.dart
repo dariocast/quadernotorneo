@@ -8,6 +8,8 @@ import '../blocs/blocs.dart';
 import 'widgets/widgets.dart';
 
 class ClassificaPage extends StatefulWidget {
+  const ClassificaPage({super.key});
+
   static Route route(String? torneo) {
     return MaterialPageRoute<void>(
         builder: (_) => BlocProvider(
@@ -88,10 +90,10 @@ class _ClassificaPageState extends State<ClassificaPage> {
               : Stack(
                   children: [
                     Positioned(
-                      child: ClassificaGironeCard(
-                          gironi[_currentIndex], gruppiPerGirone),
                       width: MediaQuery.of(context).size.width,
                       top: 0.0,
+                      child: ClassificaGironeCard(
+                          gironi[_currentIndex], gruppiPerGirone),
                     ),
                     Positioned(
                       width: MediaQuery.of(context).size.width,

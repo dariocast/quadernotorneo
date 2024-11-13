@@ -3,18 +3,16 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:quaderno_flutter/ui/tornei_page.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../blocs/blocs.dart';
 import 'ui.dart';
 
 class HomeDrawer extends StatelessWidget {
-  final onlyLogin;
+  final bool onlyLogin;
   final String? torneo;
 
-  const HomeDrawer({Key? key, this.onlyLogin = false, this.torneo})
-      : super(key: key);
+  const HomeDrawer({super.key, this.onlyLogin = false, this.torneo});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +29,7 @@ class HomeDrawer extends StatelessWidget {
                   child: ListView(
                     padding: EdgeInsets.zero,
                     children: [
-                      Container(
+                      SizedBox(
                         height: 270,
                         child: DrawerHeader(
                           decoration: BoxDecoration(

@@ -12,6 +12,8 @@ import 'ui.dart';
 class TorneiPage extends StatelessWidget {
   static const String routeName = '/tornei';
 
+  const TorneiPage({super.key});
+
   static Route route() {
     return MaterialPageRoute<void>(
       builder: (_) => BlocProvider(

@@ -11,7 +11,7 @@ import 'style_helpers.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PartitaWidget extends StatelessWidget {
-  PartitaWidget();
+  const PartitaWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +60,9 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraUno)));
                                 }
                               },
+                              style: elevatedButtonStyle,
                               child: Text(AppLocalizations.of(context)!
                                   .matchWidgetGolButtonLabel),
-                              style: elevatedButtonStyle,
                             ),
                           ),
                           SizedBox(
@@ -86,9 +86,9 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraUno)));
                                 }
                               },
+                              style: elevatedButtonStyle,
                               child: Text(AppLocalizations.of(context)!
                                   .matchWidgetAutogolButtonLabel),
-                              style: elevatedButtonStyle,
                             ),
                           ),
                           SizedBox(
@@ -112,9 +112,9 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraUno)));
                                 }
                               },
+                              style: elevatedButtonStyle,
                               child: Text(AppLocalizations.of(context)!
                                   .matchWidgetYellowCardButtonLabel),
-                              style: elevatedButtonStyle,
                             ),
                           ),
                           SizedBox(
@@ -138,9 +138,9 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraUno)));
                                 }
                               },
+                              style: elevatedButtonStyle,
                               child: Text(AppLocalizations.of(context)!
                                   .matchWidgetRedCardButtonLabel),
-                              style: elevatedButtonStyle,
                             ),
                           ),
                           Padding(
@@ -160,8 +160,8 @@ class PartitaWidget extends StatelessWidget {
                                         .read<DettaglioBloc>()
                                         .add(DettaglioAggiungiFallo(
                                             partita.squadraUno)),
-                                    child: FaIcon(FontAwesomeIcons.plus),
                                     style: elevatedButtonStyle,
+                                    child: FaIcon(FontAwesomeIcons.plus),
                                   ),
                                 ),
                               ),
@@ -174,8 +174,8 @@ class PartitaWidget extends StatelessWidget {
                                         .read<DettaglioBloc>()
                                         .add(DettaglioRimuoviFallo(
                                             partita.squadraUno)),
-                                    child: FaIcon(FontAwesomeIcons.minus),
                                     style: elevatedButtonStyle,
+                                    child: FaIcon(FontAwesomeIcons.minus),
                                   ),
                                 ),
                               ),
@@ -232,9 +232,9 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraDue)));
                                 }
                               },
+                              style: elevatedButtonStyle,
                               child: Text(AppLocalizations.of(context)!
                                   .matchWidgetGolButtonLabel),
-                              style: elevatedButtonStyle,
                             ),
                           ),
                           SizedBox(
@@ -258,9 +258,9 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraDue)));
                                 }
                               },
+                              style: elevatedButtonStyle,
                               child: Text(AppLocalizations.of(context)!
                                   .matchWidgetAutogolButtonLabel),
-                              style: elevatedButtonStyle,
                             ),
                           ),
                           SizedBox(
@@ -284,9 +284,9 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraDue)));
                                 }
                               },
+                              style: elevatedButtonStyle,
                               child: Text(AppLocalizations.of(context)!
                                   .matchWidgetYellowCardButtonLabel),
-                              style: elevatedButtonStyle,
                             ),
                           ),
                           SizedBox(
@@ -310,9 +310,9 @@ class PartitaWidget extends StatelessWidget {
                                           choice, partita.squadraDue)));
                                 }
                               },
+                              style: elevatedButtonStyle,
                               child: Text(AppLocalizations.of(context)!
                                   .matchWidgetRedCardButtonLabel),
-                              style: elevatedButtonStyle,
                             ),
                           ),
                           Padding(
@@ -332,8 +332,8 @@ class PartitaWidget extends StatelessWidget {
                                         .read<DettaglioBloc>()
                                         .add(DettaglioAggiungiFallo(
                                             partita.squadraDue)),
-                                    child: FaIcon(FontAwesomeIcons.plus),
                                     style: elevatedButtonStyle,
+                                    child: FaIcon(FontAwesomeIcons.plus),
                                   ),
                                 ),
                               ),
@@ -346,8 +346,8 @@ class PartitaWidget extends StatelessWidget {
                                         .read<DettaglioBloc>()
                                         .add(DettaglioRimuoviFallo(
                                             partita.squadraDue)),
-                                    child: FaIcon(FontAwesomeIcons.minus),
                                     style: elevatedButtonStyle,
+                                    child: FaIcon(FontAwesomeIcons.minus),
                                   ),
                                 ),
                               ),

@@ -14,7 +14,7 @@ class TorneoApiProvider {
   Future<List<Torneo>> tutti() async {
     final supabase = Supabase.instance.client;
     try {
-      final listaTornei;
+      final List listaTornei;
       listaTornei = await supabase.from(TORNEI_TABLE).select();
 
       final mapDone = listaTornei.map<Torneo>((json) => Torneo.fromMap(json));
@@ -56,7 +56,7 @@ class TorneoApiProvider {
     } catch (e) {
       QTLog.log(e.toString(),
           name: 'repositories.torneo.create', level: Level.SEVERE.value);
-      throw Exception('Impossibile creare il torneo: error: ${e}');
+      throw Exception('Impossibile creare il torneo: error: $e');
     }
   }
 

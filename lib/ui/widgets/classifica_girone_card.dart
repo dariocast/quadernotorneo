@@ -4,11 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/models.dart';
 
 class ClassificaGironeCard extends StatelessWidget {
-  ClassificaGironeCard(
+  const ClassificaGironeCard(
     this.title,
     this.gruppi, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String title;
   final List<Gruppo> gruppi;

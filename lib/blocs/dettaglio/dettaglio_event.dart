@@ -10,43 +10,43 @@ abstract class DettaglioEvent extends Equatable {
 class DettaglioLoaded extends DettaglioEvent {
   final Partita partita;
 
-  DettaglioLoaded(this.partita);
+  const DettaglioLoaded(this.partita);
 }
 
 class DettaglioAmmonisci extends DettaglioEvent {
   final GiocatoreBase giocatore;
 
-  DettaglioAmmonisci(this.giocatore);
+  const DettaglioAmmonisci(this.giocatore);
 }
 
 class DettaglioEspelli extends DettaglioEvent {
   final GiocatoreBase giocatore;
 
-  DettaglioEspelli(this.giocatore);
+  const DettaglioEspelli(this.giocatore);
 }
 
 class DettaglioAggiungiGol extends DettaglioEvent {
   final GiocatoreBase giocatore;
 
-  DettaglioAggiungiGol(this.giocatore);
+  const DettaglioAggiungiGol(this.giocatore);
 }
 
 class DettaglioAggiungiAutogol extends DettaglioEvent {
   final GiocatoreBase giocatore;
 
-  DettaglioAggiungiAutogol(this.giocatore);
+  const DettaglioAggiungiAutogol(this.giocatore);
 }
 
 class DettaglioAggiungiFallo extends DettaglioEvent {
   final String squadra;
 
-  DettaglioAggiungiFallo(this.squadra);
+  const DettaglioAggiungiFallo(this.squadra);
 }
 
 class DettaglioRimuoviFallo extends DettaglioEvent {
   final String squadra;
 
-  DettaglioRimuoviFallo(this.squadra);
+  const DettaglioRimuoviFallo(this.squadra);
 }
 
 class DettaglioRimuoviPartita extends DettaglioEvent {}

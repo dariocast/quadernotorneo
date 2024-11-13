@@ -17,7 +17,7 @@ class PartitePage extends StatefulWidget {
 
   final String? torneo;
 
-  PartitePage({this.torneo});
+  const PartitePage({super.key, this.torneo});
 
   static Route route(String? torneo) {
     return MaterialPageRoute<void>(

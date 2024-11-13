@@ -15,7 +15,7 @@ class CreaPage extends StatelessWidget {
 
   final String? torneo;
 
-  CreaPage({this.torneo});
+  const CreaPage({super.key, this.torneo});
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +67,8 @@ class CreaPage extends StatelessWidget {
                                   .map<DropdownMenuItem<String>>(
                                       (String gruppo) {
                                 return DropdownMenuItem(
-                                  child: Text(gruppo),
                                   value: gruppo,
+                                  child: Text(gruppo),
                                 );
                               }).toList(),
                             ),
@@ -96,8 +96,8 @@ class CreaPage extends StatelessWidget {
                                   .map<DropdownMenuItem<String>>(
                                       (String gruppo) {
                                 return DropdownMenuItem(
-                                  child: Text(gruppo),
                                   value: gruppo,
+                                  child: Text(gruppo),
                                 );
                               }).toList(),
                             ),

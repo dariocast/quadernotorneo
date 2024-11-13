@@ -6,7 +6,7 @@ class GiocatoreBase extends Equatable {
   final String nome;
   final String gruppo;
 
-  GiocatoreBase(this.nome, this.gruppo);
+  const GiocatoreBase(this.nome, this.gruppo);
 
   @override
   List<Object> get props => [nome, gruppo];

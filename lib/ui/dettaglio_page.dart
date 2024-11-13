@@ -10,6 +10,8 @@ import 'widgets/widgets.dart';
 
 class DettaglioPage extends StatelessWidget {
   static final String routeName = '/dettaglio';
+
+  const DettaglioPage({super.key});
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => DettaglioPage());
   }
@@ -51,10 +53,11 @@ class DettaglioPage extends StatelessWidget {
                               context: context,
                               title: AppLocalizations.of(context)!
                                   .saveDetailsAlertTitle);
-                          if (result == OkCancelResult.ok && !state.loading)
+                          if (result == OkCancelResult.ok && !state.loading) {
                             context
                                 .read<DettaglioBloc>()
                                 .add(DettaglioSalvaPartita());
+                          }
                         } else {
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()

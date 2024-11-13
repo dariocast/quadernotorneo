@@ -9,9 +9,9 @@ class WidgetCreazioneTorneo extends StatefulWidget {
   final Torneo? torneo;
 
   const WidgetCreazioneTorneo({
-    Key? key,
+    super.key,
     this.torneo,
-  }) : super(key: key);
+  });
 
   @override
   State<WidgetCreazioneTorneo> createState() =>
@@ -50,9 +50,9 @@ class _WidgetParametriGiocatoreState extends State<WidgetCreazioneTorneo> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: TextFormField(
-                  initialValue: this.name,
+                  initialValue: name,
                   onChanged: (value) => setState(() {
-                    this.name = value;
+                    name = value;
                   }),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -79,18 +79,17 @@ class _WidgetParametriGiocatoreState extends State<WidgetCreazioneTorneo> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if (this.name != null) {
+                    if (name != null) {
                       final torneoUpdated = widget.torneo?.copyWith(
-                            name: this.name,
-                          ) ??
-                          null;
+                        name: name,
+                      );
                       if (torneoUpdated != null) {
                         context.read<TorneiBloc>().add(TorneiAggiorna(
                               torneo: torneoUpdated,
                             ));
                       } else {
                         context.read<TorneiBloc>().add(TorneiCrea(
-                              nome: this.name!.trim(),
+                              nome: name!.trim(),
                             ));
                       }
                       Navigator.of(context).pop();

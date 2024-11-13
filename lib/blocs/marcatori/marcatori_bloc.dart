@@ -18,10 +18,10 @@ class MarcatoriBloc extends Bloc<MarcatoriEvent, MarcatoriState> {
         for (var gruppo in gruppi) {
           marcatori.addAll(await _repo.marcatori(gruppo.nome));
         }
-        Map<String, String> loghi = Map();
-        gruppi.forEach((gruppo) {
+        Map<String, String> loghi = {};
+        for (var gruppo in gruppi) {
           loghi.putIfAbsent(gruppo.nome, () => gruppo.logo);
-        });
+        }
         // order marcatori by gol
         marcatori.sort((a, b) => b.gol.compareTo(a.gol));
         emit(MarcatoriLoadSuccess(marcatori.cast<Giocatore>(), loghi));

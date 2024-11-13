@@ -15,7 +15,7 @@ class AdHelper {
     } else if (Platform.isIOS) {
       return kDebugMode ? testBannerId : iosBannerId;
     }
-    throw new UnsupportedError("Unsupported platform");
+    throw UnsupportedError("Unsupported platform");
   }
 
   static String get nativeAdUnitId {
@@ -26,6 +26,6 @@ class AdHelper {
         return iosNativeId;
       }
     }
-    throw new UnsupportedError("Unsupported platform");
+    throw UnsupportedError("Unsupported platform");
   }
 }

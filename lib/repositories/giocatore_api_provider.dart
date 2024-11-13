@@ -49,7 +49,7 @@ class GiocatoreApiProvider {
       String nome, String gruppo, int immagine, String? photo) async {
     final supabase = Supabase.instance.client;
     try {
-      String? publicURL = null;
+      String? publicURL;
       if (photo != null) {
         final logoFile = File(photo);
         final uploadResult = await supabase.storage.from('giocatori').upload(

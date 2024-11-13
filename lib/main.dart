@@ -6,14 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:quaderno_flutter/blocs/tornei/tornei_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'blocs/blocs.dart';
 import 'theme.dart';
-import 'ui/tornei_page.dart';
 import 'ui/ui.dart';
 import 'utils/log_helper.dart';
 
@@ -99,10 +97,10 @@ void main() async {
 
 class QuadernoTorneoApp extends StatelessWidget {
   const QuadernoTorneoApp({
-    Key? key,
+    super.key,
     required this.authenticationRepository,
     required this.userRepository,
-  }) : super(key: key);
+  });
 
   final AuthenticationRepository authenticationRepository;
   final UserRepository userRepository;
@@ -135,13 +133,13 @@ class QuadernoTorneoApp extends StatelessWidget {
 }
 
 class AppView extends StatefulWidget {
-  AppView();
+  const AppView({super.key});
 
   @override
-  _AppViewState createState() => _AppViewState();
+  AppViewState createState() => AppViewState();
 }
 
-class _AppViewState extends State<AppView> {
+class AppViewState extends State<AppView> {
   final _navigatorKey = GlobalKey<NavigatorState>();
   late Stream<String> _tokenStream;
 
@@ -170,7 +168,7 @@ class _AppViewState extends State<AppView> {
         //         channel.id,
         //         channel.name,
         //         channelDescription: channel.description,
-        //         // TODO add a proper drawable resource to android, for now using
+        //         // add a proper drawable resource to android, for now using
         //         //      one that already exists in example app.
         //         icon: 'ic_launcher_foreground',
         //       ),
