@@ -107,6 +107,7 @@
     "tournamentWidgetNameLabel": "Name",
     "tournamentWidgetEditButtonTitle": "Edit",
     "tournamentWidgetNewButtonTitle": "Create",
+    "leaderboardsEmpty": "No leaderboards",
     "leaderboardsPlayedColumnHeader":"P",
     "leaderboardsWinsColumnHeader":"W",
     "leaderboardsDrawsColumnHeader":"D",

@@ -13,7 +13,7 @@ class PartitaApiProvider {
     final supabase = Supabase.instance.client;
     try {
       final listaPartite;
-      if (torneo != null) {
+      if (torneo != null && torneo.isNotEmpty) {
         listaPartite = await supabase
             .from('partita')
             .select()
