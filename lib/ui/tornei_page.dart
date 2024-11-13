@@ -1,3 +1,4 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +26,8 @@ class TorneiPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthenticationBloc>().state;
+    final isAdmin = authState.status == AuthenticationStatus.authenticated &&
+        authState.user.isAdmin;
 
     return BlocListener<TorneiBloc, TorneiState>(
       listener: (context, state) {
@@ -39,21 +42,19 @@ class TorneiPage extends StatelessWidget {
           centerTitle: true,
           title: Text(AppLocalizations.of(context)!.tournamentPageTitle),
           actions: <Widget>[
-            authState.status == AuthenticationStatus.authenticated &&
-                    authState.user.isAdmin
-                ? IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () => showModalBottomSheet(
-                      context: context,
-                      builder: (_) {
-                        return BlocProvider.value(
-                          value: BlocProvider.of<TorneiBloc>(context),
-                          child: WidgetCreazioneTorneo(),
-                        );
-                      },
-                    ),
-                  )
-                : Container(),
+            if (isAdmin)
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  builder: (_) {
+                    return BlocProvider.value(
+                      value: BlocProvider.of<TorneiBloc>(context),
+                      child: WidgetCreazioneTorneo(),
+                    );
+                  },
+                ),
+              ),
             IconButton(
               icon: Icon(Icons.autorenew_rounded),
               onPressed: () {
@@ -86,23 +87,48 @@ class TorneiPage extends StatelessWidget {
                   itemCount: state.tornei.length,
                   itemBuilder: (context, index) {
                     final torneo = state.tornei[index];
+
                     return Padding(
                       padding: const EdgeInsets.only(
                           top: 2.0, left: 10.0, right: 10.0),
-                      child: Card(
-                        child: ListTile(
-                            title: Text(torneo.name),
-                            trailing: FaIcon(FontAwesomeIcons.folderOpen),
-                            onTap: () => {
+                      child: InkWell(
+                        onTap: () => context
+                            .read<TorneiBloc>()
+                            .add(TorneoSelezionato(torneo: torneo)),
+                        onLongPress: isAdmin
+                            ? () async {
+                                final result = await showOkCancelAlertDialog(
+                                  context: context,
+                                  title: AppLocalizations.of(context)!
+                                      .deleteWarningTitle,
+                                  message:
+                                      '${AppLocalizations.of(context)!.teamDeleteLabel} ${torneo.name} ${AppLocalizations.of(context)!.teamDeleteWithPlayersLabel}',
+                                );
+                                if (result == OkCancelResult.ok) {
                                   context
                                       .read<TorneiBloc>()
-                                      .add(TorneoSelezionato(torneo: torneo)),
-                                  Navigator.of(context)
-                                      .push(PartitePage.route(torneo.name))
-                                      .whenComplete(() => context
-                                          .read<TorneiBloc>()
-                                          .add(TorneiLoaded()))
-                                }),
+                                      .add(TorneiElimina(torneo: torneo));
+                                }
+                              }
+                            : null,
+                        child: Card(
+                          child: ListTile(
+                            title: Text(torneo.name),
+                            trailing: FaIcon(FontAwesomeIcons.folderOpen),
+                            onTap: () {
+                              context
+                                  .read<TorneiBloc>()
+                                  .add(TorneoSelezionato(torneo: torneo));
+                              Navigator.of(context)
+                                  .push(PartitePage.route(torneo.name))
+                                  .whenComplete(
+                                    () => context
+                                        .read<TorneiBloc>()
+                                        .add(TorneiLoaded()),
+                                  );
+                            },
+                          ),
+                        ),
                       ),
                     );
                   },
@@ -115,9 +141,7 @@ class TorneiPage extends StatelessWidget {
                   Text(AppLocalizations.of(context)!.tournamentPageLoadFailure),
             );
           } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return Center(child: CircularProgressIndicator());
           }
         }),
       ),

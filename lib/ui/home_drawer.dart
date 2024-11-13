@@ -66,6 +66,7 @@ class HomeDrawer extends StatelessWidget {
                                   title: Text(AppLocalizations.of(context)!
                                       .drawerTournamentLabel),
                                   onTap: () {
+                                    context.read<DrawerCubit>().resetTorneo();
                                     Navigator.of(context).pop();
                                     Navigator.of(context)
                                         .push(TorneiPage.route());

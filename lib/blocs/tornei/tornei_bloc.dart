@@ -66,5 +66,23 @@ class TorneiBloc extends Bloc<TorneiEvent, TorneiState> {
         emit(TorneiLoadFailure());
       }
     });
+
+    on<TorneiElimina>((event, emit) async {
+      QTLog.log(
+          "TorneiElimina event triggered for torneo: ${event.torneo.name}",
+          name: 'blocs.tornei');
+      emit(TorneiLoading());
+      try {
+        QTLog.log("Deleting torneo: ${event.torneo.name}",
+            name: 'blocs.tornei');
+        await _repository.eliminaTorneo(event.torneo.id);
+        QTLog.log("Torneo deleted successfully, reloading list",
+            name: 'blocs.tornei');
+        add(TorneiLoaded());
+      } catch (e) {
+        QTLog.log("Error in TorneiElimina: $e", name: 'blocs.tornei');
+        emit(TorneiLoadFailure());
+      }
+    });
   }
 }
