@@ -11,6 +11,8 @@ import '../models/giocatore.dart';
 import '../utils/ui_helpers.dart';
 import 'widgets/widgets.dart';
 
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 class GiocatoriPage extends StatelessWidget {
   final String gruppo;
   GiocatoriPage(this.gruppo);
@@ -28,6 +30,7 @@ class GiocatoriPage extends StatelessWidget {
     final authState = context.watch<AuthenticationBloc>().state;
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('${this.gruppo}'),
         centerTitle: true,
@@ -159,10 +162,11 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                     authState.status == AuthenticationStatus.authenticated &&
                     authState.user.isAdmin
                 ? () async => await showModalBottomSheet(
-                      context: context,
-                      builder: (_) {
+                      context: _scaffoldKey.currentContext!,
+                      builder: (context) {
                         return BlocProvider.value(
-                          value: BlocProvider.of<GiocatoriBloc>(context),
+                          value: BlocProvider.of<GiocatoriBloc>(
+                              _scaffoldKey.currentContext!),
                           child: WidgetParametriGiocatore(
                             gruppo: giocatore.gruppo,
                             giocatore: giocatore,
@@ -216,7 +220,7 @@ class _GrigliaGiocatoriState extends State<GrigliaGiocatori> {
                             giocatore.nome,
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyText1!
+                                .bodyLarge!
                                 .copyWith(fontWeight: FontWeight.bold),
                           ),
                         ),

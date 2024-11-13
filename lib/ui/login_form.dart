@@ -13,7 +13,7 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        if (state.status.isFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -37,13 +37,7 @@ class LoginForm extends StatelessWidget {
                 const Padding(padding: EdgeInsets.all(12)),
                 _PasswordInput(state.password.value),
                 const Padding(padding: EdgeInsets.all(12)),
-                BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-                  if (state.status.isSubmissionInProgress) {
-                    return CircularProgressIndicator();
-                  } else {
-                    return _LoginButton();
-                  }
-                }),
+                _LoginButton(),
                 const Padding(padding: EdgeInsets.all(12)),
                 _SaveCredentialCheckbox(),
               ],
@@ -89,7 +83,7 @@ class _UsernameInput extends StatelessWidget {
               context.read<LoginBloc>().add(LoginUsernameChanged(username)),
           decoration: InputDecoration(
             labelText: AppLocalizations.of(context)!.loginFormEmailLabel,
-            errorText: state.username.invalid
+            errorText: state.username.isNotValid
                 ? AppLocalizations.of(context)!.loginFormEmailErrorLabel
                 : null,
           ),
@@ -117,7 +111,7 @@ class _PasswordInput extends StatelessWidget {
           obscureText: state.hidePassword,
           decoration: InputDecoration(
             labelText: AppLocalizations.of(context)!.loginFormPasswordLabel,
-            errorText: state.password.invalid
+            errorText: state.password.isNotValid
                 ? AppLocalizations.of(context)!.loginFormPasswordErrorLabel
                 : null,
             suffixIcon: InkWell(
@@ -139,20 +133,17 @@ class _LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return state.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                style: elevatedButtonStyle,
-                key: const Key('loginForm_continue_raisedButton'),
-                child: Text(AppLocalizations.of(context)!.loginFormSubmitLabel),
-                onPressed: state.status.isValidated
-                    ? () {
-                        context.read<LoginBloc>().add(const LoginSubmitted());
-                      }
-                    : null,
-              );
+        return ElevatedButton(
+          style: elevatedButtonStyle,
+          key: const Key('loginForm_continue_raisedButton'),
+          child: Text(AppLocalizations.of(context)!.loginFormSubmitLabel),
+          onPressed: state.isValid && !state.status.isInProgress
+              ? () {
+                  context.read<LoginBloc>().add(const LoginSubmitted());
+                }
+              : null,
+        );
       },
     );
   }

@@ -221,7 +221,7 @@ class CreaPage extends StatelessWidget {
                         child: Text(
                           AppLocalizations.of(context)!
                               .matchCreateNoGroupsWarning,
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.headlineSmall,
                           textAlign: TextAlign.center,
                         ),
                       ),

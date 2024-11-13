@@ -54,7 +54,7 @@ class _WidgetParametriGiocatoreState extends State<WidgetParametriGiocatore> {
                   widget.giocatore != null
                       ? 'Modifica il giocatore'
                       : 'Un nuovo giocatore, eh?',
-                  style: Theme.of(context).textTheme.headline5),
+                  style: Theme.of(context).textTheme.headlineSmall),
             ),
           ),
           Expanded(

@@ -13,12 +13,15 @@ class ClassificaBloc extends Bloc<ClassificaEvent, ClassificaState> {
 
   ClassificaBloc() : super(ClassificaInitial()) {
     on<ClassificaLoaded>((event, emit) async {
+      print("ClassificaLoaded event triggered");
       emit(ClassificaLoading());
       try {
         final gruppi = await _repo.gruppi();
+        print("Data loaded successfully: $gruppi");
         emit(ClassificaLoadSuccess(gruppi));
       } catch (e) {
         QTLog.log(e.toString(), name: 'blocs.classifica');
+        print("Error loading data: $e");
         emit(ClassificaLoadFailure());
       }
     });
