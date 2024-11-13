@@ -12,7 +12,7 @@ class InfoPage extends StatefulWidget {
     return MaterialPageRoute<void>(builder: (_) => InfoPage());
   }
 
-  const InfoPage({Key? key}) : super(key: key);
+  const InfoPage({super.key});
 
   @override
   _InfoPageState createState() => _InfoPageState();

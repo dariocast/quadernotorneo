@@ -5,6 +5,8 @@ import '../../utils/ad_helper.dart';
 import '../../utils/log_helper.dart';
 
 class QuadernoBannerAd extends StatefulWidget {
+  const QuadernoBannerAd({super.key});
+
   @override
   _QuadernoBannerAdState createState() => _QuadernoBannerAdState();
 }
@@ -40,9 +42,9 @@ class _QuadernoBannerAdState extends State<QuadernoBannerAd> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      child: AdWidget(ad: _ad),
       width: _ad.size.width.toDouble(),
       height: _ad.size.height.toDouble(),
+      child: AdWidget(ad: _ad),
     );
   }
 

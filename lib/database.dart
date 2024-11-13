@@ -39,4 +39,10 @@ class Database {
     final r = await box!.get(key);
     return r;
   }
+
+  static Future delete(key) async {
+    await autoInit();
+    final r = await box!.delete(key);
+    return r;
+  }
 }

@@ -5,7 +5,7 @@ class Evento extends Equatable {
   final String squadra;
   final TipoEvento tipo;
 
-  Evento(this.nome, this.squadra, this.tipo);
+  const Evento(this.nome, this.squadra, this.tipo);
 
   @override
   List<Object> get props => [nome, squadra, tipo];

@@ -67,22 +67,22 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
     final giocatoriSquadraDue =
         await _repository.giocatoriGruppo(event.partita.squadraDue);
     final List<Evento> eventi = List.empty(growable: true);
-    event.partita.marcatori.forEach((giocatore) {
+    for (var giocatore in event.partita.marcatori) {
       if (giocatore.nome.contains(' (Aut)')) {
         eventi.add(Evento(giocatore.nome.replaceAll(' (Aut)', ''),
             giocatore.gruppo, TipoEvento.AUTOGOL));
       } else {
         eventi.add(Evento(giocatore.nome, giocatore.gruppo, TipoEvento.GOL));
       }
-    });
-    event.partita.ammoniti.forEach((giocatore) {
+    }
+    for (var giocatore in event.partita.ammoniti) {
       eventi.add(
           Evento(giocatore.nome, giocatore.gruppo, TipoEvento.AMMONIZIONE));
-    });
-    event.partita.espulsi.forEach((giocatore) {
+    }
+    for (var giocatore in event.partita.espulsi) {
       eventi
           .add(Evento(giocatore.nome, giocatore.gruppo, TipoEvento.ESPULSIONE));
-    });
+    }
     emit(state.copyWith(
       partita: event.partita,
       giocatoriSquadraUno: giocatoriSquadraUno,
@@ -223,7 +223,7 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
   void _handleDettaglioUndoEvent(
       DettaglioUndo event, Emitter<DettaglioState> emit) {
     final eventi = state.eventi!;
-    if (eventi.length == 0) {
+    if (eventi.isEmpty) {
       emit(state.copyWith(loading: false));
     } else {
       final eventoRimosso = eventi.removeLast();
@@ -249,7 +249,7 @@ class DettaglioBloc extends Bloc<DettaglioEvent, DettaglioState> {
       } else if (eventoRimosso.tipo == TipoEvento.AUTOGOL) {
         final marcatori = state.partita!.marcatori;
         marcatori.removeWhere((element) =>
-            '${element.nome.replaceAll(' (Aut)', '')}' == eventoRimosso.nome &&
+            element.nome.replaceAll(' (Aut)', '') == eventoRimosso.nome &&
             element.gruppo == eventoRimosso.squadra);
         final partitaAggiornata = state.partita!.copyWith(
           golSquadraUno: eventoRimosso.squadra == state.partita!.squadraUno

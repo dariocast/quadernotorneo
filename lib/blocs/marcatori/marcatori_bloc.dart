@@ -13,13 +13,18 @@ class MarcatoriBloc extends Bloc<MarcatoriEvent, MarcatoriState> {
     on<MarcatoriLoaded>((event, emit) async {
       emit(MarcatoriLoading());
       try {
-        final marcatori = await _repo.marcatori();
-        final gruppi = await _repo.gruppi();
-        Map<String, String> loghi = Map();
-        gruppi.forEach((gruppo) {
+        final List<Giocatore> marcatori = List.empty(growable: true);
+        final gruppi = await _repo.gruppi(event.torneo);
+        for (var gruppo in gruppi) {
+          marcatori.addAll(await _repo.marcatori(gruppo.nome));
+        }
+        Map<String, String> loghi = {};
+        for (var gruppo in gruppi) {
           loghi.putIfAbsent(gruppo.nome, () => gruppo.logo);
-        });
-        emit(MarcatoriLoadSuccess(marcatori, loghi));
+        }
+        // order marcatori by gol
+        marcatori.sort((a, b) => b.gol.compareTo(a.gol));
+        emit(MarcatoriLoadSuccess(marcatori.cast<Giocatore>(), loghi));
       } catch (e) {
         emit(MarcatoriLoadFailure());
       }

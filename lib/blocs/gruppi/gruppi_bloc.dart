@@ -1,6 +1,5 @@
 // ignore_for_file: unused_local_variable
 
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../models/models.dart';
@@ -12,8 +11,9 @@ part 'gruppi_state.dart';
 
 class GruppiBloc extends Bloc<GruppiEvent, GruppiState> {
   final _repository = Repository();
+  final String? torneo;
 
-  GruppiBloc() : super(GruppiInitial()) {
+  GruppiBloc(this.torneo) : super(GruppiInitial()) {
     on<GruppiLoaded>((event, emit) => _handleGruppiLoaded(event, emit));
     on<GruppiCrea>((event, emit) => _handleGruppiCrea(event, emit));
     on<GruppiAggiorna>((event, emit) => _handleGruppiAggiorna(event, emit));
@@ -23,7 +23,7 @@ class GruppiBloc extends Bloc<GruppiEvent, GruppiState> {
   _handleGruppiLoaded(GruppiLoaded event, Emitter<GruppiState> emit) async {
     emit(GruppiLoading());
     try {
-      final gruppi = await _repository.gruppi();
+      final gruppi = await _repository.gruppi(torneo);
       emit(GruppiLoadSuccess(gruppi));
     } catch (e) {
       QTLog.log(e.toString(), name: 'blocs.gruppi');
@@ -34,9 +34,9 @@ class GruppiBloc extends Bloc<GruppiEvent, GruppiState> {
   _handleGruppiCrea(GruppiCrea event, Emitter<GruppiState> emit) async {
     emit(GruppiLoading());
     try {
-      final gruppoCreato =
-          await _repository.creaGruppo(event.nome, event.girone, event.logo);
-      final gruppi = await _repository.gruppi();
+      final gruppoCreato = await _repository.creaGruppo(
+          event.nome, event.girone, event.logo, torneo!);
+      final gruppi = await _repository.gruppi(torneo);
       emit(GruppiLoadSuccess(gruppi));
     } catch (e) {
       QTLog.log(e.toString(), name: 'blocs.gruppi');
@@ -49,7 +49,7 @@ class GruppiBloc extends Bloc<GruppiEvent, GruppiState> {
     try {
       final gruppoAggiornato =
           await _repository.aggiornaGruppo(event.aggiornato);
-      final gruppi = await _repository.gruppi();
+      final gruppi = await _repository.gruppi(torneo);
       emit(GruppiLoadSuccess(gruppi));
     } catch (e) {
       QTLog.log(e.toString(), name: 'blocs.gruppi');
@@ -61,7 +61,7 @@ class GruppiBloc extends Bloc<GruppiEvent, GruppiState> {
     emit(GruppiLoading());
     try {
       final gruppoEliminato = await _repository.eliminaGruppo(event.id);
-      final gruppi = await _repository.gruppi();
+      final gruppi = await _repository.gruppi(torneo);
       emit(GruppiLoadSuccess(gruppi));
     } catch (e) {
       QTLog.log(e.toString(), name: 'blocs.gruppi');

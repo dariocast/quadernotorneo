@@ -8,10 +8,13 @@ import '../blocs/blocs.dart';
 import 'widgets/widgets.dart';
 
 class ClassificaPage extends StatefulWidget {
-  static Route route() {
+  const ClassificaPage({super.key});
+
+  static Route route(String? torneo) {
     return MaterialPageRoute<void>(
         builder: (_) => BlocProvider(
-              create: (context) => ClassificaBloc()..add(ClassificaLoaded()),
+              create: (context) =>
+                  ClassificaBloc(torneo)..add(ClassificaLoaded()),
               child: ClassificaPage(),
             ));
   }
@@ -70,21 +73,35 @@ class _ClassificaPageState extends State<ClassificaPage> {
               .where((element) => element.girone == gironi[_currentIndex])
               .toList();
           gruppiPerGirone.sort((a, b) => b.ordinaClassifica(a));
-          return Stack(
-            children: [
-              Positioned(
-                child: ClassificaGironeCard(
-                    gironi[_currentIndex], gruppiPerGirone),
-                width: MediaQuery.of(context).size.width,
-                top: 0.0,
-              ),
-              Positioned(
-                width: MediaQuery.of(context).size.width,
-                bottom: 5.0,
-                child: QuadernoBannerAd(),
-              )
-            ],
-          );
+          // return ClassificaWidget(gruppiPerGirone);
+          return state.gruppi.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FaIcon(FontAwesomeIcons.medal, size: 30.0),
+                      ),
+                      Text(AppLocalizations.of(context)!.leaderboardsPageEmpty),
+                    ],
+                  ),
+                )
+              : Stack(
+                  children: [
+                    Positioned(
+                      width: MediaQuery.of(context).size.width,
+                      top: 0.0,
+                      child: ClassificaGironeCard(
+                          gironi[_currentIndex], gruppiPerGirone),
+                    ),
+                    Positioned(
+                      width: MediaQuery.of(context).size.width,
+                      bottom: 5.0,
+                      child: QuadernoBannerAd(),
+                    )
+                  ],
+                );
         } else if (state is ClassificaLoadSuccess && gironi.isEmpty) {
           return Center(
             child: Column(

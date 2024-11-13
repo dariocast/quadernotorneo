@@ -7,11 +7,15 @@ import '../blocs/blocs.dart';
 import 'widgets/widgets.dart';
 
 class MarcatoriPage extends StatelessWidget {
-  static Route route() {
+  final String? torneo;
+  const MarcatoriPage(this.torneo, {super.key});
+
+  static Route route(String? torneo) {
     return MaterialPageRoute<void>(
         builder: (_) => BlocProvider(
-              create: (context) => MarcatoriBloc()..add(MarcatoriLoaded()),
-              child: MarcatoriPage(),
+              create: (context) =>
+                  MarcatoriBloc()..add(MarcatoriLoaded(torneo)),
+              child: MarcatoriPage(torneo),
             ));
   }
 
@@ -24,7 +28,7 @@ class MarcatoriPage extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () =>
-                  context.read<MarcatoriBloc>().add(MarcatoriLoaded()),
+                  context.read<MarcatoriBloc>().add(MarcatoriLoaded(torneo)),
               icon: Icon(Icons.autorenew_rounded)),
         ],
       ),
@@ -60,10 +64,10 @@ class MarcatoriPage extends StatelessWidget {
                         final marcatore = state.marcatori[index];
                         final logoUrl = state.loghi[marcatore.gruppo];
                         return ListTile(
-                          leading: Container(
-                            child: Image.network(logoUrl!),
+                          leading: SizedBox(
                             width: 50,
                             height: 50,
+                            child: Image.network(logoUrl!),
                           ),
                           title: Text(marcatore.nome),
                           subtitle: Text(marcatore.gruppo),

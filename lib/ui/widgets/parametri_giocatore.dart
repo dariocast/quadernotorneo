@@ -16,10 +16,10 @@ class WidgetParametriGiocatore extends StatefulWidget {
   final Giocatore? giocatore;
 
   const WidgetParametriGiocatore({
-    Key? key,
+    super.key,
     required this.gruppo,
     this.giocatore,
-  }) : super(key: key);
+  });
 
   @override
   State<WidgetParametriGiocatore> createState() =>
@@ -63,9 +63,9 @@ class _WidgetParametriGiocatoreState extends State<WidgetParametriGiocatore> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: TextFormField(
-                  initialValue: this.nome,
+                  initialValue: nome,
                   onChanged: (value) => setState(() {
-                    this.nome = value;
+                    nome = value;
                   }),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -122,7 +122,7 @@ class _WidgetParametriGiocatoreState extends State<WidgetParametriGiocatore> {
                         );
                         if (croppedImage != null) {
                           setState(() {
-                            this.file = croppedImage;
+                            file = croppedImage;
                           });
                         }
                       }
@@ -138,18 +138,16 @@ class _WidgetParametriGiocatoreState extends State<WidgetParametriGiocatore> {
             children: [
               SizedBox.square(
                 dimension: 150,
-                child: this.ruolo != null
-                    ? playerImages[this.ruolo!]
-                    : Container(),
+                child: ruolo != null ? playerImages[ruolo!] : Container(),
               ),
               SizedBox.square(
                 dimension: 150,
-                child: this.file != null
-                    ? Image.file(File(this.file!.path))
-                    : this.image != null
+                child: file != null
+                    ? Image.file(File(file!.path))
+                    : image != null
                         ? FadeInImage.memoryNetwork(
                             placeholder: kTransparentImage,
-                            image: this.image!,
+                            image: image!,
                           )
                         : Container(),
               )
@@ -171,24 +169,23 @@ class _WidgetParametriGiocatoreState extends State<WidgetParametriGiocatore> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if (this.nome != null && this.ruolo != null) {
+                    if (nome != null && ruolo != null) {
                       final giocatoreUpdated = widget.giocatore?.copyWith(
-                            nome: this.nome,
-                            gruppo: widget.gruppo,
-                            image: this.ruolo,
-                          ) ??
-                          null;
+                        nome: nome,
+                        gruppo: widget.gruppo,
+                        image: ruolo,
+                      );
                       if (giocatoreUpdated != null) {
                         context.read<GiocatoriBloc>().add(GiocatoriAggiorna(
                               giocatoreUpdated,
-                              this.file?.path ?? null,
+                              file?.path,
                             ));
                       } else {
                         context.read<GiocatoriBloc>().add(GiocatoriCrea(
-                              this.nome!.trim(),
+                              nome!.trim(),
                               widget.gruppo,
-                              this.ruolo!,
-                              this.file?.path ?? null,
+                              ruolo!,
+                              file?.path,
                             ));
                       }
                       Navigator.of(context).pop();

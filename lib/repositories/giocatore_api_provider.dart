@@ -27,12 +27,13 @@ class GiocatoreApiProvider {
     }
   }
 
-  Future<List<Giocatore>> marcatori() async {
+  Future<List<Giocatore>> marcatori(String? gruppo) async {
     final supabase = Supabase.instance.client;
     try {
       final listaGiocatoriDB = await supabase
           .from('giocatore')
           .select('*')
+          .eq('gruppo', gruppo)
           .gt('gol', 0)
           .order('gol', ascending: false);
       final mapDone =
@@ -48,7 +49,7 @@ class GiocatoreApiProvider {
       String nome, String gruppo, int immagine, String? photo) async {
     final supabase = Supabase.instance.client;
     try {
-      String? publicURL = null;
+      String? publicURL;
       if (photo != null) {
         final logoFile = File(photo);
         final uploadResult = await supabase.storage.from('giocatori').upload(

@@ -9,6 +9,8 @@ import 'ui.dart';
 
 class LoginPage extends StatelessWidget {
   static const String routeName = '/login';
+
+  const LoginPage({super.key});
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => LoginPage());
   }
@@ -17,8 +19,9 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
-        if (state.status == AuthenticationStatus.authenticated)
+        if (state.status == AuthenticationStatus.authenticated) {
           Navigator.of(context).pop();
+        }
       },
       child: Scaffold(
         appBar: AppBar(
