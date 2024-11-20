@@ -51,7 +51,7 @@ class PartitaApiProvider {
   }
 
   Future<Partita> crea(String squadra1, String squadra2, DateTime data,
-      String descrizione) async {
+      String descrizione, String torneo) async {
     final supabase = Supabase.instance.client;
     try {
       final response = await supabase
@@ -64,6 +64,7 @@ class PartitaApiProvider {
             'espulsi': List.empty(),
             'data': data.toIso8601String(),
             'descrizione': descrizione,
+            'torneo': torneo
           })
           .select()
           .single();
@@ -71,7 +72,7 @@ class PartitaApiProvider {
     } catch (e) {
       QTLog.log(e.toString(),
           name: 'repositories.partita.create', level: Level.SEVERE.value);
-      throw Exception('Impossibile creare la partita: error: ${e}');
+      throw Exception('Impossibile creare la partita: error: $e');
     }
   }
 

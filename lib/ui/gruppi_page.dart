@@ -15,10 +15,12 @@ import 'ui.dart';
 import 'widgets/widgets.dart';
 
 class GruppiPage extends StatelessWidget {
-  static Route route() {
+  const GruppiPage({super.key});
+
+  static Route route(String? torneo) {
     return MaterialPageRoute<void>(
         builder: (_) => BlocProvider(
-              create: (context) => GruppiBloc()..add(GruppiLoaded()),
+              create: (context) => GruppiBloc(torneo)..add(GruppiLoaded()),
               child: GruppiPage(),
             ));
   }
@@ -63,8 +65,8 @@ class GruppiPage extends StatelessWidget {
 
 class WidgetCreazioneGruppo extends StatefulWidget {
   const WidgetCreazioneGruppo({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<WidgetCreazioneGruppo> createState() => _WidgetCreazioneGruppoState();
@@ -91,7 +93,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
               width: MediaQuery.of(context).size.width * 0.8,
               child: TextField(
                 onChanged: (value) => setState(() {
-                  this.nome = value;
+                  nome = value;
                 }),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -106,7 +108,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
               width: MediaQuery.of(context).size.width * 0.8,
               child: TextField(
                 onChanged: (value) => setState(() {
-                  this.girone = value;
+                  girone = value;
                 }),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -123,7 +125,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   OutlinedButton(
-                    child: this.file == null
+                    child: file == null
                         ? Text(
                             AppLocalizations.of(context)!.teamCreateUploadLogo)
                         : Text(
@@ -141,7 +143,7 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
                         );
                         if (croppedImage != null) {
                           setState(() {
-                            this.file = croppedImage;
+                            file = croppedImage;
                           });
                         }
                       }
@@ -149,8 +151,8 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
                   ),
                   SizedBox.square(
                     dimension: 150,
-                    child: this.file != null
-                        ? Image.file(File(this.file!.path))
+                    child: file != null
+                        ? Image.file(File(file!.path))
                         : Container(),
                   )
                 ],
@@ -171,13 +173,11 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  if (this.nome != null &&
-                      this.girone != null &&
-                      this.file != null) {
+                  if (nome != null && girone != null && file != null) {
                     context.read<GruppiBloc>().add(GruppiCrea(
-                          this.nome!.trim(),
-                          this.girone!.trim(),
-                          this.file!.path,
+                          nome!.trim(),
+                          girone!.trim(),
+                          file!.path,
                         ));
                     Navigator.of(context).pop();
                   }
@@ -196,8 +196,8 @@ class _WidgetCreazioneGruppoState extends State<WidgetCreazioneGruppo> {
 
 class VistaGruppi extends StatefulWidget {
   const VistaGruppi({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<VistaGruppi> createState() => _VistaGruppiState();
@@ -244,9 +244,9 @@ class _VistaGruppiState extends State<VistaGruppi> {
                           itemBuilder: (context, index) {
                             return WillPopScope(
                               onWillPop: () async {
-                                if (!editable)
+                                if (!editable) {
                                   return true;
-                                else {
+                                } else {
                                   setState(() {
                                     editable = !editable;
                                   });
@@ -320,7 +320,7 @@ class _VistaGruppiState extends State<VistaGruppi> {
                                             padding: const EdgeInsets.only(
                                                 bottom: 5.0),
                                             child: Text(
-                                              '${gruppi[index].nome}',
+                                              gruppi[index].nome,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headlineSmall

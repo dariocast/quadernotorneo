@@ -16,6 +16,7 @@ class Giocatore extends GiocatoreBase {
   @override
   List<Object> get props => [nome, gruppo, id, gol];
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'nome': nome,
@@ -42,11 +43,13 @@ class Giocatore extends GiocatoreBase {
     );
   }
 
+  @override
   String toJson() => json.encode(toMap());
 
   factory Giocatore.fromJson(String source) =>
       Giocatore.fromMap(json.decode(source));
 
+  @override
   Giocatore copyWith({
     String? nome,
     String? gruppo,

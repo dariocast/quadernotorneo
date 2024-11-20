@@ -7,4 +7,8 @@ abstract class MarcatoriEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class MarcatoriLoaded extends MarcatoriEvent {}
+class MarcatoriLoaded extends MarcatoriEvent {
+  final String? torneo;
+
+  const MarcatoriLoaded(this.torneo);
+}

@@ -9,18 +9,16 @@ import '../blocs/blocs.dart';
 import 'ui.dart';
 
 class HomeDrawer extends StatelessWidget {
-  final onlyLogin;
+  final bool onlyLogin;
+  final String? torneo;
 
-  const HomeDrawer({
-    Key? key,
-    this.onlyLogin = false,
-  }) : super(key: key);
+  const HomeDrawer({super.key, this.onlyLogin = false, this.torneo});
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: BlocProvider<DrawerCubit>(
-        create: (context) => DrawerCubit(),
+        create: (context) => DrawerCubit(torneo),
         child: Builder(
           builder: (context) {
             final authState = context.watch<AuthenticationBloc>().state;
@@ -31,7 +29,7 @@ class HomeDrawer extends StatelessWidget {
                   child: ListView(
                     padding: EdgeInsets.zero,
                     children: [
-                      Container(
+                      SizedBox(
                         height: 270,
                         child: DrawerHeader(
                           decoration: BoxDecoration(
@@ -56,6 +54,28 @@ class HomeDrawer extends StatelessWidget {
                           ),
                         ),
                       ),
+                      torneo != null
+                          ? Column(
+                              children: [
+                                ListTile(
+                                  trailing: Icon(
+                                    Icons.change_circle_outlined,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                  ),
+                                  title: Text(AppLocalizations.of(context)!
+                                      .drawerTournamentLabel),
+                                  onTap: () {
+                                    context.read<DrawerCubit>().resetTorneo();
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context)
+                                        .push(TorneiPage.route());
+                                  },
+                                ),
+                                Divider()
+                              ],
+                            )
+                          : Container(),
                       !onlyLogin
                           ? ListTile(
                               trailing: Icon(
@@ -67,7 +87,7 @@ class HomeDrawer extends StatelessWidget {
                               onTap: () {
                                 Navigator.of(context).pop();
                                 Navigator.of(context)
-                                    .push(MarcatoriPage.route());
+                                    .push(MarcatoriPage.route(torneo));
                               })
                           : Container(),
                       !onlyLogin
@@ -81,7 +101,7 @@ class HomeDrawer extends StatelessWidget {
                               onTap: () {
                                 Navigator.of(context).pop();
                                 Navigator.of(context)
-                                    .push(ClassificaPage.route());
+                                    .push(ClassificaPage.route(torneo));
                               },
                             )
                           : Container(),
@@ -95,7 +115,8 @@ class HomeDrawer extends StatelessWidget {
                                   .drawerTeamsLabel),
                               onTap: () {
                                 Navigator.of(context).pop();
-                                Navigator.of(context).push(GruppiPage.route());
+                                Navigator.of(context)
+                                    .push(GruppiPage.route(torneo));
                               },
                             )
                           : Container(),

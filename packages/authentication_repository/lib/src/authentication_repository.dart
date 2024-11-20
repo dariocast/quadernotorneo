@@ -26,7 +26,7 @@ class AuthenticationRepository {
       _controller.add(AuthenticationStatus.authenticated);
     } catch (e) {
       _controller.add(AuthenticationStatus.unauthenticated);
-      throw e;
+      rethrow;
     }
   }
 

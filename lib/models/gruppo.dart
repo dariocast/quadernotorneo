@@ -15,8 +15,8 @@ class Gruppo extends Equatable {
   final int gs;
   final int pt;
 
-  Gruppo(this.nome, this.girone, this.logo, this.id, this.pg, this.v, this.p,
-      this.s, this.gf, this.gs, this.pt);
+  const Gruppo(this.nome, this.girone, this.logo, this.id, this.pg, this.v,
+      this.p, this.s, this.gf, this.gs, this.pt);
 
   @override
   List<Object> get props {
@@ -100,8 +100,8 @@ class Gruppo extends Equatable {
   }
 
   ordinaClassifica(Gruppo other) {
-    return this.pt != other.pt
-        ? this.pt.compareTo(other.pt)
-        : (this.gf - this.gs).compareTo(other.gf - other.gs);
+    return pt != other.pt
+        ? pt.compareTo(other.pt)
+        : (gf - gs).compareTo(other.gf - other.gs);
   }
 }

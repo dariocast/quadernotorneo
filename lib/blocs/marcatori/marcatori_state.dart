@@ -17,5 +17,5 @@ class MarcatoriLoadSuccess extends MarcatoriState {
   final List<Giocatore> marcatori;
   final Map<String, String> loghi;
 
-  MarcatoriLoadSuccess(this.marcatori, this.loghi);
+  const MarcatoriLoadSuccess(this.marcatori, this.loghi);
 }

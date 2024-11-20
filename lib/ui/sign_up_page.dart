@@ -4,7 +4,7 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignUpPage extends StatelessWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({super.key});
   static const String routeName = '/signup';
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => SignUpPage());
@@ -26,9 +26,9 @@ class SignUpPage extends StatelessWidget {
             },
             onSignInComplete: (_) {},
             onError: (error) {
-              final auth_error = error as AuthException;
+              final authError = error as AuthException;
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(auth_error.message),
+                content: Text(authError.message),
                 duration: const Duration(seconds: 1),
               ));
             },

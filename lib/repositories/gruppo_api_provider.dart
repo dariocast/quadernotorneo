@@ -13,11 +13,12 @@ import '../utils/log_helper.dart';
 
 class GruppoApiProvider {
   Client client = Client();
-  Future<List<Gruppo>> gruppi() async {
+  Future<List<Gruppo>> gruppi(String? torneo) async {
     QTLog.log('Getting All teams', name: 'repositories.gruppo.all');
     final supabase = Supabase.instance.client;
     try {
-      final listaGruppi = await supabase.from('gruppo').select('*');
+      final listaGruppi =
+          await supabase.from('gruppo').select('*').eq('torneo', torneo);
       final mapDone = listaGruppi.map<Gruppo>((json) => Gruppo.fromMap(json));
       final lista = mapDone.toList();
       return lista;
@@ -56,7 +57,8 @@ class GruppoApiProvider {
     }
   }
 
-  Future<Gruppo> crea(String nome, String girone, String logoPath) async {
+  Future<Gruppo> crea(
+      String nome, String girone, String logoPath, String torneo) async {
     final supabase = Supabase.instance.client;
     final logoFile = File(logoPath);
     try {
@@ -69,7 +71,12 @@ class GruppoApiProvider {
       final response = await supabase
           .from('gruppo')
           .insert([
-            {'nome': nome, 'girone': girone, 'logo': publicURL}
+            {
+              'nome': nome,
+              'girone': girone,
+              'logo': publicURL,
+              'torneo': torneo
+            }
           ])
           .select()
           .single();

@@ -12,13 +12,14 @@ part 'partite_state.dart';
 
 class PartiteBloc extends Bloc<PartiteEvent, PartiteState> {
   final _repository = Repository();
+  final String? torneo;
 
-  PartiteBloc() : super(PartiteInitial()) {
+  PartiteBloc(this.torneo) : super(PartiteInitial()) {
     on<PartiteLoaded>((event, emit) async {
       emit(PartiteLoading());
       try {
         final partite = await _repository.listaPartite(torneo: event.torneo);
-        final gruppi = await _repository.gruppi();
+        final gruppi = await _repository.gruppi(torneo);
         emit(PartiteSuccess(
             torneo: event.torneo,
             partite: partite,

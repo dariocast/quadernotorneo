@@ -7,7 +7,7 @@ import '../blocs/blocs.dart';
 import 'style_helpers.dart';
 
 class LoginForm extends StatelessWidget {
-  const LoginForm();
+  const LoginForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class _SaveCredentialCheckbox extends StatelessWidget {
 
 class _UsernameInput extends StatelessWidget {
   final String? username;
-  _UsernameInput(this.username);
+  const _UsernameInput(this.username);
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
@@ -95,7 +95,7 @@ class _UsernameInput extends StatelessWidget {
 
 class _PasswordInput extends StatelessWidget {
   final String? password;
-  _PasswordInput(this.password);
+  const _PasswordInput(this.password);
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
@@ -137,12 +137,12 @@ class _LoginButton extends StatelessWidget {
         return ElevatedButton(
           style: elevatedButtonStyle,
           key: const Key('loginForm_continue_raisedButton'),
-          child: Text(AppLocalizations.of(context)!.loginFormSubmitLabel),
           onPressed: state.isValid && !state.status.isInProgress
               ? () {
                   context.read<LoginBloc>().add(const LoginSubmitted());
                 }
               : null,
+          child: Text(AppLocalizations.of(context)!.loginFormSubmitLabel),
         );
       },
     );
