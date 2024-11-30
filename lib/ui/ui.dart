@@ -4,6 +4,7 @@ export './giocatori_page.dart';
 export './gruppi_page.dart';
 export './home_drawer.dart';
 export './info_page.dart';
+export './settings_page.dart';
 export './login_form.dart';
 export './login_page.dart';
 export './marcatori_page.dart';

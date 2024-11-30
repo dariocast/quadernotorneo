@@ -234,6 +234,18 @@ class HomeDrawer extends StatelessWidget {
                       !onlyLogin ? Divider() : Container(),
                       ListTile(
                         trailing: Icon(
+                          Icons.settings,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        title: Text(
+                            AppLocalizations.of(context)!.drawerSettingsLabel),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(SettingsPage.route());
+                        },
+                      ),
+                      ListTile(
+                        trailing: Icon(
                           Icons.info_outline_rounded,
                           color: Theme.of(context).colorScheme.secondary,
                         ),
