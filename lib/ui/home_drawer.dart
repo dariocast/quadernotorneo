@@ -135,7 +135,7 @@ class HomeDrawer extends StatelessWidget {
                                     controller: WebViewController()
                                       ..loadRequest(
                                         Uri.parse(
-                                            "https://dariocast.altervista.org/fantatorneo"),
+                                            "https://dariocast.altervista.org/fantatorneo/v2"),
                                       ),
                                   ),
                                 ));
