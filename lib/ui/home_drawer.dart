@@ -3,10 +3,12 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../blocs/blocs.dart';
 import 'ui.dart';
+import 'widgets/widgets.dart';
 
 class HomeDrawer extends StatelessWidget {
   final bool onlyLogin;
@@ -128,18 +130,10 @@ class HomeDrawer extends StatelessWidget {
                               ),
                               title: Text(AppLocalizations.of(context)!
                                   .drawerFantasyGameLabel),
-                              onTap: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute<void>(
-                                  builder: (_) => WebViewWidget(
-                                    controller: WebViewController()
-                                      ..loadRequest(
-                                        Uri.parse(
-                                            "https://dariocast.altervista.org/fantatorneo"),
-                                      ),
-                                  ),
-                                ));
-                              },
+                              onTap: () => _showOpenOptions(
+                                context,
+                                "https://dariocast.altervista.org/fantatorneo/v2",
+                              ),
                             )
                           : Container(),
                       authState.status == AuthenticationStatus.authenticated &&
@@ -234,6 +228,18 @@ class HomeDrawer extends StatelessWidget {
                       !onlyLogin ? Divider() : Container(),
                       ListTile(
                         trailing: Icon(
+                          Icons.settings,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        title: Text(
+                            AppLocalizations.of(context)!.drawerSettingsLabel),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(SettingsPage.route());
+                        },
+                      ),
+                      ListTile(
+                        trailing: Icon(
                           Icons.info_outline_rounded,
                           color: Theme.of(context).colorScheme.secondary,
                         ),
@@ -305,6 +311,66 @@ class HomeDrawer extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+
+  void _showOpenOptions(BuildContext context, String url) {
+    // Extract localized strings before async operations to avoid context issues
+    final localizations = Localizations.of<AppLocalizations>(
+      context,
+      AppLocalizations,
+    )!;
+
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: Icon(Icons.open_in_browser),
+                title: Text(localizations.drawerFantaOpenInBrowser),
+                onTap: () async {
+                  final uri = Uri.parse(url);
+                  final canLaunch = await canLaunchUrl(uri);
+                  if (canLaunch) {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  } else {
+                    // Show snackbar only if the context is still valid
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text(localizations.drawerFantaOpenInBrowserError),
+                        ),
+                      );
+                    }
+                  }
+                  if (context.mounted) {
+                    Navigator.of(context).pop(); // Close the modal
+                  }
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.web),
+                title: Text(localizations.drawerFantaOpenInApp),
+                onTap: () {
+                  Navigator.of(context).pop(); // Close the modal
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => SafeArea(
+                        child: RefreshableWebView(
+                          initialUrl: url,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -126,15 +126,28 @@ class QuadernoTorneoApp extends StatelessWidget {
               )..add(LoginLoaded());
             },
           ),
+          BlocProvider(
+            lazy: false,
+            create: (_) => SettingsBloc(), // Provide the SettingsBloc globally
+          ),
         ],
-        child: AppView(),
+        child: BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (context, settingsState) {
+            final locale = settingsState is SettingsLoaded
+                ? Locale(settingsState.locale ?? 'en') // Default to 'en'
+                : null;
+            return AppView(locale: locale);
+          },
+        ),
       ),
     );
   }
 }
 
 class AppView extends StatefulWidget {
-  const AppView({super.key});
+  const AppView({super.key, this.locale});
+
+  final Locale? locale;
 
   @override
   AppViewState createState() => AppViewState();
@@ -190,6 +203,7 @@ class AppViewState extends State<AppView> {
       debugShowCheckedModeBanner: false,
       theme: QuadernoTheme.themeData,
       navigatorKey: _navigatorKey,
+      locale: widget.locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       onGenerateRoute: (_) => TorneiPage.route(),

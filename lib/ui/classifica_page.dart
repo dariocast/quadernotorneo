@@ -92,14 +92,17 @@ class _ClassificaPageState extends State<ClassificaPage> {
                     Positioned(
                       width: MediaQuery.of(context).size.width,
                       top: 0.0,
-                      child: ClassificaGironeCard(
-                          gironi[_currentIndex], gruppiPerGirone),
+                      bottom: 50.0, // Lascia spazio per l'annuncio
+                      child: ClassificaGironeWidget(
+                        gironi[_currentIndex],
+                        gruppiPerGirone,
+                      ),
                     ),
                     Positioned(
                       width: MediaQuery.of(context).size.width,
                       bottom: 5.0,
                       child: QuadernoBannerAd(),
-                    )
+                    ),
                   ],
                 );
         } else if (state is ClassificaLoadSuccess && gironi.isEmpty) {

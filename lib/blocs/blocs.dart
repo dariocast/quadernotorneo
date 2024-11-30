@@ -9,3 +9,4 @@ export './login/login_bloc.dart';
 export './marcatori/marcatori_bloc.dart';
 export './partite/partite_bloc.dart';
 export './tornei/tornei_bloc.dart';
+export './settings/settings_bloc.dart';
