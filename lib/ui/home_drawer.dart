@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
@@ -315,12 +317,18 @@ class HomeDrawer extends StatelessWidget {
   }
 
   void _showOpenOptions(BuildContext context, String url) {
-    // Extract localized strings before async operations to avoid context issues
     final localizations = Localizations.of<AppLocalizations>(
       context,
       AppLocalizations,
     )!;
 
+    // On iOS, only allow opening in an external browser
+    if (Platform.isIOS) {
+      _openInBrowser(context, url, localizations.drawerFantaOpenInBrowserError);
+      return;
+    }
+
+    // For other platforms, show options
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
@@ -330,25 +338,10 @@ class HomeDrawer extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.open_in_browser),
                 title: Text(localizations.drawerFantaOpenInBrowser),
-                onTap: () async {
-                  final uri = Uri.parse(url);
-                  final canLaunch = await canLaunchUrl(uri);
-                  if (canLaunch) {
-                    await launchUrl(uri, mode: LaunchMode.externalApplication);
-                  } else {
-                    // Show snackbar only if the context is still valid
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content:
-                              Text(localizations.drawerFantaOpenInBrowserError),
-                        ),
-                      );
-                    }
-                  }
-                  if (context.mounted) {
-                    Navigator.of(context).pop(); // Close the modal
-                  }
+                onTap: () {
+                  Navigator.of(context).pop(); // Close the modal
+                  _openInBrowser(context, url,
+                      localizations.drawerFantaOpenInBrowserError);
                 },
               ),
               ListTile(
@@ -372,5 +365,21 @@ class HomeDrawer extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _openInBrowser(
+      BuildContext context, String url, String errorMessage) async {
+    final uri = Uri.parse(url);
+    final canLaunch = await canLaunchUrl(uri);
+    if (canLaunch) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      // Show snackbar only if the context is still valid
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage)),
+        );
+      }
+    }
   }
 }
