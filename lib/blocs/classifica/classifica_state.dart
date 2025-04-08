@@ -16,5 +16,5 @@ class ClassificaLoadFailure extends ClassificaState {}
 class ClassificaLoadSuccess extends ClassificaState {
   final List<Gruppo> gruppi;
 
-  ClassificaLoadSuccess(this.gruppi);
+  const ClassificaLoadSuccess(this.gruppi);
 }

@@ -27,7 +27,7 @@ class GiocatoreApiProvider {
     }
   }
 
-  Future<List<Giocatore>> marcatori(String? gruppo) async {
+  Future<List<Giocatore>> marcatori(String gruppo) async {
     final supabase = Supabase.instance.client;
     try {
       final listaGiocatoriDB = await supabase

@@ -7,7 +7,7 @@ environment:
 
 dependencies:
   equatable: ^2.0.0
-  supabase_flutter: ^1.10.25
+  supabase_flutter: ^2.8.4
   uuid: ^3.0.0
 
 dev_dependencies:

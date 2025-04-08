@@ -14,11 +14,11 @@ class GruppiLoading extends GruppiState {}
 class GruppiLoadSuccess extends GruppiState {
   final List<Gruppo> gruppi;
 
-  GruppiLoadSuccess(this.gruppi);
+  const GruppiLoadSuccess(this.gruppi);
 }
 
 class GruppiLoadFailure extends GruppiState {
   final String message;
 
-  GruppiLoadFailure(this.message);
+  const GruppiLoadFailure(this.message);
 }

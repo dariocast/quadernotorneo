@@ -13,17 +13,17 @@ class GruppiCrea extends GruppiEvent {
   final String nome;
   final String girone;
   final String logo;
-  GruppiCrea(this.nome, this.girone, this.logo);
+  const GruppiCrea(this.nome, this.girone, this.logo);
 }
 
 class GruppiElimina extends GruppiEvent {
   final int id;
 
-  GruppiElimina(this.id);
+  const GruppiElimina(this.id);
 }
 
 class GruppiAggiorna extends GruppiEvent {
   final Gruppo aggiornato;
 
-  GruppiAggiorna(this.aggiornato);
+  const GruppiAggiorna(this.aggiornato);
 }
