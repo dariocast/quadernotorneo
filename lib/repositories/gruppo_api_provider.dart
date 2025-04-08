@@ -17,9 +17,15 @@ class GruppoApiProvider {
     QTLog.log('Getting All teams', name: 'repositories.gruppo.all');
     final supabase = Supabase.instance.client;
     try {
-      final listaGruppi =
-          await supabase.from('gruppo').select('*').eq('torneo', torneo);
-      final mapDone = listaGruppi.map<Gruppo>((json) => Gruppo.fromMap(json));
+      final listaGruppi = supabase.from('gruppo').select('*');
+      late List listaGruppiTorneo;
+      if (torneo != null) {
+        listaGruppiTorneo = await listaGruppi.eq('torneo', torneo);
+      } else {
+        listaGruppiTorneo = await listaGruppi;
+      }
+      final mapDone =
+          listaGruppiTorneo.map<Gruppo>((json) => Gruppo.fromMap(json));
       final lista = mapDone.toList();
       return lista;
     } catch (e) {

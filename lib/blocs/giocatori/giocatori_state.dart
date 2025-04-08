@@ -14,11 +14,11 @@ class GiocatoriLoading extends GiocatoriState {}
 class GiocatoriLoadSuccess extends GiocatoriState {
   final List<Giocatore> giocatori;
 
-  GiocatoriLoadSuccess(this.giocatori);
+  const GiocatoriLoadSuccess(this.giocatori);
 }
 
 class GiocatoriLoadFailure extends GiocatoriState {
   final String message;
 
-  GiocatoriLoadFailure(this.message);
+  const GiocatoriLoadFailure(this.message);
 }

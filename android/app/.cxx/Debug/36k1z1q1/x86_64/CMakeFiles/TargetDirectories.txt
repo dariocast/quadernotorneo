@@ -1,0 +1,2 @@
+/Users/dariocastellano/Workspaces/Others/quadernotorneo/android/app/.cxx/Debug/36k1z1q1/x86_64/CMakeFiles/edit_cache.dir
+/Users/dariocastellano/Workspaces/Others/quadernotorneo/android/app/.cxx/Debug/36k1z1q1/x86_64/CMakeFiles/rebuild_cache.dir

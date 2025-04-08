@@ -9,8 +9,8 @@ class Giocatore extends GiocatoreBase {
   final int espulsioni;
   final int image;
   final String? photo;
-  Giocatore(nome, gruppo, this.id, this.gol, this.ammonizioni, this.espulsioni,
-      this.image, this.photo)
+  const Giocatore(nome, gruppo, this.id, this.gol, this.ammonizioni,
+      this.espulsioni, this.image, this.photo)
       : super(nome, gruppo);
 
   @override

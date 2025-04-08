@@ -19,6 +19,7 @@ class PartiteCreaPartita extends PartiteEvent {
 
   PartiteCreaPartita(this.data, this.orario, this.gruppoUno, this.gruppoDue);
 
+  @override
   List<Object> get props => [data, orario, gruppoUno, gruppoDue];
 }
 
@@ -26,5 +27,6 @@ class PartiteOrderBy extends PartiteEvent {
   final OrderBy orderBy;
 
   PartiteOrderBy(this.orderBy);
+  @override
   List<Object> get props => [orderBy];
 }

@@ -120,7 +120,7 @@ class CreaPage extends StatelessWidget {
                                         context: context,
                                         initialDate: DateTime.now(),
                                         firstDate: DateTime(2020),
-                                        lastDate: DateTime(2025),
+                                        lastDate: DateTime(2100),
                                         helpText: AppLocalizations.of(context)!
                                             .matchCreateDateSelectionHint,
                                       );
