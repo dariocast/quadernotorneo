@@ -8,6 +8,7 @@ import 'package:path/path.dart' as p;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:quaderno_flutter/models/models.dart';
+import 'package:quaderno_flutter/utils/errors.dart';
 
 import '../utils/log_helper.dart';
 
@@ -28,8 +29,14 @@ class GruppoApiProvider {
           listaGruppiTorneo.map<Gruppo>((json) => Gruppo.fromMap(json));
       final lista = mapDone.toList();
       return lista;
+    } on PostgrestException catch (e) {
+      QTLog.log('Impossibile caricare i gruppi: ${e.message}',
+          name: 'GruppoApiProvider.gruppi');
+      throw DatabaseError('Impossibile caricare i gruppi: ${e.message}');
     } catch (e) {
-      throw Exception('Impossibile caricare i gruppi: error: $e');
+      QTLog.log('Impossibile caricare i gruppi: error: $e',
+          name: 'GruppoApiProvider.gruppi');
+      throw AppError('Errore imprevisto durante il caricamento dei gruppi.');
     }
   }
 
@@ -40,10 +47,15 @@ class GruppoApiProvider {
       final response =
           await supabase.from('gruppo').select('*').eq('id', id).single();
       return Gruppo.fromMap(response);
+    } on PostgrestException catch (error) {
+      QTLog.log(
+          'Impossibile caricare il gruppo con id: $id, error: ${error.message}',
+          name: 'repositories.gruppo.single');
+      throw DatabaseError(
+          'Impossibile caricare il gruppo con id: $id, error: ${error.message}');
     } catch (error) {
       QTLog.log(error.toString(), name: 'repositories.gruppo.single');
-      throw Exception(
-          'Impossibile caricare il gruppo con id: $id, error: $error');
+      throw AppError('Impossibile caricare il gruppo con id: $id');
     }
   }
 
@@ -55,11 +67,17 @@ class GruppoApiProvider {
       final response =
           await supabase.from('gruppo').select('*').eq('nome', nome).single();
       return Gruppo.fromMap(response);
+    } on PostgrestException catch (error) {
+      QTLog.log(
+          'Impossibile caricare il gruppo con nome: $nome, error: ${error.message}',
+          name: 'repositories.gruppo.getByNome',
+          level: Level.SEVERE.value);
+      throw DatabaseError(
+          'Impossibile caricare il gruppo con nome: $nome, error: ${error.message}');
     } catch (error) {
       QTLog.log(error.toString(),
           name: 'repositories.gruppo.getByNome', level: Level.SEVERE.value);
-      throw Exception(
-          'Impossibile caricare il gruppo con nome: $nome, error: $error');
+      throw AppError('Impossibile caricare il gruppo con nome: $nome');
     }
   }
 
@@ -70,7 +88,7 @@ class GruppoApiProvider {
     try {
       final uploadResult = await supabase.storage.from('loghi').upload(
           'logo$nome${p.extension(logoPath)}', logoFile,
-          fileOptions: FileOptions(cacheControl: '3600', upsert: true));
+          fileOptions: const FileOptions(cacheControl: '3600', upsert: true));
       final publicURL = supabase.storage
           .from('loghi')
           .getPublicUrl('logo$nome${p.extension(logoPath)}');
@@ -87,16 +105,25 @@ class GruppoApiProvider {
           .select()
           .single();
       return Gruppo.fromMap(response);
+    } on PostgrestException catch (error) {
+      QTLog.log('Impossibile creare il gruppo: ${error.message}',
+          name: 'GruppoApiProvider.crea');
+      throw DatabaseError('Impossibile creare il gruppo: ${error.message}');
+    } on StorageException catch (error) {
+      QTLog.log('Impossibile caricare il logo: ${error.message}',
+          name: 'GruppoApiProvider.crea');
+      throw NetworkError('Impossibile caricare il logo: ${error.message}');
     } catch (error) {
-      QTLog.log('Impossibile creare il gruppo, errore: $error');
-      throw Exception('Impossibile creare il gruppo');
+      QTLog.log('Impossibile creare il gruppo, errore: $error',
+          name: 'GruppoApiProvider.crea');
+      throw AppError('Errore imprevisto durante la creazione del gruppo.');
     }
   }
 
   Future<bool> aggiorna(Gruppo gruppo) async {
     final supabase = Supabase.instance.client;
     try {
-      final response = await supabase.from('gruppo').update({
+      await supabase.from('gruppo').update({
         'nome': gruppo.nome,
         'girone': gruppo.girone,
         'logo': gruppo.logo,
@@ -109,9 +136,14 @@ class GruppoApiProvider {
         'pt': gruppo.pt
       }).eq('id', gruppo.id);
       return true;
+    } on PostgrestException catch (error) {
+      QTLog.log('Impossibile aggiornare il gruppo: ${error.message}',
+          name: 'GruppoApiProvider.aggiorna');
+      throw DatabaseError('Impossibile aggiornare il gruppo: ${error.message}');
     } catch (error) {
-      QTLog.log('Impossibile aggiornare il gruppo, errore: $error');
-      throw Exception('Impossibile aggiornare il gruppo');
+      QTLog.log('Impossibile aggiornare il gruppo, errore: $error',
+          name: 'GruppoApiProvider.aggiorna');
+      throw AppError('Errore imprevisto durante l\'aggiornamento del gruppo.');
     }
   }
 
@@ -122,7 +154,7 @@ class GruppoApiProvider {
           await supabase.from('gruppo').delete().eq('id', id).select().single();
       final gruppoEliminato = Gruppo.fromMap(response);
       QTLog.log('Gruppo rimosso', name: 'repositories.gruppo.delete');
-      final deleteLogo = await supabase.storage.from('loghi').remove(
+      await supabase.storage.from('loghi').remove(
           ['logo${gruppoEliminato.nome}${p.extension(gruppoEliminato.logo)}']);
       QTLog.log('Logo rimosso dal bucket', name: 'repositories.gruppo.delete');
 
@@ -135,7 +167,7 @@ class GruppoApiProvider {
       for (var giocatoreMap in resDeletedPlayers) {
         final giocatore = Giocatore.fromMap(giocatoreMap);
         if (giocatore.photo != null) {
-          final deletePhoto = await supabase.storage.from('giocatori').remove([
+          await supabase.storage.from('giocatori').remove([
             '${giocatore.gruppo}${giocatore.nome}${p.extension(giocatore.photo!)}'
           ]);
           QTLog.log('Foto giocatore rimossa dal bucket',
@@ -143,9 +175,20 @@ class GruppoApiProvider {
         }
       }
       return true;
+    } on PostgrestException catch (error) {
+      QTLog.log('Impossibile eliminare il gruppo: ${error.message}',
+          name: 'repositories.gruppo.delete');
+      throw DatabaseError('Impossibile eliminare il gruppo: ${error.message}');
+    } on StorageException catch (error) {
+      QTLog.log(
+          'Impossibile eliminare il logo o la foto del giocatore: ${error.message}',
+          name: 'repositories.gruppo.delete');
+      throw NetworkError(
+          'Impossibile eliminare il logo o la foto del giocatore: ${error.message}');
     } catch (error) {
-      QTLog.log('Impossibile eliminare il gruppo, errore: $error');
-      throw Exception('Impossibile eliminare il gruppo');
+      QTLog.log('Impossibile eliminare il gruppo, errore: $error',
+          name: 'repositories.gruppo.delete');
+      throw AppError('Errore imprevisto durante l\'eliminazione del gruppo.');
     }
   }
 
@@ -160,8 +203,14 @@ class GruppoApiProvider {
       final List<Gruppo> lista = mapDone.toList();
       lista.sort((a, b) => b.pt.compareTo(a.pt));
       return lista;
+    } on PostgrestException catch (error) {
+      QTLog.log('Impossibile aggiornare i gruppi: ${error.message}',
+          name: 'GruppoApiProvider.aggiornaTutti');
+      throw DatabaseError('Impossibile aggiornare i gruppi: ${error.message}');
     } catch (error) {
-      throw Exception('Impossibile aggiornare i gruppi');
+      QTLog.log('Impossibile aggiornare i gruppi, errore: $error',
+          name: 'GruppoApiProvider.aggiornaTutti');
+      throw AppError('Errore imprevisto durante l\'aggiornamento dei gruppi.');
     }
   }
 }

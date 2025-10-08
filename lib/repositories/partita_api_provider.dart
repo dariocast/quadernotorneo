@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/models.dart';
+import '../utils/errors.dart';
 import '../utils/log_helper.dart';
 
 class PartitaApiProvider {
@@ -28,8 +29,14 @@ class PartitaApiProvider {
           listaPartite.map<Partita>((json) => Partita.fromMap(json));
       final lista = mapDone.toList();
       return lista;
+    } on PostgrestException catch (error) {
+      QTLog.log('Impossibile caricare le partite: ${error.message}',
+          name: 'PartitaApiProvider.tutte');
+      throw DatabaseError('Impossibile caricare le partite: ${error.message}');
     } catch (error) {
-      throw Exception('Impossibile caricare le partite');
+      QTLog.log('Impossibile caricare le partite, errore: $error',
+          name: 'PartitaApiProvider.tutte');
+      throw AppError('Errore imprevisto durante il caricamento delle partite.');
     }
   }
 
@@ -43,10 +50,17 @@ class PartitaApiProvider {
           .select()
           .single();
       return Partita.fromMap(response);
+    } on PostgrestException catch (e) {
+      QTLog.log(
+          'Impossibile caricare la partita con id: $id, errore: ${e.message}',
+          name: 'repositories.partita.single',
+          level: Level.SEVERE.value);
+      throw DatabaseError(
+          'Impossibile caricare la partita con id: $id, errore: ${e.message}');
     } catch (e) {
       QTLog.log(e.toString(),
           name: 'repositories.partita.single', level: Level.SEVERE.value);
-      throw Exception('Impossibile caricare la partita con id: $id');
+      throw AppError('Impossibile caricare la partita con id: $id');
     }
   }
 
@@ -69,17 +83,21 @@ class PartitaApiProvider {
           .select()
           .single();
       return Partita.fromMap(response);
+    } on PostgrestException catch (e) {
+      QTLog.log('Impossibile creare la partita: ${e.message}',
+          name: 'repositories.partita.create', level: Level.SEVERE.value);
+      throw DatabaseError('Impossibile creare la partita: ${e.message}');
     } catch (e) {
       QTLog.log(e.toString(),
           name: 'repositories.partita.create', level: Level.SEVERE.value);
-      throw Exception('Impossibile creare la partita: error: $e');
+      throw AppError('Impossibile creare la partita: error: $e');
     }
   }
 
   Future<bool> aggiorna(Partita partita) async {
     final supabase = Supabase.instance.client;
     try {
-      final response = await supabase.from('partita').update({
+      await supabase.from('partita').update({
         'squadraUno': partita.squadraUno,
         'squadraDue': partita.squadraDue,
         'golSquadraUno': partita.golSquadraUno,
@@ -92,29 +110,31 @@ class PartitaApiProvider {
         'data': partita.data.toIso8601String()
       }).eq('id', partita.id);
       return true;
+    } on PostgrestException catch (e) {
+      QTLog.log('Impossibile aggiornare la partita: ${e.message}',
+          name: 'repositories.partita.update', level: Level.SEVERE.value);
+      throw DatabaseError('Impossibile aggiornare la partita: ${e.message}');
     } catch (e) {
       QTLog.log(e.toString(),
           name: 'repositories.partita.update', level: Level.SEVERE.value);
-      throw Exception('Impossibile aggiornare la partita');
+      throw AppError('Impossibile aggiornare la partita');
     }
   }
 
   Future<bool> elimina(int id) async {
     final supabase = Supabase.instance.client;
     try {
-      final response = await supabase
-          .from('partita')
-          .delete()
-          .eq('id', id)
-          .select()
-          .single();
-      final partitaEliminata = Partita.fromMap(response);
+      await supabase.from('partita').delete().eq('id', id).select().single();
       QTLog.log('Partita rimossa', name: 'repositories.partita.delete');
       return true;
+    } on PostgrestException catch (e) {
+      QTLog.log('Impossibile eliminare la partita: ${e.message}',
+          name: 'repositories.partita.delete', level: Level.SEVERE.value);
+      throw DatabaseError('Impossibile eliminare la partita: ${e.message}');
     } catch (e) {
       QTLog.log(e.toString(),
           name: 'repositories.partita.delete', level: Level.SEVERE.value);
-      throw Exception('Impossibile eliminare la partita');
+      throw AppError('Impossibile eliminare la partita');
     }
   }
 }

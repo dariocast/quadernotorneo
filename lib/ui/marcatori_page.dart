@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:quaderno_flutter/l10n/app_localizations.dart';
 
 import '../blocs/blocs.dart';
 import 'widgets/widgets.dart';
