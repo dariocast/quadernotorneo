@@ -30,7 +30,7 @@ def keystoreProperties = new Properties()
    }
 
 android {
-    compileSdkVersion 34
+    compileSdkVersion 35
 
     compileOptions {
         // Flag to enable support for the new language APIs
@@ -51,7 +51,7 @@ android {
     defaultConfig {
         applicationId "it.dariocast.quadernotorneo"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true

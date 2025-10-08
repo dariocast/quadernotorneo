@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:user_repository/user_repository.dart';
@@ -14,6 +13,7 @@ import 'blocs/blocs.dart';
 import 'theme.dart';
 import 'ui/ui.dart';
 import 'utils/log_helper.dart';
+import 'utils/config.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -21,42 +21,23 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   QTLog.log("Handling a background message: ${message.data}", name: 'main');
 }
 
-// late AndroidNotificationChannel channel;
-
-// late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
   await Firebase.initializeApp();
 
+  // Load environment variables
+  await Config.load();
+
+  // Initialize Supabase with credentials from environment variables
   await Supabase.initialize(
-    url: 'https://qadszjfdpxjteuvhtgdr.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzNzg0OTY0NCwiZXhwIjoxOTUzNDI1NjQ0fQ.sjyG7VCc12_MyWkyPmB_Mx3gE2CYAb0TmE_DmwsMlfc',
+    url: Config.supabaseUrl,
+    anonKey: Config.supabaseAnonKey,
   );
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   if (!kIsWeb) {
-    // channel = const AndroidNotificationChannel(
-    //   'quadernotorneo_channel', // id
-    //   'Qui arrivano tutte le notifiche dell\'app.', // title
-    //   description: 'Canale Notifiche Quaderno Torneo', // description
-    //   importance: Importance.high,
-    // );
-
-    // flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-    // /// Create an Android Notification Channel.
-    // ///
-    // /// We use this channel in the `AndroidManifest.xml` file to override the
-    // /// default FCM channel to enable heads up notifications.
-    // await flutterLocalNotificationsPlugin
-    //     .resolvePlatformSpecificImplementation<
-    //         AndroidFlutterLocalNotificationsPlugin>()
-    //     ?.createNotificationChannel(channel);
-
     /// Update the iOS foreground notification presentation options to allow
     /// heads up notifications.
     await FirebaseMessaging.instance
@@ -86,8 +67,6 @@ void main() async {
       QTLog.log('User declined or has not accepted permission', name: 'main');
     }
   }
-
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   runApp(QuadernoTorneoApp(
     authenticationRepository: AuthenticationRepository(),
@@ -169,29 +148,13 @@ class AppViewState extends State<AppView> {
     _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
     _tokenStream.listen(setToken);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null && !kIsWeb) {
-        // flutterLocalNotificationsPlugin.show(
-        //     notification.hashCode,
-        //     notification.title,
-        //     notification.body,
-        //     NotificationDetails(
-        //       android: AndroidNotificationDetails(
-        //         channel.id,
-        //         channel.name,
-        //         channelDescription: channel.description,
-        //         // add a proper drawable resource to android, for now using
-        //         //      one that already exists in example app.
-        //         icon: 'ic_launcher_foreground',
-        //       ),
-        //     ));
-      }
+      // Firebase messaging is configured but notifications are handled by the system
+      // No additional action needed here
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // qui posso andare a una sezione precisa o fare qualcosa in risposta
-      // all'apertura dell'app tramite notifica
+      // Handle navigation when app is opened from a notification
+      // Can be used to navigate to a specific section based on the notification data
     });
   }
 
