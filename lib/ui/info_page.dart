@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:quaderno_flutter/l10n/app_localizations.dart';
 
 import 'widgets/widgets.dart';
 
@@ -69,9 +69,10 @@ class _InfoPageState extends State<InfoPage> {
                     ),
                     TextSpan(
                       text: 'dariocast',
-                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () =>
                             launchUrl(Uri.parse('https://dariocast.github.io')),

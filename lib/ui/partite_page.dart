@@ -10,7 +10,7 @@ import '../utils/ad_helper.dart';
 import '../blocs/blocs.dart';
 import 'crea_page.dart';
 import 'widgets/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:quaderno_flutter/l10n/app_localizations.dart';
 
 class PartitePage extends StatefulWidget {
   static const String routeName = '/partite';

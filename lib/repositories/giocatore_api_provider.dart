@@ -8,6 +8,7 @@ import 'package:path/path.dart' as p;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/models.dart';
+import '../utils/errors.dart';
 import '../utils/log_helper.dart';
 
 class GiocatoreApiProvider {
@@ -21,9 +22,14 @@ class GiocatoreApiProvider {
       final listaNomiSemplice =
           listaNomi.map<String>((entry) => entry['nome']).toList();
       return listaNomiSemplice;
+    } on PostgrestException catch (error) {
+      QTLog.log('Impossibile ottenere i giocatori: ${error.message}',
+          name: 'GiocatoreApiProvider.giocatoriByGruppo');
+      throw DatabaseError('Impossibile ottenere i giocatori: ${error.message}');
     } catch (error) {
-      QTLog.log('Impossibile ottenere i giocatori, errore: $error');
-      throw Exception('Impossibile ottenere i giocatori');
+      QTLog.log('Impossibile ottenere i giocatori, errore: $error',
+          name: 'GiocatoreApiProvider.giocatoriByGruppo');
+      throw AppError('Errore imprevisto durante il caricamento dei giocatori.');
     }
   }
 
@@ -39,9 +45,14 @@ class GiocatoreApiProvider {
       final mapDone =
           listaGiocatoriDB.map<Giocatore>((json) => Giocatore.fromMap(json));
       return mapDone.toList();
+    } on PostgrestException catch (error) {
+      QTLog.log('Impossibile ottenere i marcatori: ${error.message}',
+          name: 'GiocatoreApiProvider.marcatori');
+      throw DatabaseError('Impossibile ottenere i marcatori: ${error.message}');
     } catch (error) {
-      QTLog.log('Impossibile ottenere i marcatori, errore: $error');
-      throw Exception('Impossibile ottenere i marcatori');
+      QTLog.log('Impossibile ottenere i marcatori, errore: $error',
+          name: 'GiocatoreApiProvider.marcatori');
+      throw AppError('Errore imprevisto durante il caricamento dei marcatori.');
     }
   }
 
@@ -54,7 +65,7 @@ class GiocatoreApiProvider {
         final logoFile = File(photo);
         final uploadResult = await supabase.storage.from('giocatori').upload(
             '$gruppo$nome${p.extension(photo)}', logoFile,
-            fileOptions: FileOptions(cacheControl: '3600', upsert: true));
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: true));
         publicURL = supabase.storage
             .from('giocatori')
             .getPublicUrl('$gruppo$nome${p.extension(photo)}');
@@ -72,20 +83,31 @@ class GiocatoreApiProvider {
           .select()
           .single();
       return Giocatore.fromMap(response);
+    } on PostgrestException catch (error) {
+      QTLog.log('Impossibile creare nuovo giocatore: ${error.message}',
+          name: 'GiocatoreApiProvider.creaGiocatore');
+      throw DatabaseError(
+          'Impossibile creare nuovo giocatore: ${error.message}');
+    } on StorageException catch (error) {
+      QTLog.log('Impossibile caricare la foto del giocatore: ${error.message}',
+          name: 'GiocatoreApiProvider.creaGiocatore');
+      throw NetworkError(
+          'Impossibile caricare la foto del giocatore: ${error.message}');
     } catch (error) {
-      throw Exception('Impossibile creare nuovo giocatore');
+      QTLog.log('Impossibile creare nuovo giocatore, errore: $error',
+          name: 'GiocatoreApiProvider.creaGiocatore');
+      throw AppError('Errore imprevisto durante la creazione del giocatore.');
     }
   }
 
   Future<bool> aggiorna(Giocatore giocatore, String? newPhoto) async {
-    int random = Random().nextInt(100);
     final supabase = Supabase.instance.client;
     try {
       if (newPhoto != null) {
         if (giocatore.photo != null) {
           QTLog.log('Devo rimuovere la vecchia foto dal bucket',
               name: 'repositories.giocatore.update');
-          final deletePhoto = await supabase.storage.from('giocatori').remove([
+          await supabase.storage.from('giocatori').remove([
             '${giocatore.gruppo}${giocatore.nome}${p.extension(giocatore.photo!)}'
           ]);
           QTLog.log('Foto rimossa dal bucket',
@@ -94,17 +116,17 @@ class GiocatoreApiProvider {
         QTLog.log('Carico la nuova foto nel bucket',
             name: 'repositories.giocatore.update');
         final logoFile = File(newPhoto);
-        final uploadResult = await supabase.storage.from('giocatori').upload(
+        await supabase.storage.from('giocatori').upload(
             '${giocatore.gruppo}${giocatore.nome}${p.extension(newPhoto)}',
             logoFile,
-            fileOptions: FileOptions(cacheControl: '3600', upsert: true));
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: true));
         final publicURL = supabase.storage.from('giocatori').getPublicUrl(
             '${giocatore.gruppo}${giocatore.nome}${p.extension(newPhoto)}');
         QTLog.log('Foto caricata nel bucket',
             name: 'repositories.giocatore.update');
         giocatore = giocatore.copyWith(photo: publicURL);
       }
-      final response = await supabase.from('giocatore').update({
+      await supabase.from('giocatore').update({
         'nome': giocatore.nome,
         'image': giocatore.image,
         'gruppo': giocatore.gruppo,
@@ -114,10 +136,25 @@ class GiocatoreApiProvider {
         'photo': giocatore.photo,
       }).eq('id', giocatore.id);
       return true;
+    } on PostgrestException catch (error) {
+      QTLog.log(
+          'Errore durante l\'aggiornamento del giocatore: ${error.message}',
+          name: 'repositories.giocatore.update',
+          level: Level.SEVERE.value);
+      throw DatabaseError(
+          'Impossibile aggiornare il giocatore: ${error.message}');
+    } on StorageException catch (error) {
+      QTLog.log(
+          'Errore durante l\'aggiornamento della foto del giocatore: ${error.message}',
+          name: 'repositories.giocatore.update',
+          level: Level.SEVERE.value);
+      throw NetworkError(
+          'Impossibile aggiornare la foto del giocatore: ${error.message}');
     } catch (error) {
       QTLog.log('Errore durante l\'aggiornamento: $error',
           name: 'repositories.giocatore.update', level: Level.SEVERE.value);
-      throw Exception('Impossibile aggiornare il giocatore');
+      throw AppError(
+          'Errore imprevisto durante l\'aggiornamento del giocatore.');
     }
   }
 
@@ -133,9 +170,16 @@ class GiocatoreApiProvider {
       final List<Giocatore> lista = mapDone.toList();
       lista.sort((a, b) => b.gol.compareTo(a.gol));
       return lista;
+    } on PostgrestException catch (error) {
+      QTLog.log('Errore nell\'aggiornamento dei marcatori: ${error.message}',
+          name: 'GiocatoreApiProvider.aggiornaTutti');
+      throw DatabaseError(
+          'Impossibile aggiornare i giocatori: ${error.message}');
     } catch (error) {
-      QTLog.log('Errore nell\'aggiornamento dei marcatori: $error');
-      throw Exception('Impossibile aggiornare i giocatori');
+      QTLog.log('Errore nell\'aggiornamento dei marcatori: $error',
+          name: 'GiocatoreApiProvider.aggiornaTutti');
+      throw AppError(
+          'Errore imprevisto durante l\'aggiornamento dei giocatori.');
     }
   }
 
@@ -151,7 +195,7 @@ class GiocatoreApiProvider {
       final giocatoreEliminato = Giocatore.fromMap(response);
       QTLog.log('Giocatore rimosso', name: 'repositories.giocatore.delete');
       if (giocatoreEliminato.photo != null) {
-        final deletePhoto = await supabase.storage.from('giocatori').remove([
+        await supabase.storage.from('giocatori').remove([
           '${giocatoreEliminato.gruppo}${giocatoreEliminato.nome}${p.extension(giocatoreEliminato.photo!)}'
         ]);
         QTLog.log('Foto rimossa dal bucket',
@@ -159,8 +203,21 @@ class GiocatoreApiProvider {
       }
 
       return true;
+    } on PostgrestException catch (error) {
+      QTLog.log('Impossibile eliminare il giocatore: ${error.message}',
+          name: 'repositories.giocatore.delete');
+      throw DatabaseError(
+          'Impossibile eliminare il giocatore: ${error.message}');
+    } on StorageException catch (error) {
+      QTLog.log('Impossibile eliminare la foto del giocatore: ${error.message}',
+          name: 'repositories.giocatore.delete');
+      throw NetworkError(
+          'Impossibile eliminare la foto del giocatore: ${error.message}');
     } catch (error) {
-      throw Exception('Impossibile eliminare il gruppo');
+      QTLog.log('Impossibile eliminare il gruppo, errore: $error',
+          name: 'repositories.giocatore.delete');
+      throw AppError(
+          'Errore imprevisto durante l\'eliminazione del giocatore.');
     }
   }
 
@@ -172,8 +229,14 @@ class GiocatoreApiProvider {
           listaGruppiDB.map<Giocatore>((json) => Giocatore.fromMap(json));
       final lista = mapDone.toList();
       return lista;
+    } on PostgrestException catch (error) {
+      QTLog.log('Impossibile caricare i giocatori: ${error.message}',
+          name: 'GiocatoreApiProvider.tutti');
+      throw DatabaseError('Impossibile caricare i giocatori: ${error.message}');
     } catch (error) {
-      throw Exception('Impossibile caricare i giocatori');
+      QTLog.log('Impossibile caricare i giocatori, errore: $error',
+          name: 'GiocatoreApiProvider.tutti');
+      throw AppError('Errore imprevisto durante il caricamento dei giocatori.');
     }
   }
 
@@ -188,8 +251,15 @@ class GiocatoreApiProvider {
           .select()
           .single();
       return Giocatore.fromMap(response);
+    } on PostgrestException catch (error) {
+      QTLog.log('Impossibile caricare $nome gruppo $gruppo: ${error.message}',
+          name: 'GiocatoreApiProvider.singolo');
+      throw DatabaseError(
+          'Impossibile caricare il giocatore: ${error.message}');
     } catch (error) {
-      throw Exception('Impossibile caricare $nome gruppo $gruppo');
+      QTLog.log('Impossibile caricare $nome gruppo $gruppo, errore: $error',
+          name: 'GiocatoreApiProvider.singolo');
+      throw AppError('Errore imprevisto durante il caricamento del giocatore.');
     }
   }
 }

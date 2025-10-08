@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:quaderno_flutter/l10n/app_localizations.dart';
 
 import '../../blocs/blocs.dart';
 import '../../models/models.dart';
