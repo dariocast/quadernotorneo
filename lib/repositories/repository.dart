@@ -1,8 +1,11 @@
 import 'dart:async';
 
-import 'torneo_api_provider.dart';
+import 'package:quaderno_flutter/utils/errors.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:quaderno_flutter/models/models.dart';
+import 'package:quaderno_flutter/utils/log_helper.dart';
 
-import '../models/models.dart';
+import 'torneo_api_provider.dart';
 import 'giocatore_api_provider.dart';
 import 'gruppo_api_provider.dart';
 import 'partita_api_provider.dart';
@@ -44,54 +47,67 @@ class Repository {
   Future<List<Giocatore>> marcatori(gruppo) =>
       giocatoreApiProvider.marcatori(gruppo);
   Future<List<Giocatore>> aggiornaMarcatori(torneo) async {
-    List<Partita> partite = await partitaApiProvider.tutte(torneo);
-    List<Giocatore> giocatori = await giocatoreApiProvider.tutti();
+    try {
+      List<Partita> partite = await partitaApiProvider.tutte(torneo);
+      List<Giocatore> giocatori = await giocatoreApiProvider.tutti();
 
-    giocatori = giocatori
-        .map((e) => e.copyWith(gol: 0, ammonizioni: 0, espulsioni: 0))
-        .toList();
+      giocatori = giocatori
+          .map((e) => e.copyWith(gol: 0, ammonizioni: 0, espulsioni: 0))
+          .toList();
 
-    for (var partita in partite) {
-      // aggiornamento gol
-      for (var marcatore in partita.marcatori) {
-        if (!marcatore.nome.contains('(Aut)')) {
+      for (var partita in partite) {
+        // aggiornamento gol
+        for (var marcatore in partita.marcatori) {
+          if (!marcatore.nome.contains('(Aut)')) {
+            int giocatoreIndex = giocatori.indexWhere(
+              (element) =>
+                  element.nome == marcatore.nome &&
+                  element.gruppo == marcatore.gruppo,
+            );
+            if (giocatoreIndex != -1) {
+              Giocatore aggiornato = giocatori[giocatoreIndex]
+                  .copyWith(gol: giocatori[giocatoreIndex].gol + 1);
+              giocatori[giocatoreIndex] = aggiornato;
+            }
+          }
+        }
+        // aggiornamento ammonizioni
+        for (var ammonito in partita.ammoniti) {
           int giocatoreIndex = giocatori.indexWhere(
             (element) =>
-                element.nome == marcatore.nome &&
-                element.gruppo == marcatore.gruppo,
+                element.nome == ammonito.nome &&
+                element.gruppo == ammonito.gruppo,
           );
-          Giocatore aggiornato = giocatori[giocatoreIndex]
-              .copyWith(gol: giocatori[giocatoreIndex].gol + 1);
-          giocatori
-              .replaceRange(giocatoreIndex, giocatoreIndex + 1, [aggiornato]);
+          if (giocatoreIndex != -1) {
+            Giocatore aggiornato = giocatori[giocatoreIndex].copyWith(
+                ammonizioni: giocatori[giocatoreIndex].ammonizioni + 1);
+            giocatori[giocatoreIndex] = aggiornato;
+          }
+        }
+        // aggiornamento espulsioni
+        for (var espulso in partita.espulsi) {
+          int giocatoreIndex = giocatori.indexWhere(
+            (element) =>
+                element.nome == espulso.nome &&
+                element.gruppo == espulso.gruppo,
+          );
+          if (giocatoreIndex != -1) {
+            Giocatore aggiornato = giocatori[giocatoreIndex]
+                .copyWith(espulsioni: giocatori[giocatoreIndex].espulsioni + 1);
+            giocatori[giocatoreIndex] = aggiornato;
+          }
         }
       }
-      // aggiornamento ammonizioni
-      for (var ammonito in partita.ammoniti) {
-        int giocatoreIndex = giocatori.indexWhere(
-          (element) =>
-              element.nome == ammonito.nome &&
-              element.gruppo == ammonito.gruppo,
-        );
-        Giocatore aggiornato = giocatori[giocatoreIndex]
-            .copyWith(ammonizioni: giocatori[giocatoreIndex].ammonizioni + 1);
-        giocatori
-            .replaceRange(giocatoreIndex, giocatoreIndex + 1, [aggiornato]);
-      }
-      // aggiornamento espulsioni
-      for (var espulso in partita.espulsi) {
-        int giocatoreIndex = giocatori.indexWhere(
-          (element) =>
-              element.nome == espulso.nome && element.gruppo == espulso.gruppo,
-        );
-        Giocatore aggiornato = giocatori[giocatoreIndex]
-            .copyWith(espulsioni: giocatori[giocatoreIndex].espulsioni + 1);
-        giocatori
-            .replaceRange(giocatoreIndex, giocatoreIndex + 1, [aggiornato]);
-      }
+      return giocatoreApiProvider.aggiornaTutti(giocatori);
+    } on PostgrestException catch (e) {
+      QTLog.log(e.toString(), name: 'Repository.aggiornaMarcatori');
+      throw DatabaseError(
+          'Errore durante l\'aggiornamento dei marcatori: ${e.message}');
+    } catch (e) {
+      QTLog.log(e.toString(), name: 'Repository.aggiornaMarcatori');
+      throw AppError(
+          'Errore imprevisto durante l\'aggiornamento dei marcatori.');
     }
-    return giocatoreApiProvider.aggiornaTutti(giocatori);
-    // return giocatoreApiProvider.marcatori();
   }
 
   Future<List<Gruppo>> gruppi(torneo) => gruppoApiProvider.gruppi(torneo);
@@ -103,95 +119,102 @@ class Repository {
   Future<bool> eliminaGruppo(int id) => gruppoApiProvider.elimina(id);
   Future<List<Gruppo>> aggiornaStatistiche(String? torneo,
       {bool reset = false}) async {
-    List<Partita> partite = await partitaApiProvider.tutte(null);
-    List<Gruppo> gruppi = await gruppoApiProvider.gruppi(torneo);
+    try {
+      List<Partita> partite = await partitaApiProvider.tutte(null);
+      List<Gruppo> gruppi = await gruppoApiProvider.gruppi(torneo);
 
-    gruppi = gruppi
-        .map((e) => e.copyWith(
-              pg: 0,
-              v: 0,
-              p: 0,
-              s: 0,
-              gf: 0,
-              gs: 0,
-              pt: 0,
-            ))
-        .toList();
+      gruppi = gruppi
+          .map((e) => e.copyWith(
+                pg: 0,
+                v: 0,
+                p: 0,
+                s: 0,
+                gf: 0,
+                gs: 0,
+                pt: 0,
+              ))
+          .toList();
 
-    if (reset) {
-      return gruppoApiProvider.aggiornaTutti(gruppi);
-    }
-
-    for (var partita in partite) {
-      int pg1 = 0, gf1 = 0, gs1 = 0, pt1 = 0, v1 = 0, p1 = 0, s1 = 0;
-      int pg2 = 0, gf2 = 0, gs2 = 0, pt2 = 0, v2 = 0, p2 = 0, s2 = 0;
-
-      int gruppo1Index = gruppi.indexWhere(
-        (element) => element.nome == partita.squadraUno,
-      );
-      int gruppo2Index = gruppi.indexWhere(
-        (element) => element.nome == partita.squadraDue,
-      );
-
-      pg1 = gruppi[gruppo1Index].pg + 1;
-      pg2 = gruppi[gruppo2Index].pg + 1;
-
-      gf1 = gruppi[gruppo1Index].gf + partita.golSquadraUno;
-      gf2 = gruppi[gruppo2Index].gf + partita.golSquadraDue;
-
-      gs1 = gruppi[gruppo1Index].gs + partita.golSquadraDue;
-      gs2 = gruppi[gruppo2Index].gs + partita.golSquadraUno;
-
-      pt1 = gruppi[gruppo1Index].pt;
-      pt2 = gruppi[gruppo2Index].pt;
-
-      v1 = gruppi[gruppo1Index].v;
-      p1 = gruppi[gruppo1Index].p;
-      s1 = gruppi[gruppo1Index].s;
-      v2 = gruppi[gruppo2Index].v;
-      p2 = gruppi[gruppo2Index].p;
-      s2 = gruppi[gruppo2Index].s;
-
-      if (partita.golSquadraUno > partita.golSquadraDue) {
-        v1 = v1 + 1;
-        pt1 = pt1 + 3;
-
-        s2 = s2 + 1;
-      } else if (partita.golSquadraUno == partita.golSquadraDue) {
-        p1 = p1 + 1;
-        p2 = p2 + 1;
-        pt1 = pt1 + 1;
-        pt2 = pt2 + 1;
-      } else {
-        v2 = v2 + 1;
-        pt2 = pt2 + 3;
-
-        s1 = s1 + 1;
+      if (reset) {
+        return gruppoApiProvider.aggiornaTutti(gruppi);
       }
 
-      Gruppo aggiornato = gruppi[gruppo1Index].copyWith(
-        pg: pg1,
-        v: v1,
-        p: p1,
-        s: s1,
-        gf: gf1,
-        gs: gs1,
-        pt: pt1,
-      );
-      gruppi.replaceRange(gruppo1Index, gruppo1Index + 1, [aggiornato]);
+      for (var partita in partite) {
+        int gruppo1Index = gruppi.indexWhere(
+          (element) => element.nome == partita.squadraUno,
+        );
+        int gruppo2Index = gruppi.indexWhere(
+          (element) => element.nome == partita.squadraDue,
+        );
 
-      aggiornato = gruppi[gruppo2Index].copyWith(
-        pg: pg2,
-        v: v2,
-        p: p2,
-        s: s2,
-        gf: gf2,
-        gs: gs2,
-        pt: pt2,
-      );
-      gruppi.replaceRange(gruppo2Index, gruppo2Index + 1, [aggiornato]);
+        if (gruppo1Index != -1 && gruppo2Index != -1) {
+          Gruppo gruppo1 = gruppi[gruppo1Index];
+          Gruppo gruppo2 = gruppi[gruppo2Index];
+
+          int pg1 = gruppo1.pg + 1;
+          int pg2 = gruppo2.pg + 1;
+
+          int gf1 = gruppo1.gf + partita.golSquadraUno;
+          int gf2 = gruppo2.gf + partita.golSquadraDue;
+
+          int gs1 = gruppo1.gs + partita.golSquadraDue;
+          int gs2 = gruppo2.gs + partita.golSquadraUno;
+
+          int pt1 = gruppo1.pt;
+          int pt2 = gruppo2.pt;
+
+          int v1 = gruppo1.v;
+          int p1 = gruppo1.p;
+          int s1 = gruppo1.s;
+          int v2 = gruppo2.v;
+          int p2 = gruppo2.p;
+          int s2 = gruppo2.s;
+
+          if (partita.golSquadraUno > partita.golSquadraDue) {
+            v1 = v1 + 1;
+            pt1 = pt1 + 3;
+            s2 = s2 + 1;
+          } else if (partita.golSquadraUno == partita.golSquadraDue) {
+            p1 = p1 + 1;
+            p2 = p2 + 1;
+            pt1 = pt1 + 1;
+            pt2 = pt2 + 1;
+          } else {
+            v2 = v2 + 1;
+            pt2 = pt2 + 3;
+            s1 = s1 + 1;
+          }
+
+          gruppi[gruppo1Index] = gruppo1.copyWith(
+            pg: pg1,
+            v: v1,
+            p: p1,
+            s: s1,
+            gf: gf1,
+            gs: gs1,
+            pt: pt1,
+          );
+          gruppi[gruppo2Index] = gruppo2.copyWith(
+            pg: pg2,
+            v: v2,
+            p: p2,
+            s: s2,
+            gf: gf2,
+            gs: gs2,
+            pt: pt2,
+          );
+        }
+      }
+      return gruppoApiProvider.aggiornaTutti(gruppi);
+    } on PostgrestException catch (e) {
+      QTLog.log(e.toString(), name: 'Repository.aggiornaStatistiche');
+      throw DatabaseError(
+          'Errore durante l\'aggiornamento delle statistiche: ${e.message}');
+    } catch (e) {
+      QTLog.log(e.toString(), name: 'Repository.aggiornaStatistiche');
+      throw AppError(
+          'Errore imprevisto durante l\'aggiornamento delle statistiche.');
     }
-    return gruppoApiProvider.aggiornaTutti(gruppi);
   }
 
   // Tornei
